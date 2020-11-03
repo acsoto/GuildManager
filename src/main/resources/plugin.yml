@@ -1,0 +1,11 @@
+name: GuildManager
+version: ${project.version}
+main: com.mcatk.guildmanager.GuildManager
+authors: [ soto ]
+website: www.mcatk.com
+depend: [Vault]
+commands:
+  gmg:
+    description: main command
+  gmgadmin:
+    description: admin command
