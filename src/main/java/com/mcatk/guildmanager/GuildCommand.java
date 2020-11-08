@@ -15,6 +15,7 @@ public class GuildCommand implements CommandExecutor {
             sender.sendMessage("§a/gmg check <ID>  §2查看公会详情");
             sender.sendMessage("§a/gmg tp <guild> §2传送到某公会主城");
             sender.sendMessage("§a/gmg s §2传送到自己的公会主城");
+            sender.sendMessage("§a/gmg offer <AC点> §2捐助公会资金 1wAC = 1GuildCash");
             sender.sendMessage("§e------------会长帮助------------");
             sender.sendMessage("§a/gmg members  §2玩家列表");
             sender.sendMessage("§a/gmg setname <name>  §2公会改名");
@@ -22,6 +23,8 @@ public class GuildCommand implements CommandExecutor {
             sender.sendMessage("§a/gmg remove <player>  §2删除玩家");
             sender.sendMessage("§a/gmg res create §2公会圈地(工具选点后输入该指令)");
             sender.sendMessage("§a/gmg res remove  §2删除公会领地");
+            sender.sendMessage("§a/gmg setwarp  §2设置公会领地标");
+            sender.sendMessage("§a/gmg delwarp  §2删除公会领地标");
             return true;
         }
         GuildManager plugin = GuildManager.plugin;
@@ -56,6 +59,34 @@ public class GuildCommand implements CommandExecutor {
             if(g!=null){
                 plugin.tpGuild(g.getName(),p);
                 sender.sendMessage(MsgPrefix+"§a传送成功");
+            }
+            else sender.sendMessage(MsgPrefix+"§c你不在任何公会");
+            return true;
+        }
+        if(args[0].equalsIgnoreCase("offer")){
+            if(!(sender instanceof Player)){
+                sender.sendMessage(MsgPrefix+"§c该指令只能由玩家发出");
+                return true;
+            }
+            if(args.length!=2) {
+                sender.sendMessage(MsgPrefix + "§c参数错误");
+                return true;
+            }
+            Player p = (Player)sender;
+            Guild g = GuildManager.plugin.getPlayersGuild(p.getName());
+            if(g!=null){
+                if(!isLegalMoney(args[1])){
+                    sender.sendMessage(MsgPrefix+"§c必须是整数！");
+                    return true;
+                }
+                long n = Integer.parseInt(args[1]);
+                if(!isLegalMoneyToCash(n)){
+                    sender.sendMessage(MsgPrefix+"§c必须是10000的整数倍！");
+                    return true;
+                }
+                plugin.takePlayerMoney(p,n);
+                g.addCash((int)(n/10000));
+                sender.sendMessage(MsgPrefix+"§a成功为"+g.getName()+"§a捐赠"+n+"AC"+"折合为"+(n/10000)+"公会资金");
             }
             else sender.sendMessage(MsgPrefix+"§c你不在任何公会");
             return true;
@@ -123,11 +154,36 @@ public class GuildCommand implements CommandExecutor {
                     guild.removeResidence();
                     sender.sendMessage(MsgPrefix + "领地 guild_"+guild.ID+" 删除成功");
                 }
-                else sender.sendMessage(MsgPrefix + "尚未设置领地");
+                else {
+                    sender.sendMessage(MsgPrefix + "尚未设置领地");
+                    sender.sendMessage(MsgPrefix + "请使用工具选点后输入创建指令");
+                }
             }
             return true;
         }
+        if(args[0].equalsIgnoreCase("setwarp")){
+            plugin.setWarp((Player)sender,guild.ID);
+        }
+        if(args[0].equalsIgnoreCase("delwarp")){
+            plugin.delWarp(guild.ID);
+        }
         sender.sendMessage(MsgPrefix+"§c指令输入错误");
+        return false;
+    }
+
+    Boolean isLegalMoney(String s){
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+            if(!(c>='0'&&c<='9')){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    Boolean isLegalMoneyToCash(long money){
+        if((money%10000)==0)
+            return true;
         return false;
     }
 }

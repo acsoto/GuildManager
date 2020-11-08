@@ -19,6 +19,7 @@ public class Guild implements ConfigurationSerializable {
     int MaxPlayers;
     int Points;
     int RemoveMemLimitFlag;
+    long Cash;
     boolean ResidenceFLag;
 
     ArrayList<String> Members= new ArrayList<>();
@@ -32,7 +33,7 @@ public class Guild implements ConfigurationSerializable {
         this.MaxPlayers = 5;
         this.Points = 0;
         this.RemoveMemLimitFlag=0;
-        this.ResidenceFLag=false;
+        this.Cash=0;
     }
     //公会名操作
     void setName(String name){
@@ -53,7 +54,6 @@ public class Guild implements ConfigurationSerializable {
     //等级&最大玩家数&积分操作
     void levelUP(){
         Level++;
-        MaxPlayers+=3;
     }
     int getLevel() {
         return Level;
@@ -63,6 +63,20 @@ public class Guild implements ConfigurationSerializable {
     }
     int getPoints(){
         return Points;
+    }
+    void addCash(int n){
+        Cash+=n;
+        saveConfig();
+    }
+    Boolean subCash(int n){
+        if((Cash-n)<0)
+            return false;
+        Cash-=n;
+        saveConfig();
+        return true;
+    }
+    long getCash(){
+        return Cash;
     }
     //公会成员操作
     Boolean addMembers(String p){
@@ -151,6 +165,7 @@ public class Guild implements ConfigurationSerializable {
         map.put("Members",Members);
         map.put("RemoveMemLimitFlag",RemoveMemLimitFlag);
         map.put("ResidenceFLag",ResidenceFLag);
+        map.put("Cash",Cash);
         return map;
     }
 
@@ -160,12 +175,13 @@ public class Guild implements ConfigurationSerializable {
         );
         g.GuildName=(map.get("GuildName")!=null?(String)map.get("GuildName"):null);
         g.ChairMan=(map.get("ChairMan")!=null?(String)map.get("ChairMan"):null);
-        g.Level=(map.get("Level")!=null?(int)map.get("Level"):null);
-        g.MaxPlayers=(map.get("MaxPlayers")!=null?(int)map.get("MaxPlayers"):null);
-        g.Points=(map.get("Points")!=null?(int)map.get("Points"):null);
+        g.Level=(map.get("Level")!=null?(int)map.get("Level"):1);
+        g.MaxPlayers=(map.get("MaxPlayers")!=null?(int)map.get("MaxPlayers"):5);
+        g.Points=(map.get("Points")!=null?(int)map.get("Points"):0);
         g.RemoveMemLimitFlag=(map.get("RemoveMemLimitFlag")!=null?(int)map.get("RemoveMemLimitFlag"):0);
         g.ResidenceFLag=(map.get("ResidenceFLag")!=null?(boolean)map.get("ResidenceFLag"):false);
         g.Members=(map.get("Members")!=null?(ArrayList<String>) map.get("Members"):null);
+        g.Cash=(map.get("Members")!=null?(long) map.get("Members"):0);
         return g;
     }
 

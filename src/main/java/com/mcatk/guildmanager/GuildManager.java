@@ -1,20 +1,34 @@
 package com.mcatk.guildmanager;
 
+import net.milkbowl.vault.economy.Economy;
+
+import net.milkbowl.vault.economy.EconomyResponse;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.plugin.RegisteredServiceProvider;
+
 
 import java.util.HashMap;
-
+import java.util.logging.Logger;
 
 public final class GuildManager extends JavaPlugin {
 
     public static GuildManager plugin;
     static HashMap<String , Guild> GuildList=new HashMap<>();
+    private static final Logger log = Logger.getLogger("Minecraft");
+    private static Economy econ=null;
+
     @Override
     public void onEnable() {
+        if (!setupEconomy() ) {
+            log.severe(String.format("[%s] - 未找到前置插件Vault", getDescription().getName()));
+            getServer().getPluginManager().disablePlugin(this);
+            return;
+        }
         //实例化
         plugin=this;
         //生成配置文件
@@ -98,6 +112,16 @@ public final class GuildManager extends JavaPlugin {
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(),"warp "+g+" "+p);
         return true;
     }
+    void setWarp(Player player , String g){
+        player.setOp(true);
+        player.chat("/setwarp guild_"+g);
+        player.setOp(false);
+
+    }
+    void delWarp(String g){
+        Bukkit.dispatchCommand(Bukkit.getConsoleSender(),"/delwarp guild_"+g);
+    }
+
     void loadGuildList(){
         ConfigurationSection config = getConfig().getConfigurationSection("Guilds");
         for(String key : config.getKeys(false)){
@@ -107,6 +131,23 @@ public final class GuildManager extends JavaPlugin {
             this.getLogger().info("§a成功载入公会"+g.getName());
         }
         saveConfig();
+    }
+    //启动Vault依赖
+    private boolean setupEconomy() {
+        if (getServer().getPluginManager().getPlugin("Vault") == null) {
+            return false;
+        }
+        RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
+        if (rsp == null) {
+            return false;
+        }
+        econ = rsp.getProvider();
+        return econ != null;
+    }
+    //经济操作
+    Boolean takePlayerMoney(Player p,double m){
+        EconomyResponse r = econ.withdrawPlayer(p,m);
+        return r.transactionSuccess();
     }
 
 }
