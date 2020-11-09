@@ -8,6 +8,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
@@ -42,6 +43,8 @@ public final class GuildManager extends JavaPlugin {
         if(getConfig().contains("Guilds"))
             loadGuildList();
         else this.getLogger().info("§a公会列表为空");
+        //注册监听器
+        Bukkit.getPluginManager().registerEvents(new JoinListener(),this);
     }
     @Override
     public void onDisable() {
@@ -50,10 +53,10 @@ public final class GuildManager extends JavaPlugin {
     }
 
 
-    Guild getPlayersGuild(String player){
+    Guild getChairmansGuild(String player){
         for(String i:GuildList.keySet()){
             Guild g= GuildList.get(i);
-            if(g.ChairMan.equalsIgnoreCase(player)){
+            if(g.getChairman().equalsIgnoreCase(player)){
                 return g;
             }
         }
@@ -64,7 +67,7 @@ public final class GuildManager extends JavaPlugin {
         sender.sendMessage("§a------------公会列表------------");
         for(String i:GuildList.keySet()){
             Guild g = GuildList.get(i);
-            sender.sendMessage("§2"+i+" §a公会名: "+g.GuildName+" §e会长: "+g.ChairMan);
+            sender.sendMessage("§2"+i+" §a公会名: "+g.getName()+" §e会长: "+g.getChairman());
         }
     }
     //新建公会，加入map并且存入config
@@ -85,9 +88,7 @@ public final class GuildManager extends JavaPlugin {
     }
     //查公会
     Boolean hasGuild(String ID){
-        if(GuildList.containsKey(ID))
-            return true;
-        return false;
+        return GuildList.containsKey(ID);
     }
     Guild getGuild(String ID){
         if(hasGuild(ID))
@@ -99,7 +100,7 @@ public final class GuildManager extends JavaPlugin {
         Guild g=GuildList.get(ID);
         g.setChairman(p);
     }
-    Guild PlayersGuild(String p){
+    Guild getPlayersGuild(String p){
         for(String key:GuildList.keySet()){
             Guild g = GuildList.get(key);
             if(g.hasPlayer(p))
@@ -108,9 +109,8 @@ public final class GuildManager extends JavaPlugin {
         return null;
     }
     //公会传送指令
-    Boolean tpGuild(String g, String p){
+    void tpGuild(String g, String p){
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(),"warp "+g+" "+p);
-        return true;
     }
     void setWarp(Player player , String g){
         player.setOp(true);

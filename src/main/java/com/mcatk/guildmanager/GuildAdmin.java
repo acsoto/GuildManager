@@ -25,26 +25,18 @@ public class GuildAdmin implements CommandExecutor {
         }
         Guild guild = GuildManager.plugin.getGuild(args[1]);
         if(args[0].equalsIgnoreCase("create")){
-            if (args.length<2){
-                sender.sendMessage(MsgPrefix+"§c缺少参数");
-                return true;
-            }
             GuildManager.plugin.newGuild(args[1]);
             sender.sendMessage(MsgPrefix+"创建成功");
             return true;
         }
         if(args[0].equalsIgnoreCase("remove")){
-            if(args.length==1)
-                sender.sendMessage(MsgPrefix+"§c缺少参数");
-            else if(GuildManager.plugin.removeGuild(args[1]))
+            if(GuildManager.plugin.removeGuild(args[1]))
                 sender.sendMessage(MsgPrefix+"删除成功");
             else sender.sendMessage(MsgPrefix+"§c不存在此公会");
             return true;
         }
         if(args[0].equalsIgnoreCase("check")){
-            if(args.length==1)
-                sender.sendMessage(MsgPrefix+"§c缺少参数");
-            else if(GuildManager.plugin.hasGuild(args[1])){
+            if(GuildManager.plugin.hasGuild(args[1])){
                 sender.sendMessage(guild.getStatus());
             }
             else sender.sendMessage(MsgPrefix+"§c不存在此公会");
@@ -72,16 +64,12 @@ public class GuildAdmin implements CommandExecutor {
             return true;
         }
         if(args[0].equalsIgnoreCase("addmem")){
-            if (args.length==1)
-                sender.sendMessage(MsgPrefix+"§c缺少参数");
-            else if(guild.addMembers(args[2]))
+            if(guild.addMembers(args[2]))
               sender.sendMessage(MsgPrefix+"添加成功");
             else sender.sendMessage(MsgPrefix+"成员已满");
             return true;
         }
         if(args[0].equalsIgnoreCase("removemem")){
-            if (args.length==1)
-                sender.sendMessage(MsgPrefix+"§c缺少参数");
             if(guild.removeMembers(args[2]))
                 sender.sendMessage(MsgPrefix+"删除成功");
             else sender.sendMessage(MsgPrefix+"不存在该玩家");

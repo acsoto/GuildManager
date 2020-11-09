@@ -46,7 +46,7 @@ public class GuildCommand implements CommandExecutor {
             if(args.length==1)
                 sender.sendMessage(MsgPrefix+"§c缺少参数");
             else if(GuildManager.plugin.hasGuild(args[1])){
-                String p=((Player)sender).getName();
+                String p= sender.getName();
                 plugin.tpGuild(args[1],p);
                 sender.sendMessage(MsgPrefix+"§a传送成功");
             }
@@ -54,7 +54,7 @@ public class GuildCommand implements CommandExecutor {
             return true;
         }
         if(args[0].equalsIgnoreCase("s")){
-            String p = ((Player)sender).getName();
+            String p = sender.getName();
             Guild g = GuildManager.plugin.getPlayersGuild(p);
             if(g!=null){
                 plugin.tpGuild(g.getName(),p);
@@ -84,20 +84,20 @@ public class GuildCommand implements CommandExecutor {
                     sender.sendMessage(MsgPrefix+"§c必须是10000的整数倍！");
                     return true;
                 }
-                plugin.takePlayerMoney(p,n);
+                if(plugin.takePlayerMoney(p,n)) {
                 g.addCash((int)(n/10000));
                 sender.sendMessage(MsgPrefix+"§a成功为"+g.getName()+"§a捐赠"+n+"AC"+"折合为"+(n/10000)+"公会资金");
+                }
             }
             else sender.sendMessage(MsgPrefix+"§c你不在任何公会");
             return true;
         }
         //会长操作
-        Guild guild=GuildManager.plugin.getPlayersGuild(sender.getName());
+        Guild guild=GuildManager.plugin.getChairmansGuild(sender.getName());
         if(guild==null){
             sender.sendMessage(MsgPrefix+"§c你不是会长");
             return true;
         }
-        Player player = (Player)sender;
         //以下为会长操作
         if(args[0].equalsIgnoreCase("members")){
             sender.sendMessage(guild.listMembers());
@@ -182,8 +182,6 @@ public class GuildCommand implements CommandExecutor {
     }
 
     Boolean isLegalMoneyToCash(long money){
-        if((money%10000)==0)
-            return true;
-        return false;
+        return (money % 10000) == 0;
     }
 }

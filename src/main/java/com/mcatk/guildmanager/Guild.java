@@ -13,14 +13,14 @@ import org.bukkit.entity.Player;
 
 public class Guild implements ConfigurationSerializable {
     String ID;
-    String GuildName;
-    String ChairMan;
-    int Level;
-    int MaxPlayers;
-    int Points;
-    int RemoveMemLimitFlag;
-    long Cash;
-    boolean ResidenceFLag;
+    private String GuildName;
+    private String ChairMan;
+    private int Level;
+    private int MaxPlayers;
+    private int Points;
+    private int RemoveMemLimitFlag;
+    private long Cash;
+    private boolean ResidenceFLag;
 
     ArrayList<String> Members= new ArrayList<>();
     ConfigurationSection config = GuildManager.plugin.getConfig().getConfigurationSection("Guilds");
@@ -103,13 +103,11 @@ public class Guild implements ConfigurationSerializable {
         return Members.contains(p);
     }
     //成员权限方法
-    Boolean givePerm(String p){
+    void givePerm(String p){
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(),"res pset main.gh "+p+" move true");
-        return true;
     }
-    Boolean removePerm(String p){
+    void removePerm(String p){
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(),"res pset main.gh "+p+" move remove");
-        return true;
     }
     //领地操作
     void createResidence(Player player){
@@ -129,6 +127,7 @@ public class Guild implements ConfigurationSerializable {
         String msg="§2"+"公会ID: "+"§a"+ID+"\n";
         msg+="§2"+"公会名: "+"§a"+GuildName+"\n";
         msg+="§2"+"会长: "+"§6"+ChairMan+"\n";
+        msg+="§2"+"公会资金: "+"§6"+Cash+"\n";
         msg+=listMembers();
         return msg;
     }
