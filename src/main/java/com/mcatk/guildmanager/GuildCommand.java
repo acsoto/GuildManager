@@ -19,6 +19,7 @@ public class GuildCommand implements CommandExecutor {
             sender.sendMessage("§e------------会长帮助------------");
             sender.sendMessage("§a/gmg members  §2玩家列表");
             sender.sendMessage("§a/gmg setname <name>  §2公会改名");
+            sender.sendMessage("§a/gmg levelup  §2公会升级");
             sender.sendMessage("§a/gmg add <player>  §2增加玩家");
             sender.sendMessage("§a/gmg remove <player>  §2删除玩家");
             sender.sendMessage("§a/gmg adda <player>  §2增加玩家到公会广场名单");
@@ -103,6 +104,30 @@ public class GuildCommand implements CommandExecutor {
         //以下为会长操作
         if(args[0].equalsIgnoreCase("members")){
             sender.sendMessage(guild.listMembers());
+            return true;
+        }
+        if(args[0].equalsIgnoreCase("levelup")){
+            if(guild.getLevel()>=5){
+                sender.sendMessage(MsgPrefix+"公会已达到满级");
+                return true;
+            }
+            int value = guild.levelUP();
+            if(value==1) {
+                sender.sendMessage(MsgPrefix + "公会积分不足，无法升级");
+                sender.sendMessage("需要积分："+guild.getLevel()*5);
+                sender.sendMessage("实际积分："+guild.getPoints());
+            }
+            if(value==2) {
+                sender.sendMessage(MsgPrefix + "公会资金不足，无法升级");
+                sender.sendMessage("需要资金："+guild.getLevel()*10+20);
+                sender.sendMessage("实际资金："+guild.getCash());
+            }
+            if(value==3){
+                sender.sendMessage(MsgPrefix+"公会升级成功，扣除公会资金"+guild.getLevel()*5);
+                sender.sendMessage("目前公会等级+1，为"+guild.getLevel());
+                sender.sendMessage("目前公会最大人数+5，为"+guild.getMaxPlayers());
+                sender.sendMessage("目前公会最大高级玩家数+2，为"+guild.getMaxAdvancedPlayers());
+            }
             return true;
         }
         if(args[0].equalsIgnoreCase("add")){

@@ -13,7 +13,7 @@ import org.bukkit.entity.Player;
 
 public class Guild implements ConfigurationSerializable {
     //成员变量
-    private String ID;
+    private final String ID;
     private String GuildName;
     private String ChairMan;
     private int Level;
@@ -22,8 +22,8 @@ public class Guild implements ConfigurationSerializable {
     private int Points;
     private int RemoveMemLimitFlag;
     private boolean ResidenceFLag;
-    ArrayList<String> Members= new ArrayList<>();
-    ArrayList<String> AdvancedMembers=new ArrayList<>();
+    private ArrayList<String> Members= new ArrayList<>();
+    private ArrayList<String> AdvancedMembers=new ArrayList<>();
     private long Cash;
 
     ConfigurationSection config = GuildManager.plugin.getConfig().getConfigurationSection("Guilds");
@@ -58,14 +58,27 @@ public class Guild implements ConfigurationSerializable {
         return ChairMan;
     }
     //等级&最大玩家数&积分操作
-    void levelUP(){
+    int levelUP(){
+        int reqPoints=Level*5;
+        int reqCash=Level*10+20;
+        if(Points<reqPoints)
+            return 1;
+        if(Cash<reqCash)
+            return 2;
+        Cash-=reqCash;
         Level++;
+        MaxPlayers+=5;
+        MaxAdvancedPlayers+=2;
+        return 3;
     }
     int getLevel() {
         return Level;
     }
     int getMaxPlayers() {
         return MaxPlayers;
+    }
+    int getMaxAdvancedPlayers() {
+        return MaxAdvancedPlayers;
     }
     int getPoints(){
         return Points;
@@ -157,16 +170,18 @@ public class Guild implements ConfigurationSerializable {
         msg+="§2"+"公会名: "+"§a"+GuildName+"\n";
         msg+="§2"+"会长: "+"§6"+ChairMan+"\n";
         msg+="§2"+"公会资金: "+"§6"+Cash+"\n";
+        msg+="§2"+"公会人数: "+"§a"+Members.size()+"/"+MaxPlayers+"\n";
+        msg+="§2"+"高级玩家: "+"§a"+AdvancedMembers.size()+"/"+MaxAdvancedPlayers+"\n";
         msg+=listMembers();
         return msg;
     }
     //输出成员列表
     String listMembers(){
-        String msg="§2成员列表: \n";
+        StringBuilder msg= new StringBuilder("§2成员列表: \n");
         for(String p:Members){
-            msg+="§e"+p+"\n";
+            msg.append("§e").append(p).append("\n");
         }
-        return msg;
+        return msg.toString();
     }
     void addRemoveMemLimitFlag(){
         RemoveMemLimitFlag++;
@@ -189,8 +204,10 @@ public class Guild implements ConfigurationSerializable {
         map.put("ChairMan",ChairMan);
         map.put("Level",Level);
         map.put("MaxPlayers",MaxPlayers);
+        map.put("MaxAdvancedPlayers",MaxAdvancedPlayers);
         map.put("Points",Points);
         map.put("Members",Members);
+        map.put("AdvancedMembers",AdvancedMembers);
         map.put("RemoveMemLimitFlag",RemoveMemLimitFlag);
         map.put("ResidenceFLag",ResidenceFLag);
         map.put("Cash",Cash);
@@ -201,14 +218,16 @@ public class Guild implements ConfigurationSerializable {
         Guild g = new Guild(
                 (map.get("ID")!=null?(String)map.get("ID"):null)
         );
-        g.GuildName=(map.get("GuildName")!=null?(String)map.get("GuildName"):null);
-        g.ChairMan=(map.get("ChairMan")!=null?(String)map.get("ChairMan"):null);
+        g.GuildName=(map.get("GuildName")!=null?(String)map.get("GuildName"):"");
+        g.ChairMan=(map.get("ChairMan")!=null?(String)map.get("ChairMan"):"");
         g.Level=(map.get("Level")!=null?(int)map.get("Level"):1);
-        g.MaxPlayers=(map.get("MaxPlayers")!=null?(int)map.get("MaxPlayers"):5);
+        g.MaxPlayers=(map.get("MaxAdvancedPlayers")!=null?(int)map.get("MaxPlayers"):10);
+        g.MaxAdvancedPlayers=(map.get("MaxAdvancedPlayers")!=null?(int)map.get("MaxPlayers"):5);
         g.Points=(map.get("Points")!=null?(int)map.get("Points"):0);
         g.RemoveMemLimitFlag=(map.get("RemoveMemLimitFlag")!=null?(int)map.get("RemoveMemLimitFlag"):0);
         g.ResidenceFLag=(map.get("ResidenceFLag")!=null?(boolean)map.get("ResidenceFLag"):false);
-        g.Members=(map.get("Members")!=null?(ArrayList<String>) map.get("Members"):null);
+        g.Members=(map.get("Members")!=null?(ArrayList<String>) map.get("Members"):new ArrayList<String>());
+        g.AdvancedMembers=(map.get("AdvancedMembers")!=null?(ArrayList<String>) map.get("Members"):new ArrayList<String>());
         g.Cash=(map.get("Members")!=null?(long) map.get("Members"):0);
         return g;
     }
