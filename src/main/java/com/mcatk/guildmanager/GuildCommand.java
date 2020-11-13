@@ -21,6 +21,8 @@ public class GuildCommand implements CommandExecutor {
             sender.sendMessage("§a/gmg setname <name>  §2公会改名");
             sender.sendMessage("§a/gmg add <player>  §2增加玩家");
             sender.sendMessage("§a/gmg remove <player>  §2删除玩家");
+            sender.sendMessage("§a/gmg adda <player>  §2增加玩家到公会广场名单");
+            sender.sendMessage("§a/gmg removea <player>  §2从公会广场名单删除玩家");
             sender.sendMessage("§a/gmg res create §2公会圈地(工具选点后输入该指令)");
             sender.sendMessage("§a/gmg res remove  §2删除公会领地");
             sender.sendMessage("§a/gmg setwarp  §2设置公会领地标");
@@ -118,10 +120,32 @@ public class GuildCommand implements CommandExecutor {
         if (args[0].equalsIgnoreCase("remove")){
             if(args.length<2)
                 sender.sendMessage(MsgPrefix+"§c缺少参数");
+            else if(guild.removeMembers(args[1])) {
+                sender.sendMessage(MsgPrefix + "删除成功");
+            }
+            else
+                sender.sendMessage(MsgPrefix + "不存在该玩家");
+            return true;
+        }
+        if(args[0].equalsIgnoreCase("adda")){
+            if(args.length<2)
+                sender.sendMessage(MsgPrefix+"§c缺少参数");
+            else if(guild.getAdvancedMembers().contains(args[1])){
+                sender.sendMessage(MsgPrefix + "§c该玩家已存在于公会广场名单");
+            }
+            else if(guild.addAdvancedMembers(args[1]))
+                sender.sendMessage(MsgPrefix+"增加成功");
+            else
+                sender.sendMessage(MsgPrefix+"该玩家不在公会或已达到公会广场名单最大成员数");
+            return true;
+        }
+        if (args[0].equalsIgnoreCase("removea")){
+            if(args.length<2)
+                sender.sendMessage(MsgPrefix+"§c缺少参数");
             else if(guild.getRemoveMemLimitFlag()>0){
                 sender.sendMessage(MsgPrefix + "§c已超过今日删除玩家次数，请明天再试");
             }
-            else if(guild.removeMembers(args[1])) {
+            else if(guild.removeAdvancedMembers(args[1])) {
                 guild.addRemoveMemLimitFlag();
                 sender.sendMessage(MsgPrefix + "删除成功");
             }
@@ -143,7 +167,7 @@ public class GuildCommand implements CommandExecutor {
                 sender.sendMessage(MsgPrefix+"§c缺少参数create或remove");
             else if(args[1].equalsIgnoreCase("create")){
                 if(guild.getResidenceFLag()){
-                    sender.sendMessage(MsgPrefix + "请勿重复设置领地,领地 guild_"+guild.ID+" 已存在");
+                    sender.sendMessage(MsgPrefix + "请勿重复设置领地,领地 guild_"+guild.getID()+" 已存在");
                 }
                 else {
                     guild.createResidence((Player) sender);
@@ -152,7 +176,7 @@ public class GuildCommand implements CommandExecutor {
             else if(args[1].equalsIgnoreCase("remove")){
                 if(guild.getResidenceFLag()){
                     guild.removeResidence();
-                    sender.sendMessage(MsgPrefix + "领地 guild_"+guild.ID+" 删除成功");
+                    sender.sendMessage(MsgPrefix + "领地 guild_"+guild.getID()+" 删除成功");
                 }
                 else {
                     sender.sendMessage(MsgPrefix + "尚未设置领地");
@@ -162,10 +186,10 @@ public class GuildCommand implements CommandExecutor {
             return true;
         }
         if(args[0].equalsIgnoreCase("setwarp")){
-            plugin.setWarp((Player)sender,guild.ID);
+            plugin.setWarp((Player)sender,guild.getID());
         }
         if(args[0].equalsIgnoreCase("delwarp")){
-            plugin.delWarp(guild.ID);
+            plugin.delWarp(guild.getID());
         }
         sender.sendMessage(MsgPrefix+"§c指令输入错误");
         return false;

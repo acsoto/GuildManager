@@ -12,17 +12,20 @@ import org.bukkit.entity.Player;
 
 
 public class Guild implements ConfigurationSerializable {
-    String ID;
+    //成员变量
+    private String ID;
     private String GuildName;
     private String ChairMan;
     private int Level;
     private int MaxPlayers;
+    private int MaxAdvancedPlayers;
     private int Points;
     private int RemoveMemLimitFlag;
-    private long Cash;
     private boolean ResidenceFLag;
-
     ArrayList<String> Members= new ArrayList<>();
+    ArrayList<String> AdvancedMembers=new ArrayList<>();
+    private long Cash;
+
     ConfigurationSection config = GuildManager.plugin.getConfig().getConfigurationSection("Guilds");
     //构造方法
     public Guild(String ID) {
@@ -35,7 +38,10 @@ public class Guild implements ConfigurationSerializable {
         this.RemoveMemLimitFlag=0;
         this.Cash=0;
     }
-    //公会名操作
+    //成员变量set和get
+    String getID(){
+        return ID;
+    }
     void setName(String name){
         GuildName = name;
         config.set(this.ID,this);
@@ -82,7 +88,6 @@ public class Guild implements ConfigurationSerializable {
     Boolean addMembers(String p){
         if(Members.size()<=MaxPlayers){
             Members.add(p);
-            givePerm(p);
             saveConfig();
             return true;
         }
@@ -90,6 +95,24 @@ public class Guild implements ConfigurationSerializable {
     }
     Boolean removeMembers(String p){
         if(Members.remove(p)){
+            saveConfig();
+            return true;
+        }
+        else return false;
+    }
+    Boolean addAdvancedMembers(String p){
+        if (Members.contains(p)){
+            if(AdvancedMembers.size()<=MaxAdvancedPlayers){
+                AdvancedMembers.add(p);
+                givePerm(p);
+                saveConfig();
+                return true;
+            }
+        }
+        return false;
+    }
+    Boolean removeAdvancedMembers(String p){
+        if(AdvancedMembers.remove(p)){
             removePerm(p);
             saveConfig();
             return true;
@@ -99,8 +122,14 @@ public class Guild implements ConfigurationSerializable {
     ArrayList<String> getMembers() {
         return Members;
     }
+    ArrayList<String> getAdvancedMembers() {
+        return AdvancedMembers;
+    }
     Boolean hasPlayer(String p){
         return Members.contains(p);
+    }
+    Boolean hasAdvancedPlayer(String p){
+        return AdvancedMembers.contains(p);
     }
     //成员权限方法
     void givePerm(String p){
@@ -189,3 +218,4 @@ public class Guild implements ConfigurationSerializable {
         GuildManager.plugin.saveConfig();
     }
 }
+
