@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 
 public class GuildCommand implements CommandExecutor {
     String MsgPrefix = "§d§l系统 §7>>> §a";
+    String ErrorPrefix = "§d§l系统 §7>>> §4[错误]§c";
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if(args.length==0){
@@ -153,15 +154,26 @@ public class GuildCommand implements CommandExecutor {
             return true;
         }
         if(args[0].equalsIgnoreCase("adda")){
-            if(args.length<2)
-                sender.sendMessage(MsgPrefix+"§c缺少参数");
-            else if(guild.getAdvancedMembers().contains(args[1])){
-                sender.sendMessage(MsgPrefix + "§c该玩家已存在于公会广场名单");
+            if(args.length<2) {
+                sender.sendMessage(MsgPrefix + "§c缺少参数");
+                return true;
             }
-            else if(guild.addAdvancedMembers(args[1]))
-                sender.sendMessage(MsgPrefix+"增加成功");
-            else
-                sender.sendMessage(MsgPrefix+"该玩家不在公会或已达到公会广场名单最大成员数");
+            String p = args[1];
+            int flag = guild.addAdvancedMembers(p);
+            switch (flag){
+                case 0:
+                    sender.sendMessage(ErrorPrefix + "该玩家已存在于公会广场名单");
+                    break;
+                case 1:
+                    sender.sendMessage(MsgPrefix + "增加成功");
+                    break;
+                case 2:
+                    sender.sendMessage(ErrorPrefix + "已达到公会广场名单最大成员数");
+                    break;
+                case 3:
+                    sender.sendMessage(ErrorPrefix + "该玩家不在你的公会");
+                    break;
+            }
             return true;
         }
         if (args[0].equalsIgnoreCase("removea")){
@@ -175,12 +187,12 @@ public class GuildCommand implements CommandExecutor {
                 sender.sendMessage(MsgPrefix + "删除成功");
             }
             else
-                sender.sendMessage(MsgPrefix + "不存在该玩家");
+                sender.sendMessage(ErrorPrefix + "不存在该玩家");
             return true;
         }
         if (args[0].equalsIgnoreCase("setname")){
             if(args.length<2){
-                sender.sendMessage(MsgPrefix+"§c缺少参数");
+                sender.sendMessage(ErrorPrefix+"§c缺少参数");
                 return true;
             }
             guild.setName(args[1]);

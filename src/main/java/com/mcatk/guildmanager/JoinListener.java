@@ -27,6 +27,7 @@ public class JoinListener implements Listener {
             }
         }
         if(guild.hasAdvancedPlayer(player.getName())){
+            Member member = guild.get
             player.sendMessage(MsgPrefix+"§2您是公会高级成员，可以前往公会广场");
         }
     }
