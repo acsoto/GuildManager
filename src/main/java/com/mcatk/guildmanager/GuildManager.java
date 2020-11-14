@@ -51,7 +51,11 @@ public final class GuildManager extends JavaPlugin {
         saveConfig();
     }
 
-
+    void reloadPlugin(){
+        if(getConfig().contains("Guilds"))
+            loadGuildList();
+        else this.getLogger().info("§a公会列表为空");
+    }
     Guild getChairmansGuild(String player){
         for(String i:GuildList.keySet()){
             Guild g= GuildList.get(i);
@@ -122,11 +126,12 @@ public final class GuildManager extends JavaPlugin {
     }
 
     void loadGuildList(){
-        ConfigurationSection config = getConfig().getConfigurationSection("Guilds");
+        ConfigurationSection config =
+                getConfig().getConfigurationSection("Guilds");
         for(String key : config.getKeys(false)){
             Guild g = (Guild) config.get(key);
             GuildList.put(key,g);
-            g.setRemoveMemLimitFlag(0);
+            g.resetRemoveMemLimitFlag();
             this.getLogger().info("§a成功载入公会"+g.getName());
         }
     }
@@ -135,7 +140,8 @@ public final class GuildManager extends JavaPlugin {
         if (getServer().getPluginManager().getPlugin("Vault") == null) {
             return false;
         }
-        RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
+        RegisteredServiceProvider<Economy> rsp =
+                getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
         if (rsp == null) {
             return false;
         }

@@ -87,10 +87,21 @@ public class Guild implements ConfigurationSerializable {
         Cash+=n;
         saveConfig();
     }
-    Boolean subCash(int n){
+    Boolean takeCash(int n){
         if((Cash-n)<0)
             return false;
         Cash-=n;
+        saveConfig();
+        return true;
+    }
+    void addPoints(int n){
+        Points+=n;
+        saveConfig();
+    }
+    Boolean takePoints(int n){
+        if((Points-n)<0)
+            return false;
+        Points-=n;
         saveConfig();
         return true;
     }
@@ -186,8 +197,8 @@ public class Guild implements ConfigurationSerializable {
     void addRemoveMemLimitFlag(){
         RemoveMemLimitFlag++;
     }
-    void setRemoveMemLimitFlag(int n){
-        RemoveMemLimitFlag = n;
+    void resetRemoveMemLimitFlag(){
+        RemoveMemLimitFlag = 0;
     }
     int getRemoveMemLimitFlag(){
         return RemoveMemLimitFlag;
@@ -225,7 +236,7 @@ public class Guild implements ConfigurationSerializable {
         g.MaxAdvancedPlayers=(map.get("MaxAdvancedPlayers")!=null?(int)map.get("MaxPlayers"):5);
         g.Points=(map.get("Points")!=null?(int)map.get("Points"):0);
         g.RemoveMemLimitFlag=(map.get("RemoveMemLimitFlag")!=null?(int)map.get("RemoveMemLimitFlag"):0);
-        g.ResidenceFLag=(map.get("ResidenceFLag")!=null?(boolean)map.get("ResidenceFLag"):false);
+        g.ResidenceFLag=(map.get("ResidenceFLag") != null && (boolean) map.get("ResidenceFLag"));
         g.Members=(map.get("Members")!=null?(ArrayList<String>) map.get("Members"):new ArrayList<String>());
         g.AdvancedMembers=(map.get("AdvancedMembers")!=null?(ArrayList<String>) map.get("Members"):new ArrayList<String>());
         g.Cash=(map.get("Members")!=null?(long) map.get("Members"):0);
