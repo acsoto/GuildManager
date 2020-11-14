@@ -9,11 +9,15 @@ import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.entity.Player;
+import org.yaml.snakeyaml.events.Event;
 
 
 public class Guild implements ConfigurationSerializable {
-    //成员变量
-    private final String ID;
+    private GuildManager plugin = GuildManager.plugin;
+    private ConfigurationSection GuildsSec =
+            plugin.getConfig().getConfigurationSection("Guilds");
+    //需要保存的成员变量
+    private String ID;
     private String GuildName;
     private String ChairMan;
     private int Level;
@@ -24,10 +28,9 @@ public class Guild implements ConfigurationSerializable {
     private boolean ResidenceFLag;
     private ArrayList<String> Members= new ArrayList<>();
     private ArrayList<String> AdvancedMembers=new ArrayList<>();
-    private long Cash;
+    private int Cash;
 
-    ConfigurationSection config = GuildManager.plugin.getConfig().getConfigurationSection("Guilds");
-    //构造方法
+    //只有ID的构造方法
     public Guild(String ID) {
         this.ID = ID;
         this.GuildName = ID;
@@ -38,13 +41,47 @@ public class Guild implements ConfigurationSerializable {
         this.RemoveMemLimitFlag=0;
         this.Cash=0;
     }
-    //成员变量set和get
+    //实现序列化
+    @Override
+    public Map<String, Object> serialize() {
+        Map<String,Object> map=new HashMap<>();
+        map.put("ID",ID);
+        map.put("GuildName",GuildName);
+        map.put("ChairMan",ChairMan);
+        map.put("Level",Level);
+        map.put("MaxPlayers",MaxPlayers);
+        map.put("MaxAdvancedPlayers",MaxAdvancedPlayers);
+        map.put("Points",Points);
+        map.put("RemoveMemLimitFlag",RemoveMemLimitFlag);
+        map.put("ResidenceFLag",ResidenceFLag);
+        map.put("Members",Members);
+        map.put("AdvancedMembers",AdvancedMembers);
+        map.put("Cash",Cash);
+        return map;
+    }
+    //反序列化
+    public static Guild deserialize(Map<String, Object> map){
+        Guild guild = new Guild((String)map.get("ID"));
+        guild.GuildName=(String)map.get("GuildName");
+        guild.ChairMan=(String)map.get("ChairMan");
+        guild.Level=(int)map.get("Level");
+        guild.MaxPlayers=(int)map.get("MaxPlayers");
+        guild.MaxAdvancedPlayers=(int)map.get("MaxAdvancedPlayers");
+        guild.Points=(int)map.get("Points");
+        guild.RemoveMemLimitFlag=(int)map.get("RemoveMemLimitFlag");
+        guild.ResidenceFLag= (boolean) map.get("ResidenceFLag");
+        guild.Members=(ArrayList<String>) map.get("Members");
+        guild.AdvancedMembers=(ArrayList<String>) map.get("AdvancedMembers");
+        guild.Cash=(int) map.get("Cash");
+        return guild;
+    }
+    //成员变量的操作
     String getID(){
         return ID;
     }
     void setName(String name){
         GuildName = name;
-        config.set(this.ID,this);
+        GuildManager.plugin.getConfig().getConfigurationSection("Guilds").set(this.ID,this);
     }
     String getName(){
         return GuildName;
@@ -52,7 +89,7 @@ public class Guild implements ConfigurationSerializable {
     //会长操作
     void setChairman(String p){
         ChairMan=p;
-        config.set(this.ID,this);
+        GuildManager.plugin.getConfig().getConfigurationSection("Guilds").set(this.ID,this);
     }
     String getChairman(){
         return ChairMan;
@@ -105,7 +142,7 @@ public class Guild implements ConfigurationSerializable {
         saveConfig();
         return true;
     }
-    long getCash(){
+    int getCash(){
         return Cash;
     }
     //公会成员操作
@@ -155,6 +192,18 @@ public class Guild implements ConfigurationSerializable {
     Boolean hasAdvancedPlayer(String p){
         return AdvancedMembers.contains(p);
     }
+    void addRemoveMemLimitFlag(){
+        RemoveMemLimitFlag++;
+    }
+    void resetRemoveMemLimitFlag(){
+        RemoveMemLimitFlag = 0;
+    }
+    int getRemoveMemLimitFlag(){
+        return RemoveMemLimitFlag;
+    }
+    Boolean getResidenceFLag(){
+        return ResidenceFLag;
+    }
     //成员权限方法
     void givePerm(String p){
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(),"res pset main.gh "+p+" move true");
@@ -194,57 +243,9 @@ public class Guild implements ConfigurationSerializable {
         }
         return msg.toString();
     }
-    void addRemoveMemLimitFlag(){
-        RemoveMemLimitFlag++;
-    }
-    void resetRemoveMemLimitFlag(){
-        RemoveMemLimitFlag = 0;
-    }
-    int getRemoveMemLimitFlag(){
-        return RemoveMemLimitFlag;
-    }
-    Boolean getResidenceFLag(){
-        return ResidenceFLag;
-    }
-    //实现序列化
-    @Override
-    public Map<String, Object> serialize() {
-        Map<String,Object> map=new HashMap<>();
-        map.put("ID",ID);
-        map.put("GuildName",GuildName);
-        map.put("ChairMan",ChairMan);
-        map.put("Level",Level);
-        map.put("MaxPlayers",MaxPlayers);
-        map.put("MaxAdvancedPlayers",MaxAdvancedPlayers);
-        map.put("Points",Points);
-        map.put("Members",Members);
-        map.put("AdvancedMembers",AdvancedMembers);
-        map.put("RemoveMemLimitFlag",RemoveMemLimitFlag);
-        map.put("ResidenceFLag",ResidenceFLag);
-        map.put("Cash",Cash);
-        return map;
-    }
-
-    public static Guild deserialize(Map<String, Object> map){
-        Guild g = new Guild(
-                (map.get("ID")!=null?(String)map.get("ID"):null)
-        );
-        g.GuildName=(map.get("GuildName")!=null?(String)map.get("GuildName"):"");
-        g.ChairMan=(map.get("ChairMan")!=null?(String)map.get("ChairMan"):"");
-        g.Level=(map.get("Level")!=null?(int)map.get("Level"):1);
-        g.MaxPlayers=(map.get("MaxAdvancedPlayers")!=null?(int)map.get("MaxPlayers"):10);
-        g.MaxAdvancedPlayers=(map.get("MaxAdvancedPlayers")!=null?(int)map.get("MaxPlayers"):5);
-        g.Points=(map.get("Points")!=null?(int)map.get("Points"):0);
-        g.RemoveMemLimitFlag=(map.get("RemoveMemLimitFlag")!=null?(int)map.get("RemoveMemLimitFlag"):0);
-        g.ResidenceFLag=(map.get("ResidenceFLag") != null && (boolean) map.get("ResidenceFLag"));
-        g.Members=(map.get("Members")!=null?(ArrayList<String>) map.get("Members"):new ArrayList<String>());
-        g.AdvancedMembers=(map.get("AdvancedMembers")!=null?(ArrayList<String>) map.get("Members"):new ArrayList<String>());
-        g.Cash=(map.get("Members")!=null?(long) map.get("Members"):0);
-        return g;
-    }
-
+    //存储方法
     void saveConfig(){
-        config.set(this.ID,this);
+        GuildManager.plugin.getConfig().getConfigurationSection("Guilds").set(this.ID,this);
         GuildManager.plugin.saveConfig();
     }
 }

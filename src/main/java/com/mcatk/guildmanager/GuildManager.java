@@ -33,25 +33,30 @@ public final class GuildManager extends JavaPlugin {
         plugin=this;
         //生成配置文件
         saveDefaultConfig();
-        this.getLogger().info("§a公会管理插件已启动-soto");
-        //注册指令和序列化
+        getLogger().info("§a公会管理插件已启动-soto");
+        //注册指令
         Bukkit.getPluginCommand("gmg").setExecutor(new GuildCommand());
         Bukkit.getPluginCommand("gmgadmin").setExecutor(new GuildAdmin());
+        //注册序列化
         ConfigurationSerialization.registerClass(Guild.class);
-        //读取公会列表
-        if(getConfig().contains("Guilds"))
-            loadGuildList();
-        else this.getLogger().info("§a公会列表为空");
         //注册监听器
         Bukkit.getPluginManager().registerEvents(new JoinListener(),this);
+        //读取公会列表
+        if(getConfig().contains("Guilds")) {
+            loadGuildList();
+        }
+        else {
+            getLogger().info("§a公会列表为空");
+        }
     }
     @Override
     public void onDisable() {
-        this.getLogger().info("§a公会管理插件已关闭-soto");
+        getLogger().info("§a公会管理插件已关闭-soto");
         saveConfig();
     }
 
     void reloadPlugin(){
+        GuildList.clear();
         if(getConfig().contains("Guilds"))
             loadGuildList();
         else this.getLogger().info("§a公会列表为空");
@@ -126,10 +131,10 @@ public final class GuildManager extends JavaPlugin {
     }
 
     void loadGuildList(){
-        ConfigurationSection config =
+        ConfigurationSection configGuilds =
                 getConfig().getConfigurationSection("Guilds");
-        for(String key : config.getKeys(false)){
-            Guild g = (Guild) config.get(key);
+        for(String key : configGuilds.getKeys(false)){
+            Guild g = (Guild) configGuilds.get(key);
             GuildList.put(key,g);
             g.resetRemoveMemLimitFlag();
             this.getLogger().info("§a成功载入公会"+g.getName());
