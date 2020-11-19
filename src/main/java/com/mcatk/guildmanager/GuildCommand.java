@@ -18,7 +18,6 @@ public class GuildCommand implements CommandExecutor {
             sender.sendMessage("§a/gmg s §2传送到自己的公会主城");
             sender.sendMessage("§a/gmg offer <AC点> §2捐助公会资金 1wAC = 1GuildCash");
             sender.sendMessage("§e------------会长帮助------------");
-            sender.sendMessage("§a/gmg members  §2玩家列表");
             sender.sendMessage("§a/gmg setname <name>  §2公会改名");
             sender.sendMessage("§a/gmg levelup  §2公会升级");
             sender.sendMessage("§a/gmg add <player>  §2增加玩家");
@@ -83,30 +82,59 @@ public class GuildCommand implements CommandExecutor {
                     sender.sendMessage(MsgPrefix+"§c必须是整数！");
                     return true;
                 }
-                long n = Integer.parseInt(args[1]);
+                int n = Integer.parseInt(args[1]);
                 if(!isLegalMoneyToCash(n)){
                     sender.sendMessage(MsgPrefix+"§c必须是10000的整数倍！");
                     return true;
                 }
                 if(plugin.takePlayerMoney(p,n)) {
-                g.addCash((int)(n/10000));
+                g.addCash(n/10000);
+                g.getMember(p.getName()).addContribution(n/10000);
                 sender.sendMessage(MsgPrefix+"§a成功为"+g.getName()+"§a捐赠"+n+"AC"+"折合为"+(n/10000)+"公会资金");
                 }
             }
             else sender.sendMessage(MsgPrefix+"§c你不在任何公会");
             return true;
         }
+        //以下要求发送者在一个公会之中
+        Guild guild = plugin.getPlayersGuild(sender.getName());
+        if(guild==null){
+            sender.sendMessage(MsgPrefix+"§c你不在任何公会");
+            return true;
+        }
+        if(args[0].equalsIgnoreCase("name")){
+            sender.sendMessage(guild.checkGuildName());
+            return true;
+        }
+        if(args[0].equalsIgnoreCase("chairman")){
+            sender.sendMessage(guild.checkChairman());
+            return true;
+        }
+        if(args[0].equalsIgnoreCase("cash")){
+            sender.sendMessage(guild.checkCash());
+            return true;
+        }
+        if(args[0].equalsIgnoreCase("points")){
+            sender.sendMessage(guild.checkPoints());
+            return true;
+        }
+        if(args[0].equalsIgnoreCase("mems")){
+            sender.sendMessage(guild.checkMemSize());
+            sender.sendMessage(guild.listMembers());
+            return true;
+        }
+        if(args[0].equalsIgnoreCase("amems")){
+            sender.sendMessage(guild.checkAdvancedMemSize());
+            sender.sendMessage(guild.listAdvancedMembers());
+            return true;
+        }
         //会长操作
-        Guild guild=GuildManager.plugin.getChairmansGuild(sender.getName());
+        guild = plugin.getChairmansGuild(sender.getName());
         if(guild==null){
             sender.sendMessage(MsgPrefix+"§c你不是会长");
             return true;
         }
         //以下为会长操作
-        if(args[0].equalsIgnoreCase("members")){
-            sender.sendMessage(guild.listMembers());
-            return true;
-        }
         if(args[0].equalsIgnoreCase("levelup")){
             if(guild.getLevel()>=5){
                 sender.sendMessage(MsgPrefix+"公会已达到满级");
@@ -134,7 +162,7 @@ public class GuildCommand implements CommandExecutor {
         if(args[0].equalsIgnoreCase("add")){
             if(args.length<2)
                 sender.sendMessage(MsgPrefix+"§c缺少参数");
-            else if(guild.getMembers().contains(args[1])){
+            else if(guild.hasPlayer(args[1])){
                 sender.sendMessage(MsgPrefix + "§c该玩家已存在于本公会");
             }
             else if(guild.addMembers(args[1]))
@@ -242,7 +270,7 @@ public class GuildCommand implements CommandExecutor {
         return true;
     }
 
-    Boolean isLegalMoneyToCash(long money){
+    Boolean isLegalMoneyToCash(int money){
         return (money % 10000) == 0;
     }
 }

@@ -18,7 +18,9 @@ import java.util.logging.Logger;
 public final class GuildManager extends JavaPlugin {
 
     public static GuildManager plugin;
-    static HashMap<String , Guild> GuildList=new HashMap<>();
+    private final ConfigurationSection GuildsSec =
+            getConfig().getConfigurationSection("Guilds");
+    private static final HashMap<String , Guild> GuildList=new HashMap<>();
     private static final Logger log = Logger.getLogger("Minecraft");
     private static Economy econ=null;
 
@@ -38,6 +40,7 @@ public final class GuildManager extends JavaPlugin {
         Bukkit.getPluginCommand("gmg").setExecutor(new GuildCommand());
         Bukkit.getPluginCommand("gmgadmin").setExecutor(new GuildAdmin());
         //注册序列化
+        ConfigurationSerialization.registerClass(Member.class);
         ConfigurationSerialization.registerClass(Guild.class);
         //注册监听器
         Bukkit.getPluginManager().registerEvents(new JoinListener(),this);
@@ -47,6 +50,11 @@ public final class GuildManager extends JavaPlugin {
         }
         else {
             getLogger().info("§a公会列表为空");
+            Guild g = newGuild("ra");
+            getConfig().set("Guilds."+"ra",g);
+            saveConfig();
+            removeGuild("ra");
+            saveConfig();
         }
     }
     @Override
@@ -61,6 +69,8 @@ public final class GuildManager extends JavaPlugin {
             loadGuildList();
         else this.getLogger().info("§a公会列表为空");
     }
+
+
     Guild getChairmansGuild(String player){
         for(String i:GuildList.keySet()){
             Guild g= GuildList.get(i);
@@ -82,14 +92,21 @@ public final class GuildManager extends JavaPlugin {
     Guild newGuild(String ID){
         Guild g = new Guild(ID);
         GuildList.put(ID,g);
-        getConfig().set("Guilds."+ID,g);
+        getConfig().set("guilds."+ID,g);
+        saveConfig();
+        return g;
+    }
+    Guild newGuild(String ID, String player){
+        Guild g = new Guild(ID,player);
+        GuildList.put(ID,g);
+        GuildsSec.set(ID,g);
         saveConfig();
         return g;
     }
     //删除公会，从map删除并且从config删除
     Boolean removeGuild(String ID){
         if(GuildList.remove(ID)!=null){
-            getConfig().set("Guilds."+ID,null);
+            GuildsSec.set(ID,null);
             return true;
         }
         return false;
@@ -104,10 +121,6 @@ public final class GuildManager extends JavaPlugin {
         return null;
     }
 
-    void setChairman(String ID,String p){
-        Guild g=GuildList.get(ID);
-        g.setChairman(p);
-    }
     Guild getPlayersGuild(String p){
         for(String key:GuildList.keySet()){
             Guild g = GuildList.get(key);

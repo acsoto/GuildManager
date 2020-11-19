@@ -26,7 +26,7 @@ public class Member implements ConfigurationSerializable {
     }
     //反序列化
     public Member(Map<String, Object> map){
-        this.ID = (String)map.get("ID");
+        this.ID = (String) map.get("ID");
         this.contribution=(int)map.get("contribution");
         this.isAdvanced=(boolean)map.get("isAdvanced");
     }

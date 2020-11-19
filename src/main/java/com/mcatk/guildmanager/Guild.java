@@ -1,7 +1,7 @@
 package com.mcatk.guildmanager;
 
 
-import java.util.ArrayList;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,16 +29,21 @@ public class Guild implements ConfigurationSerializable {
     private HashMap<String , Member> Members= new HashMap<>();
     private int Cash;
 
-    //只有ID的构造方法
+    //构造方法
     public Guild(String ID) {
         this.ID = ID;
         this.GuildName = ID;
-        this.ChairMan = "";
         this.Level = 1;
-        this.MaxPlayers = 5;
-        this.Points = 0;
-        this.RemoveMemLimitFlag=0;
-        this.Cash=0;
+        this.MaxPlayers = 10;
+        this.MaxAdvancedPlayers = 5;
+    }
+    public Guild(String ID, String player) {
+        this.ID = ID;
+        this.GuildName = ID;
+        this.ChairMan = player;
+        this.Level = 1;
+        this.MaxPlayers = 10;
+        this.MaxAdvancedPlayers = 5;
     }
     //实现序列化
     @Override
@@ -49,6 +54,7 @@ public class Guild implements ConfigurationSerializable {
         map.put("ChairMan",ChairMan);
         map.put("Level",Level);
         map.put("MaxPlayers",MaxPlayers);
+        map.put("AdvancedPlayers",AdvancedPlayers);
         map.put("MaxAdvancedPlayers",MaxAdvancedPlayers);
         map.put("Points",Points);
         map.put("RemoveMemLimitFlag",RemoveMemLimitFlag);
@@ -57,19 +63,32 @@ public class Guild implements ConfigurationSerializable {
         map.put("Cash",Cash);
         return map;
     }
-    //反序列化
+    //反序列化构造方法
     public Guild(Map<String, Object> map){
-        this.ID = (String)map.get("ID");
-        this.GuildName=(String)map.get("GuildName");
-        this.ChairMan=(String)map.get("ChairMan");
-        this.Level=(int)map.get("Level");
-        this.MaxPlayers=(int)map.get("MaxPlayers");
-        this.MaxAdvancedPlayers=(int)map.get("MaxAdvancedPlayers");
-        this.Points=(int)map.get("Points");
-        this.RemoveMemLimitFlag=(int)map.get("RemoveMemLimitFlag");
-        this.ResidenceFLag= (boolean) map.get("ResidenceFLag");
-        this.Members=(HashMap<String, Member>) map.get("Members");
-        this.Cash=(int) map.get("Cash");
+        this.ID = map.get("ID") !=null?
+                (String)map.get("ID"):null;
+        this.GuildName=map.get("GuildName") !=null?
+                (String)map.get("GuildName"):"";
+        this.ChairMan=map.get("ChairMan") !=null?
+                (String)map.get("ChairMan"):"";
+        this.Level=map.get("Level") !=null?
+                (int)map.get("Level"):1;
+        this.MaxPlayers=map.get("MaxPlayers") !=null?
+                (int)map.get("MaxPlayers"):10;
+        this.AdvancedPlayers=map.get("AdvancedPlayers") !=null?
+                (int)map.get("AdvancedPlayers"):0;
+        this.MaxAdvancedPlayers=map.get("MaxAdvancedPlayers") !=null?
+                (int)map.get("MaxAdvancedPlayers"):5;
+        this.Points=map.get("Points") !=null?
+                (int)map.get("Points"):0;
+        this.RemoveMemLimitFlag=map.get("RemoveMemLimitFlag") !=null?
+                (int)map.get("RemoveMemLimitFlag"):0;
+        this.ResidenceFLag= map.get("ResidenceFLag") != null && (boolean) map.get("ResidenceFLag");
+        this.Members=map.get("Members") !=null?
+                (HashMap<String, Member>) map.get("Members"):new HashMap<String, Member>();
+        this.Cash=map.get("Cash") !=null?
+                (int)map.get("Cash"):0;
+        saveConfig();
     }
     //成员变量的操作
     String getID(){
@@ -155,6 +174,7 @@ public class Guild implements ConfigurationSerializable {
     Boolean removeMembers(String p){
         Member member = Members.remove(p);
         if(member!=null){
+            removePerm(p);
             saveConfig();
             return true;
         }
@@ -190,7 +210,10 @@ public class Guild implements ConfigurationSerializable {
     Boolean hasPlayer(String p){
         return Members.containsKey(p);
     }
-
+    Boolean isAdvancedPlayer(String p){
+        Member member = getMember(p);
+        return member.isAdvanced();
+    }
     void addRemoveMemLimitFlag(){
         RemoveMemLimitFlag++;
     }
@@ -228,21 +251,53 @@ public class Guild implements ConfigurationSerializable {
         ResidenceFLag=false;
     }
     //查看公会情况
+    String checkGuildName(){
+        return "§2公会名: "+"§a"+GuildName+"\n";
+    }
+    String checkChairman(){
+        return "§2会长: "+"§6"+ChairMan+"\n";
+    }
+    String checkCash(){
+        return "§2公会资金: "+"§6"+Cash+"\n";
+    }
+    String checkPoints(){
+        return "§2公会积分: "+"§6"+Points+"\n";
+    }
+    String checkMemSize(){
+        return "§2公会人数: "+"§a"+Members.size()+"/"+MaxPlayers+"\n";
+    }
+    String checkAdvancedMemSize(){
+        return "§2高级玩家: "+"§a"+AdvancedPlayers+"/"+MaxAdvancedPlayers+"\n";
+    }
     String getStatus(){
         String msg="§2"+"公会ID: "+"§a"+ID+"\n";
-        msg+="§2"+"公会名: "+"§a"+GuildName+"\n";
-        msg+="§2"+"会长: "+"§6"+ChairMan+"\n";
-        msg+="§2"+"公会资金: "+"§6"+Cash+"\n";
-        msg+="§2"+"公会人数: "+"§a"+Members.size()+"/"+MaxPlayers+"\n";
-        msg+="§2"+"高级玩家: "+"§a"+AdvancedPlayers+"/"+MaxAdvancedPlayers+"\n";
-        msg+=listMembers();
+        msg+= checkGuildName();
+        msg+= checkChairman();
+        msg+= checkCash();
+        msg+= checkPoints();
+        msg+= checkMemSize();
+        msg+= checkAdvancedMemSize();
+        msg+= listMembers();
         return msg;
     }
     //输出成员列表
     String listMembers(){
-        StringBuilder msg= new StringBuilder("§2成员列表: \n");
+        StringBuilder msg= new StringBuilder("§2成员列表: ");
+        if(Members.size()==0){
+            msg.append("[空]");
+            return msg.toString();
+        }
         for(String p:Members.keySet()){
-            msg.append("§e").append(p).append("\n");
+            msg.append("§e").append(p).append(", ");
+        }
+        return msg.toString();
+    }
+    //输出高级成员列表
+    String listAdvancedMembers(){
+        StringBuilder msg= new StringBuilder("§2高级成员列表: ");
+        for(String p:Members.keySet()){
+            if(getMember(p).isAdvanced())
+                msg.append("§6").append(p).append(", ");
         }
         return msg.toString();
     }

@@ -16,7 +16,7 @@ public class GuildAdmin implements CommandExecutor {
         if(args.length==0){
             sender.sendMessage("§e------------ADMIN帮助------------");
             sender.sendMessage("§a/gmgadmin reload §2重载插件");
-            sender.sendMessage("§a/gmgadmin create <guild> §2创建公会");
+            sender.sendMessage("§a/gmgadmin create <guild> (player)§2创建公会");
             sender.sendMessage("§a/gmgadmin remove <guild> §2移除公会");
             sender.sendMessage("§a/gmgadmin check <guild> §2查看公会情况");
             sender.sendMessage("§a/gmgadmin rename <guild> <player> §2修改公会名");
@@ -37,12 +37,18 @@ public class GuildAdmin implements CommandExecutor {
             sender.sendMessage(MsgPrefix+"缺少参数");
             return true;
         }
-        Guild guild = GuildManager.plugin.getGuild(args[1]);
         if(args[0].equalsIgnoreCase("create")){
-            GuildManager.plugin.newGuild(args[1]);
-            sender.sendMessage(MsgPrefix+"创建成功");
+            if(args.length==2){
+                plugin.newGuild(args[1]);
+                sender.sendMessage(MsgPrefix+"创建成功");
+            }
+            else if(args.length==3){
+                plugin.newGuild(args[1],args[2]);
+                sender.sendMessage(MsgPrefix+"创建成功");
+            }
             return true;
         }
+        Guild guild = plugin.getGuild(args[1]);
         if(args[0].equalsIgnoreCase("remove")){
             if(GuildManager.plugin.removeGuild(args[1]))
                 sender.sendMessage(MsgPrefix+"删除成功");
@@ -69,11 +75,11 @@ public class GuildAdmin implements CommandExecutor {
             return true;
         }
         if(args[0].equalsIgnoreCase("sc")){
-            if (args.length<3){
-                sender.sendMessage(MsgPrefix+"§c缺少参数");
+            if (args.length!=3){
+                sender.sendMessage(MsgPrefix+"§c参数有误");
                 return true;
             }
-            GuildManager.plugin.setChairman(args[1],args[2]);
+            guild.setChairman(args[2]);
             sender.sendMessage(MsgPrefix+"设置成功");
             return true;
         }

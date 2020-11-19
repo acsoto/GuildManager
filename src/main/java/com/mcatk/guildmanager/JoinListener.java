@@ -25,10 +25,9 @@ public class JoinListener implements Listener {
                 player.sendMessage("§a"+p);
                 }
             }
-        }
-        if(guild.hasAdvancedPlayer(player.getName())){
-            Member member = guild.get
-            player.sendMessage(MsgPrefix+"§2您是公会高级成员，可以前往公会广场");
+            if(guild.isAdvancedPlayer(player.getName())){
+                player.sendMessage(MsgPrefix+"§2您是公会高级成员，可以前往公会广场");
+            }
         }
     }
 }
