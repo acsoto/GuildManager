@@ -99,7 +99,7 @@ public final class GuildManager extends JavaPlugin {
     Guild newGuild(String ID, String player){
         Guild g = new Guild(ID,player);
         GuildList.put(ID,g);
-        GuildsSec.set(ID,g);
+        GuildsSec.set("guilds."+ID,g);
         saveConfig();
         return g;
     }
@@ -151,6 +151,16 @@ public final class GuildManager extends JavaPlugin {
             GuildList.put(key,g);
             g.resetRemoveMemLimitFlag();
             this.getLogger().info("§a成功载入公会"+g.getName());
+        }
+    }
+
+    void tpAll(Guild guild,Player player){
+        for (Player p :
+                getServer().getOnlinePlayers()) {
+            String pName = p.getName();
+            if(guild.hasPlayer(pName)){
+                player.chat("/tpahere "+pName);
+            }
         }
     }
     //启动Vault依赖

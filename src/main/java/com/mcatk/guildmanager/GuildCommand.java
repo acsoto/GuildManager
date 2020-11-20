@@ -7,8 +7,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 public class GuildCommand implements CommandExecutor {
-    String MsgPrefix = "§d§l系统 §7>>> §a";
-    String ErrorPrefix = "§d§l系统 §7>>> §4[错误]§c";
+    final String MsgPrefix = "§d§l系统 §7>>> §a";
+    final String ErrorPrefix = "§d§l系统 §7>>> §4[错误]§c";
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if(args.length==0){
@@ -41,7 +41,11 @@ public class GuildCommand implements CommandExecutor {
                 sender.sendMessage(MsgPrefix+"§c缺少参数");
             else if(GuildManager.plugin.hasGuild(args[1])){
                 Guild guild= GuildManager.plugin.getGuild(args[1]);
-                sender.sendMessage(guild.getStatus());
+                if(guild==null){
+                    sender.sendMessage(ErrorPrefix+"不存在此公会");
+                    return true;
+                }
+                sender.sendMessage(guild.checkStatus());
             }
             else sender.sendMessage(MsgPrefix+"§c不存在此公会");
             return true;
@@ -90,7 +94,9 @@ public class GuildCommand implements CommandExecutor {
                 }
                 if(plugin.takePlayerMoney(p,n)) {
                 g.addCash(n/10000);
-                g.getMember(p.getName()).addContribution(n/10000);
+                //add contribution and check if is full.
+                if(!g.getMember(p.getName()).addContribution(n/10000))
+                    sender.sendMessage(MsgPrefix+"您的贡献值已满，无法继续增长");
                 sender.sendMessage(MsgPrefix+"§a成功为"+g.getName()+"§a捐赠"+n+"AC"+"折合为"+(n/10000)+"公会资金");
                 }
             }
@@ -257,11 +263,17 @@ public class GuildCommand implements CommandExecutor {
         }
         if(args[0].equalsIgnoreCase("buytptickets")){
             if(guild.getCash()<=0){
-                sender.sendMessage(ErrorPrefix+"资金不足");
+                sender.sendMessage(ErrorPrefix+"资金不足，请重试");
+                return true;
+            }
+            // check if inventory is full
+            if(player.getInventory().firstEmpty()==-1){
+                sender.sendMessage(ErrorPrefix+"背包已满，请重试");
+                return true;
             }
             guild.takeCash(1);
-            //to do check if man
             player.getInventory().addItem(GuildItem.getTpTicket());
+            return true;
         }
         if(args[0].equalsIgnoreCase("tpall")){
             ItemStack item = player.getInventory().getItemInMainHand();
@@ -272,6 +284,7 @@ public class GuildCommand implements CommandExecutor {
             int amount = item.getAmount();
             amount--;
             item.setAmount(amount);
+            plugin.tpAll(guild,player);
             sender.sendMessage(MsgPrefix+"成功发起召集");
             return true;
         }

@@ -64,6 +64,7 @@ public class Guild implements ConfigurationSerializable {
         return map;
     }
     //反序列化构造方法
+    @SuppressWarnings("unchecked")
     public Guild(Map<String, Object> map){
         this.ID = map.get("ID") !=null?
                 (String)map.get("ID"):null;
@@ -85,7 +86,7 @@ public class Guild implements ConfigurationSerializable {
                 (int)map.get("RemoveMemLimitFlag"):0;
         this.ResidenceFLag= map.get("ResidenceFLag") != null && (boolean) map.get("ResidenceFLag");
         this.Members=map.get("Members") !=null?
-                (HashMap<String, Member>) map.get("Members"):new HashMap<String, Member>();
+                (HashMap<String, Member>) map.get("Members"):new HashMap<>();
         this.Cash=map.get("Cash") !=null?
                 (int)map.get("Cash"):0;
         saveConfig();
@@ -269,7 +270,7 @@ public class Guild implements ConfigurationSerializable {
     String checkAdvancedMemSize(){
         return "§2高级玩家: "+"§a"+AdvancedPlayers+"/"+MaxAdvancedPlayers+"\n";
     }
-    String getStatus(){
+    String checkStatus(){
         String msg="§2"+"公会ID: "+"§a"+ID+"\n";
         msg+= checkGuildName();
         msg+= checkChairman();

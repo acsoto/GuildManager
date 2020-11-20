@@ -5,7 +5,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
 public class GuildAdmin implements CommandExecutor {
-    String MsgPrefix = "§d§l系统 §7>>> §a";
+    final String MsgPrefix = "§d§l系统 §7>>> §a";
+    final String ErrorPrefix = "§d§l系统 §7>>> §4[错误]§c";
     GuildManager plugin = GuildManager.plugin;
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -49,6 +50,10 @@ public class GuildAdmin implements CommandExecutor {
             return true;
         }
         Guild guild = plugin.getGuild(args[1]);
+        if(guild==null){
+            sender.sendMessage(ErrorPrefix+"不存在此公会");
+            return true;
+        }
         if(args[0].equalsIgnoreCase("remove")){
             if(GuildManager.plugin.removeGuild(args[1]))
                 sender.sendMessage(MsgPrefix+"删除成功");
@@ -57,7 +62,7 @@ public class GuildAdmin implements CommandExecutor {
         }
         if(args[0].equalsIgnoreCase("check")){
             if(GuildManager.plugin.hasGuild(args[1])){
-                sender.sendMessage(guild.getStatus());
+                sender.sendMessage(guild.checkStatus());
             }
             else sender.sendMessage(MsgPrefix+"§c不存在此公会");
             return true;
