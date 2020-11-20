@@ -18,8 +18,6 @@ import java.util.logging.Logger;
 public final class GuildManager extends JavaPlugin {
 
     public static GuildManager plugin;
-    private final ConfigurationSection GuildsSec =
-            getConfig().getConfigurationSection("Guilds");
     private static final HashMap<String , Guild> GuildList=new HashMap<>();
     private static final Logger log = Logger.getLogger("Minecraft");
     private static Economy econ=null;
@@ -51,8 +49,6 @@ public final class GuildManager extends JavaPlugin {
         else {
             getLogger().info("§a公会列表为空");
             Guild g = newGuild("ra");
-            getConfig().set("Guilds."+"ra",g);
-            saveConfig();
             removeGuild("ra");
             saveConfig();
         }
@@ -92,21 +88,21 @@ public final class GuildManager extends JavaPlugin {
     Guild newGuild(String ID){
         Guild g = new Guild(ID);
         GuildList.put(ID,g);
-        getConfig().set("guilds."+ID,g);
+        getConfig().set("Guilds."+ID,g);
         saveConfig();
         return g;
     }
     Guild newGuild(String ID, String player){
         Guild g = new Guild(ID,player);
         GuildList.put(ID,g);
-        GuildsSec.set("guilds."+ID,g);
+        getConfig().set("Guilds."+ID,g);
         saveConfig();
         return g;
     }
     //删除公会，从map删除并且从config删除
     Boolean removeGuild(String ID){
         if(GuildList.remove(ID)!=null){
-            GuildsSec.set(ID,null);
+            getConfig().set("Guilds."+ID,null);
             return true;
         }
         return false;
@@ -135,12 +131,12 @@ public final class GuildManager extends JavaPlugin {
     }
     void setWarp(Player player , String g){
         player.setOp(true);
-        player.chat("/setwarp guild_"+g);
+        player.chat("/setwarp Guild_"+g);
         player.setOp(false);
 
     }
     void delWarp(String g){
-        Bukkit.dispatchCommand(Bukkit.getConsoleSender(),"/delwarp guild_"+g);
+        Bukkit.dispatchCommand(Bukkit.getConsoleSender(),"/delwarp Guild_"+g);
     }
 
     void loadGuildList(){
