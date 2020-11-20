@@ -4,6 +4,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 public class GuildCommand implements CommandExecutor {
     String MsgPrefix = "§d§l系统 §7>>> §a";
@@ -18,7 +19,7 @@ public class GuildCommand implements CommandExecutor {
             sender.sendMessage("§a/gmg s §2传送到自己的公会主城");
             sender.sendMessage("§a/gmg offer <AC点> §2捐助公会资金 1wAC = 1GuildCash");
             sender.sendMessage("§e------------会长帮助------------");
-            sender.sendMessage("§a/gmg setname <name>  §2公会改名");
+            sender.sendMessage("§a/gmg setname <name>  §2公会名称设置");
             sender.sendMessage("§a/gmg levelup  §2公会升级");
             sender.sendMessage("§a/gmg add <player>  §2增加玩家");
             sender.sendMessage("§a/gmg remove <player>  §2删除玩家");
@@ -134,6 +135,7 @@ public class GuildCommand implements CommandExecutor {
             sender.sendMessage(MsgPrefix+"§c你不是会长");
             return true;
         }
+        Player player = (Player) sender;
         //以下为会长操作
         if(args[0].equalsIgnoreCase("levelup")){
             if(guild.getLevel()>=5){
@@ -252,6 +254,26 @@ public class GuildCommand implements CommandExecutor {
         }
         if(args[0].equalsIgnoreCase("setwarp")){
             plugin.setWarp((Player)sender,guild.getID());
+        }
+        if(args[0].equalsIgnoreCase("buytptickets")){
+            if(guild.getCash()<=0){
+                sender.sendMessage(ErrorPrefix+"资金不足");
+            }
+            guild.takeCash(1);
+            //to do check if man
+            player.getInventory().addItem(GuildItem.getTpTicket());
+        }
+        if(args[0].equalsIgnoreCase("tpall")){
+            ItemStack item = player.getInventory().getItemInMainHand();
+            if(!GuildItem.oneOfThemIsTpTicket(item)){
+                sender.sendMessage(ErrorPrefix+"请手持召集令");
+                return true;
+            }
+            int amount = item.getAmount();
+            amount--;
+            item.setAmount(amount);
+            sender.sendMessage(MsgPrefix+"成功发起召集");
+            return true;
         }
         if(args[0].equalsIgnoreCase("delwarp")){
             plugin.delWarp(guild.getID());
