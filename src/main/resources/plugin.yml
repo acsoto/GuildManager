@@ -4,6 +4,7 @@ main: com.mcatk.guildmanager.GuildManager
 authors: [ soto ]
 website: www.mcatk.com
 depend: [Vault]
+softdepend: [PlaceholderAPI]
 commands:
   gmg:
     description: main command

@@ -29,11 +29,15 @@ public final class GuildManager extends JavaPlugin {
             getServer().getPluginManager().disablePlugin(this);
             return;
         }
+        if(Bukkit.getPluginManager().getPlugin("PlaceholderAPI")!=null){
+            getLogger().info("检测到PlaceholderAPI，已启动PAPI变量");
+            new GuildPAPI(this).register();
+        }
         //实例化
         plugin=this;
         //生成配置文件
         saveDefaultConfig();
-        getLogger().info("§a公会管理插件已启动-soto");
+        getLogger().info("公会管理插件已启动-soto");
         //注册指令
         Bukkit.getPluginCommand("gmg").setExecutor(new GuildCommand());
         Bukkit.getPluginCommand("gmgadmin").setExecutor(new GuildAdmin());
@@ -47,7 +51,7 @@ public final class GuildManager extends JavaPlugin {
             loadGuildList();
         }
         else {
-            getLogger().info("§a公会列表为空");
+            getLogger().info("公会列表为空");
             Guild g = newGuild("ra");
             removeGuild("ra");
             saveConfig();
@@ -55,7 +59,7 @@ public final class GuildManager extends JavaPlugin {
     }
     @Override
     public void onDisable() {
-        getLogger().info("§a公会管理插件已关闭-soto");
+        getLogger().info("公会管理插件已关闭-soto");
         saveConfig();
     }
 
@@ -63,7 +67,7 @@ public final class GuildManager extends JavaPlugin {
         GuildList.clear();
         if(getConfig().contains("Guilds"))
             loadGuildList();
-        else this.getLogger().info("§a公会列表为空");
+        else this.getLogger().info("公会列表为空");
     }
 
 
