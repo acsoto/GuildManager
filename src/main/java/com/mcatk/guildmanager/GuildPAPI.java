@@ -6,7 +6,7 @@ import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 //The class is used for PAPI
 public class GuildPAPI extends PlaceholderExpansion {
 
-    private GuildManager plugin;
+    private final GuildManager plugin;
 
     public GuildPAPI(GuildManager plugin){
         this.plugin = plugin;
@@ -30,7 +30,7 @@ public class GuildPAPI extends PlaceholderExpansion {
 
     @Override
     public String getIdentifier(){
-        return "GuildManager";
+        return "guildmanager";
     }
 
     public String getVersion(){

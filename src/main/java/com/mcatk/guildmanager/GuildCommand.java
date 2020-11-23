@@ -7,8 +7,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 public class GuildCommand implements CommandExecutor {
-    final String MsgPrefix = "§d§l系统 §7>>> §a";
-    final String ErrorPrefix = "§d§l系统 §7>>> §4[错误]§c";
+    final String MsgPrefix = "§6§l系统 §7>>> §a";
+    final String ErrorPrefix = "§4§l错误 §7>>> §c";
+    GuildManager plugin = GuildManager.plugin;
+    GuildItem guildItem = new GuildItem();
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if(args.length==0){
@@ -18,20 +20,22 @@ public class GuildCommand implements CommandExecutor {
             sender.sendMessage("§a/gmg tp <guild> §2传送到某公会主城");
             sender.sendMessage("§a/gmg s §2传送到自己的公会主城");
             sender.sendMessage("§a/gmg offer <AC点> §2捐助公会资金 1wAC = 1GuildCash");
-            sender.sendMessage("§e------------会长帮助------------");
-            sender.sendMessage("§a/gmg setname <name>  §2公会名称设置");
-            sender.sendMessage("§a/gmg levelup  §2公会升级");
-            sender.sendMessage("§a/gmg add <player>  §2增加玩家");
-            sender.sendMessage("§a/gmg remove <player>  §2删除玩家");
-            sender.sendMessage("§a/gmg adda <player>  §2增加玩家到公会广场名单");
-            sender.sendMessage("§a/gmg removea <player>  §2从公会广场名单删除玩家");
-            sender.sendMessage("§a/gmg res create §2公会圈地(工具选点后输入该指令)");
-            sender.sendMessage("§a/gmg res remove  §2删除公会领地");
-            sender.sendMessage("§a/gmg setwarp  §2设置公会领地标");
-            sender.sendMessage("§a/gmg delwarp  §2删除公会领地标");
+            if(plugin.getChairmansGuild(sender.getName())!=null) {
+                sender.sendMessage("§e------------会长帮助------------");
+                sender.sendMessage("§a/gmg setname <name>  §2公会名称设置");
+                sender.sendMessage("§a/gmg levelup  §2公会升级");
+                sender.sendMessage("§a/gmg add <player>  §2增加玩家");
+                sender.sendMessage("§a/gmg remove <player>  §2删除玩家");
+                sender.sendMessage("§a/gmg adda <player>  §2增加玩家到公会广场名单");
+                sender.sendMessage("§a/gmg removea <player>  §2从公会广场名单删除玩家");
+                sender.sendMessage("§a/gmg res create §2公会圈地(工具选点后输入该指令)");
+                sender.sendMessage("§a/gmg res remove  §2删除公会领地");
+                sender.sendMessage("§a/gmg setwarp  §2设置公会领地标");
+                sender.sendMessage("§a/gmg delwarp  §2删除公会领地标");
+                sender.sendMessage("§a/gmg buytpall  §2购买公会召集令");
+            }
             return true;
         }
-        GuildManager plugin = GuildManager.plugin;
         if(args[0].equalsIgnoreCase("list")){
             GuildManager.plugin.listGuilds(sender);
             return true;
@@ -61,52 +65,53 @@ public class GuildCommand implements CommandExecutor {
             else sender.sendMessage(MsgPrefix+"§c不存在此公会");
             return true;
         }
-        if(args[0].equalsIgnoreCase("s")){
-            String p = sender.getName();
-            Guild g = GuildManager.plugin.getPlayersGuild(p);
-            if(g!=null){
-                plugin.tpGuild(g.getName(),p);
-                sender.sendMessage(MsgPrefix+"§a传送成功");
-            }
-            else sender.sendMessage(MsgPrefix+"§c你不在任何公会");
-            return true;
-        }
-        if(args[0].equalsIgnoreCase("offer")){
-            if(!(sender instanceof Player)){
-                sender.sendMessage(MsgPrefix+"§c该指令只能由玩家发出");
-                return true;
-            }
-            if(args.length!=2) {
-                sender.sendMessage(MsgPrefix + "§c参数错误");
-                return true;
-            }
-            Player p = (Player)sender;
-            Guild g = GuildManager.plugin.getPlayersGuild(p.getName());
-            if(g!=null){
-                if(!isLegalMoney(args[1])){
-                    sender.sendMessage(MsgPrefix+"§c必须是整数！");
-                    return true;
-                }
-                int n = Integer.parseInt(args[1]);
-                if(!isLegalMoneyToCash(n)){
-                    sender.sendMessage(MsgPrefix+"§c必须是10000的整数倍！");
-                    return true;
-                }
-                if(plugin.takePlayerMoney(p,n)) {
-                g.addCash(n/10000);
-                //add contribution and check if is full.
-                if(!g.getMember(p.getName()).addContribution(n/10000))
-                    sender.sendMessage(MsgPrefix+"您的贡献值已满，无法继续增长");
-                sender.sendMessage(MsgPrefix+"§a成功为"+g.getName()+"§a捐赠"+n+"AC"+"折合为"+(n/10000)+"公会资金");
-                }
-            }
-            else sender.sendMessage(MsgPrefix+"§c你不在任何公会");
-            return true;
-        }
         //以下要求发送者在一个公会之中
         Guild guild = plugin.getPlayersGuild(sender.getName());
         if(guild==null){
             sender.sendMessage(MsgPrefix+"§c你不在任何公会");
+            return true;
+        }
+        if(args[0].equalsIgnoreCase("s")){
+            if(!(sender instanceof Player)){
+                sender.sendMessage(ErrorPrefix+"§c该指令只能由玩家发出");
+                return true;
+            }
+            plugin.tpGuild(guild.getName(),sender.getName());
+            sender.sendMessage(MsgPrefix+"§a传送成功");
+            return true;
+        }
+        if(args[0].equalsIgnoreCase("offer")){
+            if(!(sender instanceof Player)){
+                sender.sendMessage(ErrorPrefix+"§c该指令只能由玩家发出");
+                return true;
+            }
+            String p =sender.getName();
+            if(args.length!=2) {
+                sender.sendMessage(MsgPrefix + "§c参数错误");
+                return true;
+            }
+            if(!isLegalMoney(args[1])){
+                sender.sendMessage(MsgPrefix+"§c必须是整数！");
+                return true;
+            }
+            int n;
+            try{
+                n = Integer.parseInt(args[1]);
+            }catch (ClassCastException e){
+                sender.sendMessage(MsgPrefix+"§c必须是整数！");
+                return true;
+            }
+            if(!isLegalMoneyToCash(n)){
+                sender.sendMessage(MsgPrefix+"§c必须是10000的整数倍！");
+                return true;
+            }
+            if(plugin.takePlayerMoney((Player) sender,n)) {
+            guild.addCash(n/10000);
+            //add contribution and check if is full.
+            if(!guild.getMember(p).addContribution(n/10000))
+                sender.sendMessage(MsgPrefix+"您的贡献值已满，无法继续增长");
+            sender.sendMessage(MsgPrefix+"§a成功为"+guild.getName()+"§a捐赠"+n+"AC"+"折合为"+(n/10000)+"公会资金");
+            }
             return true;
         }
         if(args[0].equalsIgnoreCase("name")){
@@ -156,7 +161,7 @@ public class GuildCommand implements CommandExecutor {
             }
             if(value==2) {
                 sender.sendMessage(MsgPrefix + "公会资金不足，无法升级");
-                sender.sendMessage("需要资金："+guild.getLevel()*10+20);
+                sender.sendMessage("需要资金："+(guild.getLevel()*10+20));
                 sender.sendMessage("实际资金："+guild.getCash());
             }
             if(value==3){
@@ -180,8 +185,14 @@ public class GuildCommand implements CommandExecutor {
             return true;
         }
         if (args[0].equalsIgnoreCase("remove")){
-            if(args.length<2)
-                sender.sendMessage(MsgPrefix+"§c缺少参数");
+            if(args.length<2) {
+                sender.sendMessage(MsgPrefix + "§c缺少参数");
+                return true;
+            }
+            if(args[1].equalsIgnoreCase(sender.getName())){
+                sender.sendMessage(ErrorPrefix + "§c不能添加你自己");
+                return true;
+            }
             else if(guild.removeMembers(args[1])) {
                 sender.sendMessage(MsgPrefix + "删除成功");
             }
@@ -261,24 +272,44 @@ public class GuildCommand implements CommandExecutor {
         if(args[0].equalsIgnoreCase("setwarp")){
             plugin.setWarp((Player)sender,guild.getID());
         }
-        if(args[0].equalsIgnoreCase("buytptickets")){
-            if(guild.getCash()<=0){
-                sender.sendMessage(ErrorPrefix+"资金不足，请重试");
+        if(args[0].equalsIgnoreCase("buytpall")){
+            int flag;
+            if(args.length==1){
+                flag = guildItem.buyTpTickets(guild,player,1);
+            }
+            else if(args.length==2){
+                try {
+                    int n = Integer.parseInt(args[1]);
+                    flag = guildItem.buyTpTickets(guild,player,n);
+                }catch (ClassCastException e){
+                    sender.sendMessage(ErrorPrefix+"请输入整数");
+                    return true;
+                }
+            }
+            else {
+                sender.sendMessage(MsgPrefix + "§c参数有误");
                 return true;
             }
-            // check if inventory is full
-            if(player.getInventory().firstEmpty()==-1){
-                sender.sendMessage(ErrorPrefix+"背包已满，请重试");
-                return true;
+            switch (flag){
+                case 0:
+                    sender.sendMessage(ErrorPrefix + "最多购买10份");
+                    break;
+                case 1:
+                    sender.sendMessage(ErrorPrefix + "资金不足");
+                    break;
+                case 2:
+                    sender.sendMessage(ErrorPrefix + "背包已满，请重试");
+                    break;
+                case 3:
+                    sender.sendMessage(MsgPrefix + "购买成功：公会召集令x5");
+                    break;
             }
-            guild.takeCash(1);
-            player.getInventory().addItem(GuildItem.getTpTicket());
             return true;
         }
         if(args[0].equalsIgnoreCase("tpall")){
             ItemStack item = player.getInventory().getItemInMainHand();
-            if(!GuildItem.oneOfThemIsTpTicket(item)){
-                sender.sendMessage(ErrorPrefix+"请手持召集令");
+            if(!guildItem.oneOfThemIsTpTicket(item)){
+                sender.sendMessage(ErrorPrefix+"在你的背包里没有找到召集令");
                 return true;
             }
             int amount = item.getAmount();

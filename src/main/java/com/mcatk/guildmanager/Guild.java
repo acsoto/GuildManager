@@ -40,7 +40,7 @@ public class Guild implements ConfigurationSerializable {
     public Guild(String ID, String player) {
         this.ID = ID;
         this.GuildName = ID;
-        this.ChairMan = player;
+        setChairman(player);
         this.Level = 1;
         this.MaxPlayers = 10;
         this.MaxAdvancedPlayers = 5;
@@ -104,8 +104,8 @@ public class Guild implements ConfigurationSerializable {
     }
     //会长操作
     void setChairman(String p){
-
         ChairMan=p;
+        addMembers(p);
         saveConfig();
     }
     String getChairman(){

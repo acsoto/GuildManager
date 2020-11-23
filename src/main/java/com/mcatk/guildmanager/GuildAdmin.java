@@ -5,8 +5,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
 public class GuildAdmin implements CommandExecutor {
-    final String MsgPrefix = "§d§l系统 §7>>> §a";
-    final String ErrorPrefix = "§d§l系统 §7>>> §4[错误]§c";
+    final String MsgPrefix = "§6§l系统 §7>>> §a";
+    final String ErrorPrefix = "§4§l错误 §7>>> §c";
     GuildManager plugin = GuildManager.plugin;
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
