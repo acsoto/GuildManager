@@ -20,6 +20,7 @@ public class GuildCommand implements CommandExecutor {
             sender.sendMessage("§a/gmg tp <guild> §2传送到某公会主城");
             sender.sendMessage("§a/gmg s §2传送到自己的公会主城");
             sender.sendMessage("§a/gmg offer <AC点> §2捐助公会资金 1wAC = 1GuildCash");
+            sender.sendMessage("§a/gmg create <ID> §2创建公会（ID必须为英文）");
             if(plugin.getChairmansGuild(sender.getName())!=null) {
                 sender.sendMessage("§e------------会长帮助------------");
                 sender.sendMessage("§a/gmg setname <name>  §2公会名称设置");
@@ -65,6 +66,30 @@ public class GuildCommand implements CommandExecutor {
             else sender.sendMessage(MsgPrefix+"§c不存在此公会");
             return true;
         }
+        if(args[0].equalsIgnoreCase("create")){
+            if(args.length!=2){
+                sender.sendMessage(ErrorPrefix+"参数错误");
+                return true;
+            }
+            if(!isAlphabet(args[1])){
+                sender.sendMessage(ErrorPrefix+"ID只能是小写字母");
+                return false;
+            }
+            Guild guild = plugin.getPlayersGuild(sender.getName());
+            if(guild!=null){
+                sender.sendMessage(ErrorPrefix+"你已在公会"+guild.getName());
+                return true;
+            }
+            if(!(sender instanceof Player)){
+                sender.sendMessage(ErrorPrefix+"§c该指令只能由玩家发出");
+                return true;
+            }
+            if(plugin.takePlayerMoney((Player)sender,500000)){
+                plugin.newGuild(args[1],sender.getName());
+            }
+            else sender.sendMessage(ErrorPrefix+"AC点不足！");
+            return true;
+        }
         //以下要求发送者在一个公会之中
         Guild guild = plugin.getPlayersGuild(sender.getName());
         if(guild==null){
@@ -108,10 +133,11 @@ public class GuildCommand implements CommandExecutor {
             if(plugin.takePlayerMoney((Player) sender,n)) {
             guild.addCash(n/10000);
             //add contribution and check if is full.
-            if(!guild.getMember(p).addContribution(n/10000))
-                sender.sendMessage(MsgPrefix+"您的贡献值已满，无法继续增长");
-            sender.sendMessage(MsgPrefix+"§a成功为"+guild.getName()+"§a捐赠"+n+"AC"+"折合为"+(n/10000)+"公会资金");
+                if(!guild.getMember(p).addContribution(n/10000))
+                    sender.sendMessage(MsgPrefix+"您的贡献值已满，无法继续增长");
+                sender.sendMessage(MsgPrefix+"§a成功为"+guild.getName()+"§a捐赠"+n+"AC"+"折合为"+(n/10000)+"公会资金");
             }
+            else sender.sendMessage(ErrorPrefix+"AC点不足！");
             return true;
         }
         if(args[0].equalsIgnoreCase("name")){
@@ -338,5 +364,14 @@ public class GuildCommand implements CommandExecutor {
 
     Boolean isLegalMoneyToCash(int money){
         return (money % 10000) == 0;
+    }
+
+    Boolean isAlphabet(String str){
+        for (int i = 0; i < str.length(); i++) {
+            char c = str.charAt(i);
+            if(!(c>='a'&&c<='z'))
+                return false;
+        }
+        return true;
     }
 }
