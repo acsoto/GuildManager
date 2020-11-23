@@ -18,7 +18,10 @@ public class GuildCommand implements CommandExecutor {
             sender.sendMessage("§a/gmg list  §2公会列表");
             sender.sendMessage("§a/gmg check <ID>  §2查看公会详情");
             sender.sendMessage("§a/gmg tp <guild> §2传送到某公会主城");
-            sender.sendMessage("§a/gmg s §2传送到自己的公会主城");
+            sender.sendMessage("§a/gmg t §2传送到自己的公会主城");
+            sender.sendMessage("§a/gmg s §2查看公会状态");
+            sender.sendMessage("§a/gmg mems §2查看公会成员列表");
+            sender.sendMessage("§a/gmg amems §2查看公会名高级成员列表");
             sender.sendMessage("§a/gmg offer <AC点> §2捐助公会资金 1wAC = 1GuildCash");
             sender.sendMessage("§a/gmg create <ID> §2创建公会（ID必须为英文）");
             if(plugin.getChairmansGuild(sender.getName())!=null) {
@@ -96,7 +99,7 @@ public class GuildCommand implements CommandExecutor {
             sender.sendMessage(MsgPrefix+"§c你不在任何公会");
             return true;
         }
-        if(args[0].equalsIgnoreCase("s")){
+        if(args[0].equalsIgnoreCase("t")){
             if(!(sender instanceof Player)){
                 sender.sendMessage(ErrorPrefix+"§c该指令只能由玩家发出");
                 return true;
@@ -138,6 +141,10 @@ public class GuildCommand implements CommandExecutor {
                 sender.sendMessage(MsgPrefix+"§a成功为"+guild.getName()+"§a捐赠"+n+"AC"+"折合为"+(n/10000)+"公会资金");
             }
             else sender.sendMessage(ErrorPrefix+"AC点不足！");
+            return true;
+        }
+        if(args[0].equalsIgnoreCase("s")){
+            sender.sendMessage(guild.checkStatus());
             return true;
         }
         if(args[0].equalsIgnoreCase("name")){
@@ -298,6 +305,9 @@ public class GuildCommand implements CommandExecutor {
         if(args[0].equalsIgnoreCase("setwarp")){
             plugin.setWarp((Player)sender,guild.getID());
         }
+        if(args[0].equalsIgnoreCase("delwarp")){
+            plugin.delWarp(guild.getID());
+        }
         if(args[0].equalsIgnoreCase("buytpall")){
             int flag;
             if(args.length==1){
@@ -344,9 +354,6 @@ public class GuildCommand implements CommandExecutor {
             plugin.tpAll(guild,player);
             sender.sendMessage(MsgPrefix+"成功发起召集");
             return true;
-        }
-        if(args[0].equalsIgnoreCase("delwarp")){
-            plugin.delWarp(guild.getID());
         }
         sender.sendMessage(MsgPrefix+"§c指令输入错误");
         return false;

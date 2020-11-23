@@ -6,9 +6,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Member implements ConfigurationSerializable {
-    private final String ID;
-    private int contribution;
-    private boolean isAdvanced;
+    private final String ID;     //标记玩家ID
+    private int contribution;    //贡献度
+    private boolean isAdvanced;  //是否为高级成员
     //构造方法
     Member(String ID){
         this.ID = ID;

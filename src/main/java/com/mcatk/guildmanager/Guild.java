@@ -16,18 +16,18 @@ public class Guild implements ConfigurationSerializable {
     private final ConfigurationSection GuildsSec =
             plugin.getConfig().getConfigurationSection("Guilds");
     //需要保存的成员变量
-    private final String ID;
-    private String GuildName;
-    private String ChairMan;
-    private int Level;
-    private int MaxPlayers;
-    private int AdvancedPlayers;
-    private int MaxAdvancedPlayers;
-    private int Points;
-    private int RemoveMemLimitFlag;
-    private boolean ResidenceFLag;
-    private HashMap<String , Member> Members= new HashMap<>();
-    private int Cash;
+    private final String ID; //标记ID
+    private String GuildName; //公会名
+    private String ChairMan; //会长
+    private int Level; //等级
+    private int MaxPlayers; //最大成员数
+    private int AdvancedPlayers; //高级成员数
+    private int MaxAdvancedPlayers; //最大高级成员数
+    private int Points; //积分
+    private int RemoveMemLimitFlag; //成员删除限制flag
+    private boolean ResidenceFLag; //是否拥有领地
+    private HashMap<String , Member> Members= new HashMap<>(); //成员
+    private int Cash; //资金
 
     //构造方法
     public Guild(String ID) {

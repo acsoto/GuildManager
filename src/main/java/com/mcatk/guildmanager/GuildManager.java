@@ -13,19 +13,19 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 
 
 import java.util.HashMap;
-import java.util.logging.Logger;
 
 public final class GuildManager extends JavaPlugin {
 
     public static GuildManager plugin;
     private static final HashMap<String , Guild> GuildList=new HashMap<>();
-    private static final Logger log = Logger.getLogger("Minecraft");
     private static Economy econ=null;
+
+    private int reqCreateGuildMoney;
 
     @Override
     public void onEnable() {
         if (!setupEconomy() ) {
-            log.severe(String.format("[%s] - 未找到前置插件Vault", getDescription().getName()));
+            getLogger().warning("未找到前置插件Vault，即将关闭插件");
             getServer().getPluginManager().disablePlugin(this);
             return;
         }
@@ -46,6 +46,13 @@ public final class GuildManager extends JavaPlugin {
         ConfigurationSerialization.registerClass(Guild.class);
         //注册监听器
         Bukkit.getPluginManager().registerEvents(new JoinListener(),this);
+        //读取配置文件
+        if(!getConfig().contains("CreateGuildMoney")){
+            getLogger().warning("配置文件错误，即将关闭插件，请删除配置文件后重试");
+            getServer().getPluginManager().disablePlugin(this);
+            return;
+        }
+        getConfig().get("CreateGuildMoney",reqCreateGuildMoney);
         //读取公会列表
         if(getConfig().contains("Guilds")) {
             loadGuildList();
