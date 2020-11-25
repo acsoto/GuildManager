@@ -105,7 +105,7 @@ public class Guild implements ConfigurationSerializable {
         return ID;
     }
     void setName(String name){
-        GuildName = name;
+        GuildName = plugin.colorFormat(name);
         saveConfig();
     }
     String getName(){
@@ -160,6 +160,12 @@ public class Guild implements ConfigurationSerializable {
     }
     int getLevel() {
         return Level;
+    }
+    int getPlayersNum(){
+        return Members.size();
+    }
+    int getAdvancedPlayersNum(){
+        return MaxAdvancedPlayers;
     }
     int getMaxPlayers() {
         return MaxPlayers;

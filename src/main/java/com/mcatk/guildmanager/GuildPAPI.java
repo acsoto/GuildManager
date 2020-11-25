@@ -70,6 +70,22 @@ public class GuildPAPI extends PlaceholderExpansion {
             int level = guild.getLevel();
             return Integer.toString(level);
         }
+        if(identifier.equals("num_player")){
+            int n = guild.getPlayersNum();
+            return Integer.toString(n);
+        }
+        if(identifier.equals("max_player")){
+            int n = guild.getMaxPlayers();
+            return Integer.toString(n);
+        }
+        if(identifier.equals("num_advanced_player")){
+            int n = guild.getAdvancedPlayersNum();
+            return Integer.toString(n);
+        }
+        if(identifier.equals("max_advanced_player")){
+            int n = guild.getMaxAdvancedPlayers();
+            return Integer.toString(n);
+        }
         //玩家的相关变量
         Member member = guild.getMember(player.getName());
         if(identifier.equals("isadvanced")){
@@ -80,6 +96,16 @@ public class GuildPAPI extends PlaceholderExpansion {
         if (identifier.equals("contribution")){
             int contribution = member.getContribution();
             return Integer.toString(contribution);
+        }
+        if(identifier.equals("position")){
+            String playerID = player.getName();
+            if(guild.getChairman().equals(playerID))
+                return "会长";
+            else if(guild.hasViceChairman(playerID))
+                return "副会长";
+            else if(guild.hasManager(playerID))
+                return "管理员";
+            else return "无";
         }
 
 

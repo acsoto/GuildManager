@@ -4,6 +4,7 @@ import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.economy.EconomyResponse;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
@@ -197,5 +198,9 @@ public final class GuildManager extends JavaPlugin {
     //console command
     void sendConsoleCmd(String cmd){
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(),cmd);
+    }
+    //color
+    String colorFormat (String str) {
+        return ChatColor.translateAlternateColorCodes('&', str);
     }
 }

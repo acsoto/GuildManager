@@ -143,6 +143,7 @@ public class GuildCommand implements CommandExecutor {
                 if(!guild.getMember(p).addContribution(n/10000))
                     sender.sendMessage(MsgPrefix+"您的贡献值已满，无法继续增长");
                 sender.sendMessage(MsgPrefix+"§a成功为"+guild.getName()+"§a捐赠"+n+"AC"+"折合为"+(n/10000)+"公会资金");
+                plugin.logInfo(p+"捐献了"+Integer.toString(n)+"给"+guild.getName());
             }
             else sender.sendMessage(ErrorPrefix+"AC点不足！");
             return true;
@@ -178,8 +179,7 @@ public class GuildCommand implements CommandExecutor {
             return true;
         }
         //会长操作
-        guild = plugin.getChairmansGuild(sender.getName());
-        if(guild==null){
+        if((guild.getChairman().equals(sender.getName()))){
             sender.sendMessage(MsgPrefix+"§c你不是会长");
             return true;
         }
