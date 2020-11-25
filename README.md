@@ -1,6 +1,8 @@
 # 简介
 
-基于Minecraft Spigot服务端开发的插件
+对Minecraft Spigot服务端开发的Bukkit插件
+
+github: https://github.com/acsoto/GuildManager
 
 ## 效果展示
 

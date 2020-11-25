@@ -7,7 +7,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 public class GuildCommand implements CommandExecutor {
-    final String MsgPrefix = "§6§l系统 §7>>> §a";
+    final String MsgPrefix = "§6§l公会系统 §7>>> §a";
     final String ErrorPrefix = "§4§l错误 §7>>> §c";
     GuildManager plugin = GuildManager.plugin;
     GuildItem guildItem = new GuildItem();
@@ -37,6 +37,8 @@ public class GuildCommand implements CommandExecutor {
                 sender.sendMessage("§a/gmg setwarp  §2设置公会领地标");
                 sender.sendMessage("§a/gmg delwarp  §2删除公会领地标");
                 sender.sendMessage("§a/gmg buytpall  §2购买公会召集令");
+                sender.sendMessage("§a/gmg posset <player> v/m  §2设置玩家为副会长/管理员");
+                sender.sendMessage("§a/gmg posremove <player> v/m §2撤销玩家的副会长/管理员");
             }
             return true;
         }
@@ -87,8 +89,10 @@ public class GuildCommand implements CommandExecutor {
                 sender.sendMessage(ErrorPrefix+"§c该指令只能由玩家发出");
                 return true;
             }
-            if(plugin.takePlayerMoney((Player)sender,500000)){
+            if(plugin.takePlayerMoney((Player)sender,plugin.getReqCreateGuildMoney())){
                 plugin.newGuild(args[1],sender.getName());
+                sender.sendMessage(MsgPrefix+"创建成功");
+                plugin.logInfo("玩家"+sender.getName()+"创建了公会"+args[1]);
             }
             else sender.sendMessage(ErrorPrefix+"AC点不足！");
             return true;
@@ -206,12 +210,20 @@ public class GuildCommand implements CommandExecutor {
             return true;
         }
         if(args[0].equalsIgnoreCase("add")){
-            if(args.length<2)
-                sender.sendMessage(MsgPrefix+"§c缺少参数");
-            else if(guild.hasPlayer(args[1])){
-                sender.sendMessage(MsgPrefix + "§c该玩家已存在于本公会");
+            if(args.length<2) {
+                sender.sendMessage(MsgPrefix + "§c缺少参数");
+                return true;
             }
-            else if(guild.addMembers(args[1]))
+            if(args[1].equalsIgnoreCase(sender.getName())){
+                sender.sendMessage(ErrorPrefix+"不能添加你自己");
+                return true;
+            }
+            Guild tempGuild =  plugin.getPlayersGuild(args[1]);
+            if(tempGuild!=null){
+                sender.sendMessage(MsgPrefix + "§该玩家已有公会"+tempGuild.getName());
+                return true;
+            }
+            if(guild.addMembers(args[1]))
                 sender.sendMessage(MsgPrefix+"增加成功");
             else
                 sender.sendMessage(MsgPrefix+"成员已满");
@@ -223,11 +235,16 @@ public class GuildCommand implements CommandExecutor {
                 return true;
             }
             if(args[1].equalsIgnoreCase(sender.getName())){
-                sender.sendMessage(ErrorPrefix + "§c不能添加你自己");
+                sender.sendMessage(ErrorPrefix + "不能删除你自己");
+                return true;
+            }
+            if(guild.getRemoveMemLimitFlag()>0){
+                sender.sendMessage(MsgPrefix + "§c已超过今日删除玩家次数，请明天再试");
                 return true;
             }
             else if(guild.removeMembers(args[1])) {
                 sender.sendMessage(MsgPrefix + "删除成功");
+                guild.addRemoveMemLimitFlag();
             }
             else
                 sender.sendMessage(MsgPrefix + "不存在该玩家");
@@ -355,6 +372,65 @@ public class GuildCommand implements CommandExecutor {
             sender.sendMessage(MsgPrefix+"成功发起召集");
             return true;
         }
+        if(args[0].equalsIgnoreCase("posset")){
+            if(args.length!=3){
+                sender.sendMessage(ErrorPrefix+"参数错误，请检查");
+                sender.sendMessage("§a/gmg posset <player> v/m  §2设置玩家为副会长/管理员");
+                return true;
+            }
+            String p = args[1];
+            if(!guild.hasPlayer(p)){
+                sender.sendMessage(ErrorPrefix+"公会无此玩家");
+                return true;
+            }
+            if (args[2].equalsIgnoreCase("v")){
+                if(guild.hasViceChairman(p)){
+                    sender.sendMessage(ErrorPrefix+p+"已是副会长");
+                    return true;
+                }
+                if(guild.setViceChairman(p)){
+                    sender.sendMessage(MsgPrefix+"设置成功");
+                }
+                else sender.sendMessage(ErrorPrefix+"副会长名额已满，最多2人");
+            }
+            else if (args[2].equalsIgnoreCase("m")){
+                if(guild.hasManager(p)){
+                    sender.sendMessage(ErrorPrefix+p+"已是管理员");
+                    return true;
+                }
+                if(guild.setManager(p)){
+                    sender.sendMessage(MsgPrefix+"设置成功");
+                }
+                else sender.sendMessage(ErrorPrefix+"管理员名额已满，最多3人");
+            }
+            else sender.sendMessage(ErrorPrefix+"参数错误:应为v/m");
+            return true;
+        }
+        if(args[0].equalsIgnoreCase("posremove")){
+            if(args.length!=3){
+                sender.sendMessage(ErrorPrefix+"参数错误，请检查");
+                sender.sendMessage("§a/gmg posremove <player> v/m §2撤销玩家的副会长/管理员");
+                return true;
+            }
+            String p = args[1];
+            if(!guild.hasPlayer(p)){
+                sender.sendMessage(ErrorPrefix+"公会无此玩家");
+                return true;
+            }
+            if(args[2].equalsIgnoreCase("v")){
+                if(guild.removeViceChairman(p))
+                    sender.sendMessage(MsgPrefix+"撤销成功");
+                else sender.sendMessage(ErrorPrefix+p+"不是副会长");
+            }
+            else if(args[2].equalsIgnoreCase("m")){
+                if(guild.removeManager(p))
+                    sender.sendMessage(MsgPrefix+"撤销成功");
+                else sender.sendMessage(ErrorPrefix+p+"不是管理员");
+            }
+            else sender.sendMessage(ErrorPrefix+"参数错误:应为v/m");
+            return true;
+        }
+        /////////////////////////////////
         sender.sendMessage(MsgPrefix+"§c指令输入错误");
         return false;
     }

@@ -2,6 +2,7 @@ package com.mcatk.guildmanager;
 
 
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -19,6 +20,8 @@ public class Guild implements ConfigurationSerializable {
     private final String ID; //标记ID
     private String GuildName; //公会名
     private String ChairMan; //会长
+    private ArrayList<String> viceChairman; //副会长
+    private ArrayList<String> Manager; //干事
     private int Level; //等级
     private int MaxPlayers; //最大成员数
     private int AdvancedPlayers; //高级成员数
@@ -52,6 +55,8 @@ public class Guild implements ConfigurationSerializable {
         map.put("ID",ID);
         map.put("GuildName",GuildName);
         map.put("ChairMan",ChairMan);
+        map.put("viceChairman",viceChairman);
+        map.put("Manager",Manager);
         map.put("Level",Level);
         map.put("MaxPlayers",MaxPlayers);
         map.put("AdvancedPlayers",AdvancedPlayers);
@@ -72,6 +77,10 @@ public class Guild implements ConfigurationSerializable {
                 (String)map.get("GuildName"):"";
         this.ChairMan=map.get("ChairMan") !=null?
                 (String)map.get("ChairMan"):"";
+        this.viceChairman=map.get("viceChairman") !=null?
+                (ArrayList<String>) map.get("viceChairman"):null;
+        this.Manager=map.get("Manager") !=null?
+                (ArrayList<String>) map.get("Manager"):null;
         this.Level=map.get("Level") !=null?
                 (int)map.get("Level"):1;
         this.MaxPlayers=map.get("MaxPlayers") !=null?
@@ -86,7 +95,7 @@ public class Guild implements ConfigurationSerializable {
                 (int)map.get("RemoveMemLimitFlag"):0;
         this.ResidenceFLag= map.get("ResidenceFLag") != null && (boolean) map.get("ResidenceFLag");
         this.Members=map.get("Members") !=null?
-                (HashMap<String, Member>) map.get("Members"):new HashMap<>();
+                (HashMap<String, Member>) map.get("Members"):null;
         this.Cash=map.get("Cash") !=null?
                 (int)map.get("Cash"):0;
         saveConfig();
@@ -102,7 +111,6 @@ public class Guild implements ConfigurationSerializable {
     String getName(){
         return GuildName;
     }
-    //会长操作
     void setChairman(String p){
         ChairMan=p;
         addMembers(p);
@@ -111,6 +119,31 @@ public class Guild implements ConfigurationSerializable {
     String getChairman(){
         return ChairMan;
     }
+    Boolean setViceChairman(String p){
+        if(viceChairman.size()>=2)
+            return false;
+        viceChairman.add(p);
+        return true;
+    }
+    Boolean removeViceChairman(String p){
+        return viceChairman.remove(p);
+    }
+    Boolean hasViceChairman(String p){
+        return viceChairman.contains(p);
+    }
+    Boolean setManager(String p){
+        if(Manager.size()>=3)
+            return false;
+        Manager.add(p);
+        return true;
+    }
+    Boolean removeManager(String p){
+        return Manager.remove(p);
+    }
+    Boolean hasManager(String p){
+        return Manager.contains(p);
+    }
+
     //等级&最大玩家数&积分操作
     int levelUP(){
         int reqPoints=Level*5;
@@ -176,6 +209,8 @@ public class Guild implements ConfigurationSerializable {
         Member member = Members.remove(p);
         if(member!=null){
             removePerm(p);
+            removeViceChairman(p);
+            removeManager(p);
             saveConfig();
             return true;
         }

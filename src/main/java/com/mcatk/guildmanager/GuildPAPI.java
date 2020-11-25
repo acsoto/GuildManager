@@ -1,5 +1,6 @@
 package com.mcatk.guildmanager;
 
+
 import org.bukkit.entity.Player;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 
@@ -68,6 +69,17 @@ public class GuildPAPI extends PlaceholderExpansion {
         if(identifier.equals("level")){
             int level = guild.getLevel();
             return Integer.toString(level);
+        }
+        //玩家的相关变量
+        Member member = guild.getMember(player.getName());
+        if(identifier.equals("isadvanced")){
+            if(member.isAdvanced())
+                return "是";
+            else return "否";
+        }
+        if (identifier.equals("contribution")){
+            int contribution = member.getContribution();
+            return Integer.toString(contribution);
         }
 
 

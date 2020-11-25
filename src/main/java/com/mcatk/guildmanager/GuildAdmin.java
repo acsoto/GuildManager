@@ -5,7 +5,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
 public class GuildAdmin implements CommandExecutor {
-    final String MsgPrefix = "§6§l系统 §7>>> §a";
+    final String MsgPrefix = "§6§l公会系统 §7>>> §a";
     final String ErrorPrefix = "§4§l错误 §7>>> §c";
     GuildManager plugin = GuildManager.plugin;
     @Override

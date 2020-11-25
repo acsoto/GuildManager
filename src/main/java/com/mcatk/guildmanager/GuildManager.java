@@ -17,9 +17,8 @@ import java.util.HashMap;
 public final class GuildManager extends JavaPlugin {
 
     public static GuildManager plugin;
-    private static final HashMap<String , Guild> GuildList=new HashMap<>();
+    private final HashMap<String , Guild> GuildList=new HashMap<>();
     private static Economy econ=null;
-
     private int reqCreateGuildMoney;
 
     @Override
@@ -29,6 +28,7 @@ public final class GuildManager extends JavaPlugin {
             getServer().getPluginManager().disablePlugin(this);
             return;
         }
+        getLogger().info("检测到Vault，成功启动GuildManager");
         if(Bukkit.getPluginManager().getPlugin("PlaceholderAPI")!=null){
             getLogger().info("检测到PlaceholderAPI，已启动PAPI变量");
             new GuildPAPI(this).register();
@@ -52,16 +52,14 @@ public final class GuildManager extends JavaPlugin {
             getServer().getPluginManager().disablePlugin(this);
             return;
         }
-        getConfig().get("CreateGuildMoney",reqCreateGuildMoney);
+        reqCreateGuildMoney =
+                (int) getConfig().get("CreateGuildMoney");
         //读取公会列表
         if(getConfig().contains("Guilds")) {
             loadGuildList();
         }
         else {
             getLogger().info("公会列表为空");
-            Guild g = newGuild("ra");
-            removeGuild("ra");
-            saveConfig();
         }
     }
     @Override
@@ -71,12 +69,15 @@ public final class GuildManager extends JavaPlugin {
     }
 
     void reloadPlugin(){
+        reqCreateGuildMoney =
+                (int) getConfig().get("CreateGuildMoney");
         GuildList.clear();
-        if(getConfig().contains("Guilds"))
-            loadGuildList();
-        else this.getLogger().info("公会列表为空");
+        loadGuildList();
     }
 
+    int getReqCreateGuildMoney(){
+        return reqCreateGuildMoney;
+    }
 
     Guild getChairmansGuild(String player){
         for(String i:GuildList.keySet()){
@@ -96,19 +97,17 @@ public final class GuildManager extends JavaPlugin {
         }
     }
     //新建公会，加入map并且存入config
-    Guild newGuild(String ID){
+    void newGuild(String ID){
         Guild g = new Guild(ID);
         GuildList.put(ID,g);
         getConfig().set("Guilds."+ID,g);
         saveConfig();
-        return g;
     }
-    Guild newGuild(String ID, String player){
+    void newGuild(String ID, String player){
         Guild g = new Guild(ID,player);
         GuildList.put(ID,g);
         getConfig().set("Guilds."+ID,g);
         saveConfig();
-        return g;
     }
     //删除公会，从map删除并且从config删除
     Boolean removeGuild(String ID){
@@ -138,7 +137,7 @@ public final class GuildManager extends JavaPlugin {
     }
     //公会传送指令
     void tpGuild(String g, String p){
-        Bukkit.dispatchCommand(Bukkit.getConsoleSender(),"warp "+g+" "+p);
+        sendConsoleCmd("warp "+g+" "+p);
     }
     void setWarp(Player player , String g){
         player.setOp(true);
@@ -147,7 +146,7 @@ public final class GuildManager extends JavaPlugin {
 
     }
     void delWarp(String g){
-        Bukkit.dispatchCommand(Bukkit.getConsoleSender(),"/delwarp Guild_"+g);
+        sendConsoleCmd("/delwarp Guild_"+g);
     }
 
     void loadGuildList(){
@@ -157,7 +156,7 @@ public final class GuildManager extends JavaPlugin {
             Guild g = (Guild) configGuilds.get(key);
             GuildList.put(key,g);
             g.resetRemoveMemLimitFlag();
-            this.getLogger().info("§a成功载入公会"+g.getName());
+            getLogger().info("成功载入公会"+g.getName());
         }
     }
 
@@ -188,5 +187,15 @@ public final class GuildManager extends JavaPlugin {
         EconomyResponse r = econ.withdrawPlayer(p,m);
         return r.transactionSuccess();
     }
-
+    //log
+    void logInfo(String s){
+        getLogger().info(s);
+    }
+    void logWarn(String s){
+        getLogger().warning(s);
+    }
+    //console command
+    void sendConsoleCmd(String cmd){
+        Bukkit.dispatchCommand(Bukkit.getConsoleSender(),cmd);
+    }
 }
