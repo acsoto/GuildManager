@@ -203,4 +203,18 @@ public final class GuildManager extends JavaPlugin {
     String colorFormat (String str) {
         return ChatColor.translateAlternateColorCodes('&', str);
     }
+
+    //0:无同盟 1:成功 2:资金不足
+    int donateAlly(Guild guild, int n){
+        Guild allyGuild = plugin.getGuild(guild.getAlly());
+        if(allyGuild==null){
+            return 0;
+        }
+        if(guild.getCash()>=n){
+            guild.takeCash(n);
+            allyGuild.addCash(n);
+            return 1;
+        }
+        return 2;
+    }
 }

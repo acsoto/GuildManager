@@ -16,6 +16,7 @@ public class Guild implements ConfigurationSerializable {
     private final GuildManager plugin = GuildManager.plugin;
     private final ConfigurationSection GuildsSec =
             plugin.getConfig().getConfigurationSection("Guilds");
+    private ArrayList<String> msgBoard;
     //需要保存的成员变量
     private final String ID; //标记ID
     private String GuildName; //公会名
@@ -31,6 +32,8 @@ public class Guild implements ConfigurationSerializable {
     private boolean ResidenceFLag; //是否拥有领地
     private HashMap<String , Member> Members= new HashMap<>(); //成员
     private int Cash; //资金
+    private String League; //联盟
+    private String Ally; //伙伴公会
 
     //构造方法
     public Guild(String ID) {
@@ -66,6 +69,8 @@ public class Guild implements ConfigurationSerializable {
         map.put("ResidenceFLag",ResidenceFLag);
         map.put("Members",Members);
         map.put("Cash",Cash);
+        map.put("League",League);
+        map.put("Ally",Ally);
         return map;
     }
     //反序列化构造方法
@@ -98,6 +103,10 @@ public class Guild implements ConfigurationSerializable {
                 (HashMap<String, Member>) map.get("Members"):null;
         this.Cash=map.get("Cash") !=null?
                 (int)map.get("Cash"):0;
+        this.League=map.get("League") !=null?
+                (String) map.get("League"):"";
+        this.Ally=map.get("Ally") !=null?
+                (String) map.get("Ally"):"";
         saveConfig();
     }
     //成员变量的操作
@@ -272,6 +281,29 @@ public class Guild implements ConfigurationSerializable {
         return Members.get(p);
 
     }
+    Boolean addMsgToBoard(String msg){
+        if(msgBoard.size()<15){
+            msgBoard.add(msg);
+            return true;
+        }
+        else return false;
+    }
+    Boolean isMsgBoardEmpty(){
+        return msgBoard.isEmpty();
+    }
+
+    void clearMsgBoard(){
+        msgBoard.clear();
+    }
+    String getMsgFromBoard(){
+        StringBuilder msg =
+                new StringBuilder(plugin.colorFormat("&a&l留言板："));
+        for (String aMsg:
+             msgBoard) {
+            msg.append(aMsg);
+        }
+        return msg.toString();
+    }
     //成员权限方法
     void givePerm(String p){
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(),"res pset main.gh "+p+" move true");
@@ -342,6 +374,30 @@ public class Guild implements ConfigurationSerializable {
                 msg.append("§6").append(p).append(", ");
         }
         return msg.toString();
+    }
+
+    void setAlly(String ally) {
+        Ally = ally;
+    }
+
+    String getAlly() {
+        return Ally;
+    }
+
+    void setLeague(String league) {
+        League = league;
+    }
+
+    String getLeague() {
+        return League;
+    }
+
+    Boolean isLeader(String p){
+        if(ChairMan.equals(p))
+            return true;
+        if (hasManager(p))
+            return true;
+        return hasViceChairman(p);
     }
     //存储方法
     void saveConfig(){

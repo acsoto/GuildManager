@@ -8,5 +8,7 @@ softdepend: [PlaceholderAPI]
 commands:
   gmg:
     description: main command
+  gmgs:
+    description: leader operate command
   gmgadmin:
     description: admin command
