@@ -9,13 +9,18 @@ import org.bukkit.inventory.ItemStack;
 public class GuildCommand implements CommandExecutor {
     final String MsgPrefix = "§6§l公会系统 §7>>> §a";
     final String ErrorPrefix = "§4§l错误 §7>>> §c";
-    GuildManager plugin = GuildManager.plugin;
-    GuildItem guildItem = new GuildItem();
+    GuildManager plugin;
+    Guilds guilds;
+    GuildCommand(GuildManager plugin, Guilds guilds){
+        this.plugin = plugin;
+        this.guilds = guilds;
+    }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if(args.length==0){
             sender.sendMessage("§e------------公会帮助------------");
             sender.sendMessage("§a/gmg list  §2公会列表");
+            sender.sendMessage("§a/gmg gui  §2公会列表");
             sender.sendMessage("§a/gmg check <ID>  §2查看公会详情");
             sender.sendMessage("§a/gmg tp <guild> §2传送到某公会主城");
             sender.sendMessage("§a/gmg create <ID> §2创建公会（ID必须为英文）");
@@ -28,14 +33,18 @@ public class GuildCommand implements CommandExecutor {
             return true;
         }
         if(args[0].equalsIgnoreCase("list")){
-            GuildManager.plugin.listGuilds(sender);
+            guilds.listGuilds(sender);
+            return true;
+        }
+        if(args[0].equalsIgnoreCase("gui")){
+            plugin.gui.openGUI((Player)sender);
             return true;
         }
         if(args[0].equalsIgnoreCase("check")){
             if(args.length==1)
                 sender.sendMessage(MsgPrefix+"§c缺少参数");
-            else if(GuildManager.plugin.hasGuild(args[1])){
-                Guild guild= GuildManager.plugin.getGuild(args[1]);
+            else if(guilds.hasGuild(args[1])){
+                Guild guild= guilds.getGuild(args[1]);
                 if(guild==null){
                     sender.sendMessage(ErrorPrefix+"不存在此公会");
                     return true;
@@ -48,7 +57,7 @@ public class GuildCommand implements CommandExecutor {
         if(args[0].equalsIgnoreCase("tp")){
             if(args.length==1)
                 sender.sendMessage(MsgPrefix+"§c缺少参数");
-            else if(GuildManager.plugin.hasGuild(args[1])){
+            else if(guilds.hasGuild(args[1])){
                 String p= sender.getName();
                 plugin.tpGuild(args[1],p);
                 sender.sendMessage(MsgPrefix+"§a传送成功");
@@ -65,7 +74,7 @@ public class GuildCommand implements CommandExecutor {
                 sender.sendMessage(ErrorPrefix+"ID只能是小写字母");
                 return false;
             }
-            Guild guild = plugin.getPlayersGuild(sender.getName());
+            Guild guild = guilds.getPlayersGuild(sender.getName());
             if(guild!=null){
                 sender.sendMessage(ErrorPrefix+"你已在公会"+guild.getName());
                 return true;
@@ -75,7 +84,7 @@ public class GuildCommand implements CommandExecutor {
                 return true;
             }
             if(plugin.takePlayerMoney((Player)sender,plugin.getReqCreateGuildMoney())){
-                plugin.newGuild(args[1],sender.getName());
+                guilds.newGuild(args[1],sender.getName());
                 sender.sendMessage(MsgPrefix+"创建成功");
                 plugin.logInfo("玩家"+sender.getName()+"创建了公会"+args[1]);
             }
@@ -83,7 +92,7 @@ public class GuildCommand implements CommandExecutor {
             return true;
         }
         //以下要求发送者在一个公会之中
-        Guild guild = plugin.getPlayersGuild(sender.getName());
+        Guild guild = guilds.getPlayersGuild(sender.getName());
         if(guild==null){
             sender.sendMessage(MsgPrefix+"§c你不在任何公会");
             return true;

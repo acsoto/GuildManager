@@ -399,6 +399,24 @@ public class Guild implements ConfigurationSerializable {
             return true;
         return hasViceChairman(p);
     }
+
+    String getViceChairman() {
+        StringBuilder str = new StringBuilder();
+        for (String s :
+                viceChairman) {
+            str.append(s).append(" ");
+        }
+        return str.toString();
+    }
+    String getManager() {
+            StringBuilder str = new StringBuilder();
+            for (String s :
+                    Manager) {
+                str.append(s).append(" ");
+            }
+            return str.toString();
+    }
+
     //存储方法
     void saveConfig(){
         GuildsSec.set(this.ID,this);

@@ -5,7 +5,6 @@ import net.milkbowl.vault.economy.EconomyResponse;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.entity.Player;
@@ -13,17 +12,18 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
 
-import java.util.HashMap;
 
 public final class GuildManager extends JavaPlugin {
 
     public static GuildManager plugin;
-    private final HashMap<String , Guild> GuildList=new HashMap<>();
-    private static Economy econ=null;
+    public Guilds guilds;
+    public GuildGUI gui;
+    private static Economy econ;
     private int reqCreateGuildMoney;
 
     @Override
     public void onEnable() {
+        //检测前置插件
         if (!setupEconomy() ) {
             getLogger().warning("未找到前置插件Vault，即将关闭插件");
             getServer().getPluginManager().disablePlugin(this);
@@ -35,18 +35,25 @@ public final class GuildManager extends JavaPlugin {
             new GuildPAPI(this).register();
         }
         //实例化
-        plugin=this;
+        plugin = this;
+        guilds = new Guilds();
+        gui = new GuildGUI();
         //生成配置文件
         saveDefaultConfig();
         getLogger().info("公会管理插件已启动-soto");
         //注册指令
-        Bukkit.getPluginCommand("gmg").setExecutor(new GuildCommand());
-        Bukkit.getPluginCommand("gmgadmin").setExecutor(new GuildAdmin());
+        Bukkit.getPluginCommand("gmg").
+                setExecutor(new GuildCommand(plugin,guilds));
+        Bukkit.getPluginCommand("gmgs").
+                setExecutor(new GuildCommandS(plugin,guilds));
+        Bukkit.getPluginCommand("gmgadmin").
+                setExecutor(new GuildAdmin(plugin,guilds));
         //注册序列化
         ConfigurationSerialization.registerClass(Member.class);
         ConfigurationSerialization.registerClass(Guild.class);
         //注册监听器
-        Bukkit.getPluginManager().registerEvents(new JoinListener(),this);
+        Bukkit.getPluginManager().
+                registerEvents(new JoinListener(plugin,guilds),this);
         //读取配置文件
         if(!getConfig().contains("CreateGuildMoney")){
             getLogger().warning("配置文件错误，即将关闭插件，请删除配置文件后重试");
@@ -72,70 +79,16 @@ public final class GuildManager extends JavaPlugin {
     void reloadPlugin(){
         reqCreateGuildMoney =
                 (int) getConfig().get("CreateGuildMoney");
-        GuildList.clear();
+        guilds.clearGuildList();
         loadGuildList();
     }
+
 
     int getReqCreateGuildMoney(){
         return reqCreateGuildMoney;
     }
 
-    Guild getChairmansGuild(String player){
-        for(String i:GuildList.keySet()){
-            Guild g= GuildList.get(i);
-            if(g.getChairman().equalsIgnoreCase(player)){
-                return g;
-            }
-        }
-        return null;
-    }
 
-    void listGuilds(CommandSender sender){
-        sender.sendMessage("§a------------公会列表------------");
-        for(String i:GuildList.keySet()){
-            Guild g = GuildList.get(i);
-            sender.sendMessage("§2"+i+" §a公会名: "+g.getName()+" §e会长: "+g.getChairman());
-        }
-    }
-    //新建公会，加入map并且存入config
-    void newGuild(String ID){
-        Guild g = new Guild(ID);
-        GuildList.put(ID,g);
-        getConfig().set("Guilds."+ID,g);
-        saveConfig();
-    }
-    void newGuild(String ID, String player){
-        Guild g = new Guild(ID,player);
-        GuildList.put(ID,g);
-        getConfig().set("Guilds."+ID,g);
-        saveConfig();
-    }
-    //删除公会，从map删除并且从config删除
-    Boolean removeGuild(String ID){
-        if(GuildList.remove(ID)!=null){
-            getConfig().set("Guilds."+ID,null);
-            return true;
-        }
-        return false;
-    }
-    //查公会
-    Boolean hasGuild(String ID){
-        return GuildList.containsKey(ID);
-    }
-    Guild getGuild(String ID){
-        if(hasGuild(ID))
-            return GuildList.get(ID);
-        return null;
-    }
-
-    Guild getPlayersGuild(String p){
-        for(String key:GuildList.keySet()){
-            Guild g = GuildList.get(key);
-            if(g.hasPlayer(p))
-                return g;
-        }
-        return null;
-    }
     //公会传送指令
     void tpGuild(String g, String p){
         sendConsoleCmd("warp "+g+" "+p);
@@ -155,9 +108,9 @@ public final class GuildManager extends JavaPlugin {
                 getConfig().getConfigurationSection("Guilds");
         for(String key : configGuilds.getKeys(false)){
             Guild g = (Guild) configGuilds.get(key);
-            GuildList.put(key,g);
+            guilds.addGuild(key,g);
             g.resetRemoveMemLimitFlag();
-            getLogger().info("成功载入公会"+g.getName());
+            getLogger().info("成功载入公会"+colorFormat(g.getName()));
         }
     }
 
@@ -204,17 +157,5 @@ public final class GuildManager extends JavaPlugin {
         return ChatColor.translateAlternateColorCodes('&', str);
     }
 
-    //0:无同盟 1:成功 2:资金不足
-    int donateAlly(Guild guild, int n){
-        Guild allyGuild = plugin.getGuild(guild.getAlly());
-        if(allyGuild==null){
-            return 0;
-        }
-        if(guild.getCash()>=n){
-            guild.takeCash(n);
-            allyGuild.addCash(n);
-            return 1;
-        }
-        return 2;
-    }
+
 }

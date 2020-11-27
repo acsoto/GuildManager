@@ -45,7 +45,7 @@ public class GuildPAPI extends PlaceholderExpansion {
         if(player == null){
             return "";
         }
-        Guild guild = plugin.getPlayersGuild(player.getName());
+        Guild guild = plugin.guilds.getPlayersGuild(player.getName());
         if(guild==null)
             return null;
         //玩家所在公会的变量

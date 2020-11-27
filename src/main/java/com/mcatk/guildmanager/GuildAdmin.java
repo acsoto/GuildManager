@@ -7,7 +7,12 @@ import org.bukkit.command.CommandSender;
 public class GuildAdmin implements CommandExecutor {
     final String MsgPrefix = "§6§l公会系统 §7>>> §a";
     final String ErrorPrefix = "§4§l错误 §7>>> §c";
-    GuildManager plugin = GuildManager.plugin;
+    GuildManager plugin;
+    Guilds guilds;
+    GuildAdmin(GuildManager plugin, Guilds guilds){
+        this.plugin = plugin;
+        this.guilds = guilds;
+    }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if(!sender.hasPermission("guildmanager.admin")){
@@ -31,7 +36,7 @@ public class GuildAdmin implements CommandExecutor {
             return true;
         }
         if(args[0].equalsIgnoreCase("reload")){
-            plugin.reloadPlugin();
+            plugin.reloadConfig();
             return true;
         }
         if(args.length==1){
@@ -40,28 +45,28 @@ public class GuildAdmin implements CommandExecutor {
         }
         if(args[0].equalsIgnoreCase("create")){
             if(args.length==2){
-                plugin.newGuild(args[1]);
+                guilds.newGuild(args[1]);
                 sender.sendMessage(MsgPrefix+"创建成功");
             }
             else if(args.length==3){
-                plugin.newGuild(args[1],args[2]);
+                guilds.newGuild(args[1],args[2]);
                 sender.sendMessage(MsgPrefix+"创建成功");
             }
             return true;
         }
-        Guild guild = plugin.getGuild(args[1]);
+        Guild guild = guilds.getGuild(args[1]);
         if(guild==null){
             sender.sendMessage(ErrorPrefix+"不存在此公会");
             return true;
         }
         if(args[0].equalsIgnoreCase("remove")){
-            if(GuildManager.plugin.removeGuild(args[1]))
+            if(guilds.removeGuild(args[1]))
                 sender.sendMessage(MsgPrefix+"删除成功");
             else sender.sendMessage(MsgPrefix+"§c不存在此公会");
             return true;
         }
         if(args[0].equalsIgnoreCase("check")){
-            if(GuildManager.plugin.hasGuild(args[1])){
+            if(guilds.hasGuild(args[1])){
                 sender.sendMessage(guild.checkStatus());
             }
             else sender.sendMessage(MsgPrefix+"§c不存在此公会");
@@ -72,7 +77,7 @@ public class GuildAdmin implements CommandExecutor {
                 sender.sendMessage(MsgPrefix+"§c缺少参数");
                 return true;
             }
-            else if(GuildManager.plugin.hasGuild(args[1])){
+            else if(guilds.hasGuild(args[1])){
                 guild.setName(args[2]);
                 sender.sendMessage(MsgPrefix+"已修改为"+args[2]);
             }

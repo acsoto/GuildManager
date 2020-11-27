@@ -9,12 +9,17 @@ import org.bukkit.inventory.ItemStack;
 public class GuildCommandS implements CommandExecutor {
     final String MsgPrefix = "§6§l公会系统 §7>>> §a";
     final String ErrorPrefix = "§4§l错误 §7>>> §c";
-    GuildManager plugin = GuildManager.plugin;
+    GuildManager plugin;
+    Guilds guilds;
+    GuildCommandS(GuildManager plugin, Guilds guilds){
+        this.plugin = plugin;
+        this.guilds = guilds;
+    }
     GuildItem guildItem = new GuildItem();
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        Guild guild = plugin.getPlayersGuild(sender.getName());
+        Guild guild = guilds.getPlayersGuild(sender.getName());
         Player player = (Player) sender;
         if(guild==null) {
             sender.sendMessage(ErrorPrefix + "您不在任何公会");
@@ -83,7 +88,7 @@ public class GuildCommandS implements CommandExecutor {
                 sender.sendMessage(ErrorPrefix+"不能添加你自己");
                 return true;
             }
-            Guild tempGuild =  plugin.getPlayersGuild(args[1]);
+            Guild tempGuild =  guilds.getPlayersGuild(args[1]);
             if(tempGuild!=null){
                 sender.sendMessage(MsgPrefix + "§该玩家已有公会"+tempGuild.getName());
                 return true;
