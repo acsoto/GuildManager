@@ -27,12 +27,6 @@ public class Guilds {
         }
     }
     //新建公会，加入map并且存入config
-    void newGuild(String ID){
-        Guild g = new Guild(ID);
-        GuildList.put(ID,g);
-        plugin.getConfig().set("Guilds."+ID,g);
-        plugin.saveConfig();
-    }
     void newGuild(String ID, String player){
         Guild g = new Guild(ID,player);
         GuildList.put(ID,g);

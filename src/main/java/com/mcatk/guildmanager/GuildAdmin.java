@@ -44,14 +44,12 @@ public class GuildAdmin implements CommandExecutor {
             return true;
         }
         if(args[0].equalsIgnoreCase("create")){
-            if(args.length==2){
-                guilds.newGuild(args[1]);
-                sender.sendMessage(MsgPrefix+"创建成功");
-            }
-            else if(args.length==3){
+            if(args.length==3){
                 guilds.newGuild(args[1],args[2]);
                 sender.sendMessage(MsgPrefix+"创建成功");
+                return true;
             }
+            sender.sendMessage(ErrorPrefix+"缺少参数");
             return true;
         }
         Guild guild = guilds.getGuild(args[1]);

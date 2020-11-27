@@ -65,6 +65,7 @@ public final class GuildManager extends JavaPlugin {
         //读取公会列表
         if(getConfig().contains("Guilds")) {
             loadGuildList();
+            gui.createGuildsGUI();
         }
         else {
             getLogger().info("公会列表为空");
@@ -81,6 +82,7 @@ public final class GuildManager extends JavaPlugin {
                 (int) getConfig().get("CreateGuildMoney");
         guilds.clearGuildList();
         loadGuildList();
+        gui.reloadButtons();
     }
 
 

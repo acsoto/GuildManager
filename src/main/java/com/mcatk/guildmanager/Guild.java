@@ -36,17 +36,10 @@ public class Guild implements ConfigurationSerializable {
     private String Ally; //伙伴公会
 
     //构造方法
-    public Guild(String ID) {
-        this.ID = ID;
-        this.GuildName = ID;
-        this.Level = 1;
-        this.MaxPlayers = 10;
-        this.MaxAdvancedPlayers = 5;
-    }
     public Guild(String ID, String player) {
         this.ID = ID;
         this.GuildName = ID;
-        setChairman(player);
+        this.setChairman(player);
         this.Level = 1;
         this.MaxPlayers = 10;
         this.MaxAdvancedPlayers = 5;
@@ -83,9 +76,9 @@ public class Guild implements ConfigurationSerializable {
         this.ChairMan=map.get("ChairMan") !=null?
                 (String)map.get("ChairMan"):"";
         this.viceChairman=map.get("viceChairman") !=null?
-                (ArrayList<String>) map.get("viceChairman"):null;
+                (ArrayList<String>) map.get("viceChairman"):new ArrayList<>();
         this.Manager=map.get("Manager") !=null?
-                (ArrayList<String>) map.get("Manager"):null;
+                (ArrayList<String>) map.get("Manager"):new ArrayList<>();
         this.Level=map.get("Level") !=null?
                 (int)map.get("Level"):1;
         this.MaxPlayers=map.get("MaxPlayers") !=null?
@@ -354,6 +347,22 @@ public class Guild implements ConfigurationSerializable {
         msg+= listMembers();
         return msg;
     }
+    String checkViceChairman() {
+        StringBuilder str = new StringBuilder("§2副会长：");
+        for (String s :
+                viceChairman) {
+            str.append(s).append(" ");
+        }
+        return str.toString();
+    }
+    String checkManager() {
+        StringBuilder str = new StringBuilder("§2管理员：");
+        for (String s :
+                Manager) {
+            str.append(s).append(" ");
+        }
+        return str.toString();
+    }
     //输出成员列表
     String listMembers(){
         StringBuilder msg= new StringBuilder("§2成员列表: ");
@@ -400,22 +409,6 @@ public class Guild implements ConfigurationSerializable {
         return hasViceChairman(p);
     }
 
-    String getViceChairman() {
-        StringBuilder str = new StringBuilder();
-        for (String s :
-                viceChairman) {
-            str.append(s).append(" ");
-        }
-        return str.toString();
-    }
-    String getManager() {
-            StringBuilder str = new StringBuilder();
-            for (String s :
-                    Manager) {
-                str.append(s).append(" ");
-            }
-            return str.toString();
-    }
 
     //存储方法
     void saveConfig(){
