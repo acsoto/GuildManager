@@ -10,7 +10,7 @@ import java.util.ArrayList;
 public class GuildItem {
     private final ItemStack tpTicket ;
 
-    public GuildItem(){
+    public GuildItem() {
         //构造tpTicket
         tpTicket = new ItemStack(Material.PAPER);
         ItemMeta meta = tpTicket.getItemMeta();

@@ -93,7 +93,7 @@ public class Guild implements ConfigurationSerializable {
                 (int)map.get("RemoveMemLimitFlag"):0;
         this.ResidenceFLag= map.get("ResidenceFLag") != null && (boolean) map.get("ResidenceFLag");
         this.Members=map.get("Members") !=null?
-                (HashMap<String, Member>) map.get("Members"):null;
+                (HashMap<String, Member>) map.get("Members"):new HashMap<>();
         this.Cash=map.get("Cash") !=null?
                 (int)map.get("Cash"):0;
         this.League=map.get("League") !=null?

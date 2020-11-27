@@ -4,6 +4,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -11,7 +14,7 @@ import org.bukkit.inventory.meta.SkullMeta;
 
 import java.util.ArrayList;
 
-public class GuildGUI {
+public class GuildGUI implements Listener {
 
     GuildManager plugin = GuildManager.plugin;
     Guilds guilds = plugin.guilds;
@@ -19,7 +22,7 @@ public class GuildGUI {
 
 
     public GuildGUI() {
-        guildsGUI = Bukkit.createInventory(null, 54, "公会列表");
+        guildsGUI = Bukkit.createInventory(null, 54, "§6公会列表");
     }
 
 
@@ -62,5 +65,21 @@ public class GuildGUI {
         }
     }
 
+    //禁止玩家拿走物品
+    @EventHandler
+    public void onInventoryClick(InventoryClickEvent event){
+        if(!(event.getWhoClicked() instanceof Player)){
+            return;
+        }
+        Player player = (Player) event.getWhoClicked();
+        if(event.getInventory().getTitle().equalsIgnoreCase("§6公会列表")){
+            event.setCancelled(true);
+            player.updateInventory();
+            if(event.getRawSlot()==0){
+                player.closeInventory();
+                player.openInventory(guildsGUI);
+            }
+        }
+    }
 
 }
