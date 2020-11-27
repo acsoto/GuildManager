@@ -19,6 +19,7 @@ public final class GuildManager extends JavaPlugin {
     public Guilds guilds;
     public GuildGUI gui;
     public JoinListener joinListener;
+    public GuildItem guildItem;
     private static Economy econ;
     private int reqCreateGuildMoney;
 
@@ -39,6 +40,7 @@ public final class GuildManager extends JavaPlugin {
         plugin = this;
         guilds = new Guilds();
         gui = new GuildGUI();
+        guildItem = new GuildItem();
         joinListener = new JoinListener(plugin,guilds);
         //生成配置文件
         saveDefaultConfig();
@@ -58,6 +60,8 @@ public final class GuildManager extends JavaPlugin {
                 registerEvents(joinListener,this);
         Bukkit.getPluginManager().
                 registerEvents(gui,this);
+        Bukkit.getPluginManager().
+                registerEvents(guildItem,this);
         //读取配置文件
         if(!getConfig().contains("CreateGuildMoney")){
             getLogger().warning("配置文件错误，即将关闭插件，请删除配置文件后重试");
