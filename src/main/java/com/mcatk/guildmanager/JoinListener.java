@@ -49,8 +49,9 @@ public class JoinListener implements Listener {
             player.sendMessage(MsgPrefix+"§2您是公会高级成员，可以前往公会广场");
         }
         //tell player situation about msgBoard if it is not empty
-        if(!guild.isMsgBoardEmpty()){
-            player.sendMessage(guild.getMsgFromBoard());
+        if(guild.isMsgBoardEmpty()){
+            player.sendMessage("§2公会留言板为空");
         }
+        else player.sendMessage(guild.getMsgFromBoard());
     }
 }

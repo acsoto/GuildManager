@@ -16,13 +16,13 @@ public class Guild implements ConfigurationSerializable {
     private final GuildManager plugin = GuildManager.plugin;
     private final ConfigurationSection GuildsSec =
             plugin.getConfig().getConfigurationSection("Guilds");
-    private ArrayList<String> msgBoard;
+    private final ArrayList<String> msgBoard = new ArrayList<>(); //留言板
     //需要保存的成员变量
     private final String ID; //标记ID
     private String GuildName; //公会名
     private String ChairMan; //会长
-    private ArrayList<String> viceChairman; //副会长
-    private ArrayList<String> Manager; //干事
+    private ArrayList<String> viceChairman = new ArrayList<>(); //副会长
+    private ArrayList<String> Manager = new ArrayList<>(); //管理员
     private int Level; //等级
     private int MaxPlayers; //最大成员数
     private int AdvancedPlayers; //高级成员数
