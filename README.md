@@ -53,7 +53,7 @@ github: https://github.com/acsoto/GuildManager
 
 ### 召集令
 
-![公会召集令](.\pics\公会召集令.png)
+![公会召集令](pics\公会召集令.png)
 
 手持输入/tpall 可以召集公会全体玩家
 
