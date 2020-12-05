@@ -251,29 +251,50 @@ public class Guild implements ConfigurationSerializable {
         else return false;
     }
 
+    HashMap<String,Member> getMembers(){
+        return Members;
+    }
+
+
+    public ArrayList<String> getViceChairman() {
+        return viceChairman;
+    }
+
+    public ArrayList<String> getManager() {
+        return Manager;
+    }
+
+
     Boolean hasPlayer(String p){
         return Members.containsKey(p);
     }
+
     Boolean isAdvancedPlayer(String p){
         Member member = getMember(p);
         return member.isAdvanced();
     }
+
     void addRemoveMemLimitFlag(){
         RemoveMemLimitFlag++;
     }
+
     void resetRemoveMemLimitFlag(){
         RemoveMemLimitFlag = 0;
     }
+
     int getRemoveMemLimitFlag(){
         return RemoveMemLimitFlag;
     }
+
     Boolean getResidenceFLag(){
         return ResidenceFLag;
     }
+
     Member getMember(String p){
         return Members.get(p);
 
     }
+
     Boolean addMsgToBoard(String msg){
         if(msgBoard.size()<15){
             msgBoard.add(msg);
@@ -281,6 +302,7 @@ public class Guild implements ConfigurationSerializable {
         }
         else return false;
     }
+
     Boolean isMsgBoardEmpty(){
         return msgBoard.isEmpty();
     }
@@ -288,6 +310,7 @@ public class Guild implements ConfigurationSerializable {
     void clearMsgBoard(){
         msgBoard.clear();
     }
+
     String getMsgFromBoard(){
         StringBuilder msg =
                 new StringBuilder(plugin.colorFormat("&a&l留言板："));
@@ -297,6 +320,11 @@ public class Guild implements ConfigurationSerializable {
         }
         return msg.toString();
     }
+
+    public ArrayList<String> getMsgBoard() {
+        return msgBoard;
+    }
+
     //成员权限方法
     void givePerm(String p){
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(),"res pset main.gh "+p+" move true");

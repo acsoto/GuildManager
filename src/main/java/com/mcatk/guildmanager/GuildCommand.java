@@ -25,6 +25,7 @@ public class GuildCommand implements CommandExecutor {
             sender.sendMessage("§a/gmg tp <guild> §2传送到某公会主城");
             sender.sendMessage("§a/gmg create <ID> §2创建公会（ID必须为英文）");
             sender.sendMessage("§a/gmg t §2传送到自己的公会主城");
+            sender.sendMessage("§a/gmg memgui §2查看公会成员菜单");
             sender.sendMessage("§a/gmg s §2查看公会状态");
             sender.sendMessage("§a/gmg offer <AC点> §2捐助公会资金 1wAC = 1GuildCash");
             sender.sendMessage("§a/gmg msg §2公会留言");
@@ -104,6 +105,14 @@ public class GuildCommand implements CommandExecutor {
             }
             plugin.tpGuild(guild.getName(),sender.getName());
             sender.sendMessage(MsgPrefix+"§a传送成功");
+            return true;
+        }
+        if(args[0].equalsIgnoreCase("memgui")){
+            if(!(sender instanceof Player)){
+                sender.sendMessage(ErrorPrefix+"§c该指令只能由玩家发出");
+                return true;
+            }
+            plugin.gui.openMemGUI((Player) sender,guild);
             return true;
         }
         if(args[0].equalsIgnoreCase("s")){
