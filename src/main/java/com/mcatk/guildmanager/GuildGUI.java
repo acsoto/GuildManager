@@ -103,6 +103,10 @@ public class GuildGUI implements Listener {
         return item;
     }
 
+    void openMsgGUI(Player player,Guild guild){
+        player.openInventory(createGuildMsgGUI(guild));
+    }
+
     Inventory createGuildMsgGUI(Guild guild){
         ArrayList <String> msgBoard = guild.getMsgBoard();
         Inventory msgGUI = Bukkit.createInventory(null, 18, guild.getName()+"§6留言板");

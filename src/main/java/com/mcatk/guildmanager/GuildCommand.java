@@ -25,12 +25,13 @@ public class GuildCommand implements CommandExecutor {
             sender.sendMessage("§a/gmg tp <guild> §2传送到某公会主城");
             sender.sendMessage("§a/gmg create <ID> §2创建公会（ID必须为英文）");
             sender.sendMessage("§a/gmg t §2传送到自己的公会主城");
-            sender.sendMessage("§a/gmg memgui §2查看公会成员菜单");
             sender.sendMessage("§a/gmg s §2查看公会状态");
             sender.sendMessage("§a/gmg offer <AC点> §2捐助公会资金 1wAC = 1GuildCash");
             sender.sendMessage("§a/gmg msg §2公会留言");
             sender.sendMessage("§a/gmg mems §2查看公会成员列表");
             sender.sendMessage("§a/gmg amems §2查看公会名高级成员列表");
+            sender.sendMessage("§a/gmg memgui §2查看公会成员菜单");
+            sender.sendMessage("§a/gmg msggui §2查看留言板菜单");
             return true;
         }
         if(args[0].equalsIgnoreCase("list")){
@@ -107,14 +108,7 @@ public class GuildCommand implements CommandExecutor {
             sender.sendMessage(MsgPrefix+"§a传送成功");
             return true;
         }
-        if(args[0].equalsIgnoreCase("memgui")){
-            if(!(sender instanceof Player)){
-                sender.sendMessage(ErrorPrefix+"§c该指令只能由玩家发出");
-                return true;
-            }
-            plugin.gui.openMemGUI((Player) sender,guild);
-            return true;
-        }
+
         if(args[0].equalsIgnoreCase("s")){
             sender.sendMessage(guild.checkStatus());
             return true;
@@ -200,7 +194,22 @@ public class GuildCommand implements CommandExecutor {
             sender.sendMessage(guild.listAdvancedMembers());
             return true;
         }
-
+        if(args[0].equalsIgnoreCase("memgui")){
+            if(!(sender instanceof Player)){
+                sender.sendMessage(ErrorPrefix+"§c该指令只能由玩家发出");
+                return true;
+            }
+            plugin.gui.openMemGUI((Player) sender,guild);
+            return true;
+        }
+        if(args[0].equalsIgnoreCase("msggui")){
+            if(!(sender instanceof Player)){
+                sender.sendMessage(ErrorPrefix+"§c该指令只能由玩家发出");
+                return true;
+            }
+            plugin.gui.openMsgGUI((Player)sender,guild);
+            return true;
+        }
         /////////////////////////////////
         sender.sendMessage(ErrorPrefix+"§c指令输入错误");
         return false;

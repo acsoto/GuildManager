@@ -36,7 +36,7 @@ public class GuildAdmin implements CommandExecutor {
             return true;
         }
         if(args[0].equalsIgnoreCase("reload")){
-            plugin.reloadConfig();
+            plugin.reloadPlugin();
             return true;
         }
         if(args.length==1){
