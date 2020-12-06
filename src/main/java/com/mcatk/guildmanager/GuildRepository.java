@@ -18,7 +18,6 @@ import java.util.HashMap;
 import java.util.List;
 
 public class GuildRepository implements Listener {
-    HashMap<String, Inventory> guildRepositories;
     GuildManager plugin = GuildManager.plugin;
 
     void openRepos (Player player, Guild guild) throws IOException {
@@ -55,6 +54,7 @@ public class GuildRepository implements Listener {
             }
         }
     }
+
     @EventHandler
     public void saveReposOnDisable(InventoryCloseEvent event) throws IOException {
         if(event.getInventory().getTitle().contains("公会仓库")) {
@@ -70,7 +70,7 @@ public class GuildRepository implements Listener {
         File f =new File(plugin.getDataFolder().getAbsolutePath(),
                 "/Repositories/"+guildID+".yml");
         FileConfiguration c = YamlConfiguration.loadConfiguration(f);
-        c.set(guildID,guildRepositories.get(guildID).getStorageContents());
+        c.set(guildID,repos.getStorageContents());
         c.save(f);
     }
 

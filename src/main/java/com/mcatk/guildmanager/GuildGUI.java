@@ -74,7 +74,7 @@ public class GuildGUI implements Listener {
         HashMap<String,Member> memList = guild.getMembers();
         Inventory memGUI = Bukkit.createInventory(null, 54, guild.getName()+"§6成员");
         for (String playerID :
-                guild.getMembers().keySet()) {
+                memList.keySet()) {
             Member player = guild.getMember(playerID);
             ItemStack button = getAnMemberButton(guild,player);
             memGUI.addItem(button);
@@ -83,7 +83,7 @@ public class GuildGUI implements Listener {
     }
 
     ItemStack getAnMemberButton(Guild guild, Member player) {
-        ItemStack item = new ItemStack(Material.SKULL);
+        ItemStack item = new ItemStack(Material.SKULL_ITEM);
         ItemMeta meta =  item.getItemMeta();
         meta.setDisplayName(player.getID());
         ArrayList<String> des = new ArrayList<>();

@@ -179,9 +179,11 @@ public class GuildCommand implements CommandExecutor {
                 else sender.sendMessage(MsgPrefix+"留言板已满，请提醒会长清理");
             }
             else sender.sendMessage(ErrorPrefix+"不可以有空格哦");
+            return true;
         }
         if(args[0].equalsIgnoreCase("msgs")){
             sender.sendMessage(guild.getMsgFromBoard());
+            return true;
         }
         if(args[0].equalsIgnoreCase("name")){
             sender.sendMessage(guild.checkGuildName());

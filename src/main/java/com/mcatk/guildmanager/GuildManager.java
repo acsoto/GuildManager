@@ -38,14 +38,15 @@ public final class GuildManager extends JavaPlugin {
             new GuildPAPI(this).register();
         }
         //实例化
+        getLogger().info("初始化...");
         plugin = this;
         guilds = new Guilds();
         gui = new GuildGUI();
         guildItem = new GuildItem();
+        guildRepository = new GuildRepository();
         joinListener = new JoinListener(plugin,guilds);
         //生成配置文件
         saveDefaultConfig();
-        getLogger().info("公会管理插件已启动-soto");
         //注册指令
         Bukkit.getPluginCommand("gmg").
                 setExecutor(new GuildCommand(plugin,guilds));
@@ -53,9 +54,11 @@ public final class GuildManager extends JavaPlugin {
                 setExecutor(new GuildCommandS(plugin,guilds));
         Bukkit.getPluginCommand("gmgadmin").
                 setExecutor(new GuildAdmin(plugin,guilds));
+        getLogger().info("成功注册指令");
         //注册序列化
         ConfigurationSerialization.registerClass(Member.class);
         ConfigurationSerialization.registerClass(Guild.class);
+        getLogger().info("成功注册序列化");
         //注册监听器
         Bukkit.getPluginManager().
                 registerEvents(joinListener,this);
@@ -65,6 +68,7 @@ public final class GuildManager extends JavaPlugin {
                 registerEvents(guildItem,this);
         Bukkit.getPluginManager().
                 registerEvents(guildRepository,this);
+        getLogger().info("成功注册监听器");
         //读取配置文件
         if(!getConfig().contains("CreateGuildMoney")){
             getLogger().warning("配置文件错误，即将关闭插件，请删除配置文件后重试");
@@ -73,7 +77,9 @@ public final class GuildManager extends JavaPlugin {
         }
         reqCreateGuildMoney =
                 (int) getConfig().get("CreateGuildMoney");
+        getLogger().info("配置文件读取完毕");
         //读取公会列表
+        getLogger().info("加载公会...");
         if(getConfig().contains("Guilds")) {
             loadGuildList();
             gui.createGuildsGUI();
@@ -81,6 +87,7 @@ public final class GuildManager extends JavaPlugin {
         else {
             getLogger().info("公会列表为空");
         }
+        getLogger().info("公会管理插件已启动-soto");
     }
     @Override
     public void onDisable() {
