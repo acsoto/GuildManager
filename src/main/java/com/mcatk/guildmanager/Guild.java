@@ -10,6 +10,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 
 
 public class Guild implements ConfigurationSerializable {
@@ -34,6 +35,7 @@ public class Guild implements ConfigurationSerializable {
     private int Cash; //资金
     private String League; //联盟
     private String Ally; //伙伴公会
+    private int ReposSize;
 
     //构造方法
     public Guild(String ID, String player) {
@@ -43,6 +45,7 @@ public class Guild implements ConfigurationSerializable {
         this.Level = 1;
         this.MaxPlayers = 10;
         this.MaxAdvancedPlayers = 5;
+        this.ReposSize = 9;
     }
     //实现序列化
     @Override
@@ -64,6 +67,7 @@ public class Guild implements ConfigurationSerializable {
         map.put("Cash",Cash);
         map.put("League",League);
         map.put("Ally",Ally);
+        map.put("ReposSize",ReposSize);
         return map;
     }
     //反序列化构造方法
@@ -100,6 +104,8 @@ public class Guild implements ConfigurationSerializable {
                 (String) map.get("League"):"";
         this.Ally=map.get("Ally") !=null?
                 (String) map.get("Ally"):"";
+        this.ReposSize=map.get("ReposSize") !=null?
+                (int) map.get("ReposSize"):9;
         saveConfig();
     }
     //成员变量的操作
@@ -144,6 +150,21 @@ public class Guild implements ConfigurationSerializable {
     }
     Boolean hasManager(String p){
         return Manager.contains(p);
+    }
+
+    public int getReposSize() {
+        return ReposSize;
+    }
+
+    public void setReposSize(int reposSize) {
+        ReposSize = reposSize;
+    }
+
+    boolean levelUpReposSize(){
+        if(ReposSize==54)
+            return false;
+        ReposSize+=9;
+        return true;
     }
 
     //等级&最大玩家数&积分操作

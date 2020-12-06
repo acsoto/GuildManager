@@ -1,42 +1,41 @@
 package com.mcatk.guildmanager;
 
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 
 public class GuildRepository implements Listener {
     HashMap<String, Inventory> guildRepositories;
     GuildManager plugin = GuildManager.plugin;
 
-    void newRepos (String guildID){
-        Guild guild = plugin.guilds.getGuild(guildID);
-        Inventory repos = Bukkit.createInventory(null, 9, guild.getName()+" §6公会仓库");
-        guildRepositories.put(guildID,repos);
+    void openRepos (Player player, Guild guild) throws IOException {
+        Inventory repos = newRepos(guild.getID(),guild.getReposSize());
+        restoreRepos(guild.getID(),repos);
+        player.openInventory(repos);
     }
 
-    void setReposSize(String guildID , int size){
+    Inventory newRepos (String guildID , int size){
         Guild guild = plugin.guilds.getGuild(guildID);
-        guildRepositories.remove(guildID);
         Inventory repos = Bukkit.createInventory(null, size, guild.getName()+" §6公会仓库");
-        guildRepositories.put(guildID,repos);
+        return repos;
     }
 
-    int levelUpRepos(String guildID){
-        Inventory repos = guildRepositories.get(guildID);
-        int reposSize = repos.getSize();
-        if(reposSize==54)
-            return 0;
-        if(repos.getContents()!=null)
-            return 1;
-        reposSize+=9;
-        setReposSize(guildID,reposSize);
-        return 2;
-    }
+
+
+
 
     //公会仓库规则：贡献度大于10或者leader可以存取
     @EventHandler
@@ -55,6 +54,33 @@ public class GuildRepository implements Listener {
                 event.setCancelled(true);
             }
         }
+    }
+    @EventHandler
+    public void saveReposOnDisable(InventoryCloseEvent event) throws IOException {
+        if(event.getInventory().getTitle().contains("公会仓库")) {
+            String playerID = event.getPlayer().getName();
+            Guild guild = plugin.guilds.getPlayersGuild(playerID);
+            saveRepos(guild.getID(),event.getInventory());
+        }
+    }
+
+
+    //save and load
+    void saveRepos(String guildID,Inventory repos)throws IOException{
+        File f =new File(plugin.getDataFolder().getAbsolutePath(),
+                "/Repositories/"+guildID+".yml");
+        FileConfiguration c = YamlConfiguration.loadConfiguration(f);
+        c.set(guildID,guildRepositories.get(guildID).getStorageContents());
+        c.save(f);
+    }
+
+    @SuppressWarnings("unchecked")
+    void restoreRepos(String guildID,Inventory repos)throws IOException{
+        File f =new File(plugin.getDataFolder().getAbsolutePath(),
+                "/Repositories/"+guildID+".yml");
+        FileConfiguration c = YamlConfiguration.loadConfiguration(f);
+        ItemStack[] content = ((List< ItemStack >)c.get(guildID)).toArray(new ItemStack[0]);
+        repos.setStorageContents(content);
     }
 
 }

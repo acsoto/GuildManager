@@ -6,6 +6,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import java.io.IOException;
+
 public class GuildCommand implements CommandExecutor {
     final String MsgPrefix = "§6§l公会系统 §7>>> §a";
     final String ErrorPrefix = "§4§l错误 §7>>> §c";
@@ -26,6 +28,7 @@ public class GuildCommand implements CommandExecutor {
             sender.sendMessage("§a/gmg create <ID> §2创建公会（ID必须为英文）");
             sender.sendMessage("§a/gmg t §2传送到自己的公会主城");
             sender.sendMessage("§a/gmg s §2查看公会状态");
+            sender.sendMessage("§a/gmg r §2打开公会仓库");
             sender.sendMessage("§a/gmg offer <AC点> §2捐助公会资金 1wAC = 1GuildCash");
             sender.sendMessage("§a/gmg msg §2公会留言");
             sender.sendMessage("§a/gmg mems §2查看公会成员列表");
@@ -111,6 +114,18 @@ public class GuildCommand implements CommandExecutor {
 
         if(args[0].equalsIgnoreCase("s")){
             sender.sendMessage(guild.checkStatus());
+            return true;
+        }
+        if(args[0].equalsIgnoreCase("r")){
+            if(!(sender instanceof Player)){
+                sender.sendMessage(ErrorPrefix+"§c该指令只能由玩家发出");
+                return true;
+            }
+            try {
+                plugin.guildRepository.openRepos((Player)sender,guild);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             return true;
         }
         if(args[0].equalsIgnoreCase("offer")){
