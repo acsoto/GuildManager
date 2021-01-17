@@ -108,7 +108,7 @@ public class Guild implements ConfigurationSerializable {
                 (int) map.get("ReposSize"):9;
         saveConfig();
     }
-    //成员变量的操作
+    //成员变量增删查改
     String getID(){
         return ID;
     }
@@ -159,7 +159,7 @@ public class Guild implements ConfigurationSerializable {
     public void setReposSize(int reposSize) {
         ReposSize = reposSize;
     }
-
+    //仓库升级
     boolean levelUpReposSize(){
         if(ReposSize==54)
             return false;
@@ -234,6 +234,7 @@ public class Guild implements ConfigurationSerializable {
         }
         else return false;
     }
+    //删除成员并且删除其权限和职位并保存
     Boolean removeMembers(String p){
         Member member = Members.remove(p);
         if(member!=null){
@@ -245,6 +246,8 @@ public class Guild implements ConfigurationSerializable {
         }
         else return false;
     }
+    //设置玩家为高级成员并保存
+    //判断是否满员
     int addAdvancedMembers(String p){
         Member member = Members.get(p);
         if (member!=null){
@@ -262,6 +265,7 @@ public class Guild implements ConfigurationSerializable {
         }
         return 3;
     }
+    //删除玩家的高级权限并保存
     Boolean removeAdvancedMembers(String p){
         Member member = Members.get(p);
         if(member!=null){
@@ -315,7 +319,7 @@ public class Guild implements ConfigurationSerializable {
         return Members.get(p);
 
     }
-
+    //此处留言板上限暂定为15
     Boolean addMsgToBoard(String msg){
         if(msgBoard.size()<15){
             msgBoard.add(msg);
@@ -332,6 +336,7 @@ public class Guild implements ConfigurationSerializable {
         msgBoard.clear();
     }
 
+    //从留言板中获取字符串
     String getMsgFromBoard(){
         StringBuilder msg =
                 new StringBuilder(plugin.colorFormat("&a&l留言板："));
@@ -347,6 +352,7 @@ public class Guild implements ConfigurationSerializable {
     }
 
     //成员权限方法
+    //调用Bukkit
     void givePerm(String p){
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(),"res pset main.gh "+p+" move true");
     }
@@ -354,6 +360,7 @@ public class Guild implements ConfigurationSerializable {
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(),"res pset main.gh "+p+" move remove");
     }
     //领地操作
+    //调用Bukkit
     void createResidence(Player player){
         player.setOp(true);
         player.chat("/resadmin select vert");
@@ -366,7 +373,7 @@ public class Guild implements ConfigurationSerializable {
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(),"resadmin confirm");
         ResidenceFLag=false;
     }
-    //查看公会情况
+    //查看公会情况，均为返回字符串
     String checkGuildName(){
         return "§2公会名: "+"§a"+GuildName+"\n";
     }
@@ -450,6 +457,7 @@ public class Guild implements ConfigurationSerializable {
         return League;
     }
 
+    //判断玩家是否为会长/副会长/管理员
     Boolean isLeader(String p){
         if(ChairMan.equals(p))
             return true;

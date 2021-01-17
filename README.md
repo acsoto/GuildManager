@@ -1,14 +1,8 @@
 # 简介
 
-对Minecraft Spigot服务端开发的Bukkit插件
-
-github: https://github.com/acsoto/GuildManager（持续更新）
+基于Minecraft Spigot服务端开发的Bukkit插件
 
 使用maven管理依赖
-
-代码量
-
-![image-20201206143303622](C:\Users\soto\AppData\Roaming\Typora\typora-user-images\image-20201206143303622.png)
 
 功能介绍和源码部分将具体说明各操作的实现
 
@@ -25,31 +19,7 @@ github: https://github.com/acsoto/GuildManager（持续更新）
 
 ## 效果展示
 
-### 
 
-![image-20201206131555170](C:\Users\soto\AppData\Roaming\Typora\typora-user-images\image-20201206131555170.png)
-
-![image-20201206143517324](C:\Users\soto\AppData\Roaming\Typora\typora-user-images\image-20201206143517324.png)
-
-
-
-![image-20201206143550449](C:\Users\soto\AppData\Roaming\Typora\typora-user-images\image-20201206143550449.png)
-
-![image-20201206143658001](C:\Users\soto\AppData\Roaming\Typora\typora-user-images\image-20201206143658001.png)
-
-![image-20201206143915877](C:\Users\soto\AppData\Roaming\Typora\typora-user-images\image-20201206143915877.png)
-
-
-
-![image-20201206143809138](C:\Users\soto\AppData\Roaming\Typora\typora-user-images\image-20201206143809138.png)
-
-
-
-![image-20201206143057436](C:\Users\soto\AppData\Roaming\Typora\typora-user-images\image-20201206143057436.png)
-
-右键或使用指令/gmg tpall使用向本公会在线玩家发出邀请
-
-![image-20201206143108997](C:\Users\soto\AppData\Roaming\Typora\typora-user-images\image-20201206143108997.png)
 
 ## 使用方法
 
@@ -61,11 +31,7 @@ github: https://github.com/acsoto/GuildManager（持续更新）
 
 ## 指令全集
 
-![image-20201206142658454](C:\Users\soto\AppData\Roaming\Typora\typora-user-images\image-20201206142658454.png)
 
-![image-20201206142708419](C:\Users\soto\AppData\Roaming\Typora\typora-user-images\image-20201206142708419.png)
-
-![image-20201206142721215](C:\Users\soto\AppData\Roaming\Typora\typora-user-images\image-20201206142721215.png)
 
 
 

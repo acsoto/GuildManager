@@ -100,7 +100,6 @@ public final class GuildManager extends JavaPlugin {
                 (int) getConfig().get("CreateGuildMoney");
         guilds.clearGuildList();
         loadGuildList();
-        gui.reloadButtons();
     }
 
 
@@ -111,7 +110,7 @@ public final class GuildManager extends JavaPlugin {
 
     //公会传送指令
     void tpGuild(String g, String p){
-        sendConsoleCmd("warp "+g+" "+p);
+        sendConsoleCmd("warp Guild_"+g+" "+p);
     }
     void setWarp(Player player , String g){
         player.setOp(true);

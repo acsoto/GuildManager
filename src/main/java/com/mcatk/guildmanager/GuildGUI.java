@@ -2,7 +2,6 @@ package com.mcatk.guildmanager;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -10,7 +9,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.SkullMeta;
+
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,13 +18,13 @@ public class GuildGUI implements Listener {
 
     GuildManager plugin = GuildManager.plugin;
     Guilds guilds = plugin.guilds;
-    Inventory guildsGUI ;
 
 
-    public GuildGUI() {
-        guildsGUI = Bukkit.createInventory(null, 54, "§6公会列表");
+    //公会列表GUI
+
+    void openGUI(Player player){
+        player.openInventory(createGuildsGUI());
     }
-
 
     ItemStack getAnGuildButton(Guild guild) {
         ItemStack item = new ItemStack(Material.PAPER);
@@ -37,7 +36,7 @@ public class GuildGUI implements Listener {
         des.add(guild.checkViceChairman());
         des.add(guild.checkManager());
         des.add("§2成员: §a" + guild.getPlayersNum() + "§7/§2" + guild.getMaxPlayers());
-        des.add("§2高级成员: §a" + guild.getAdvancedPlayersNum() + "§7/§2" + guild.getMaxAdvancedPlayers());
+        des.add("§2最大高级成员数: §a" + guild.getMaxAdvancedPlayers());
         des.add("§2等级: §a" + guild.getLevel());
         des.add("§2积分: §a" + guild.getPoints());
         des.add("§2资金: §a" + guild.getCash());
@@ -48,23 +47,19 @@ public class GuildGUI implements Listener {
         return item;
     }
 
-    void reloadButtons(){
-        guildsGUI.clear();
-        createGuildsGUI();
-    }
-
-    void openGUI(Player player){
-        player.openInventory(guildsGUI);
-    }
-
-    void createGuildsGUI(){
+    Inventory createGuildsGUI(){
+        Inventory guildsGUI = Bukkit.createInventory(null, 54, "§6公会列表");
         for (String key :
                 guilds.getGuildList().keySet()) {
             Guild guild = guilds.getGuild(key);
             ItemStack button = getAnGuildButton(guild);
             guildsGUI.addItem(button);
         }
+        return guildsGUI;
     }
+
+
+    //成员GUI
 
     void openMemGUI(Player player, Guild guild){
         player.openInventory(createGuildMemGUI(guild));
@@ -103,6 +98,7 @@ public class GuildGUI implements Listener {
         return item;
     }
 
+        //留言板GUI
     void openMsgGUI(Player player,Guild guild){
         player.openInventory(createGuildMsgGUI(guild));
     }
@@ -139,11 +135,11 @@ public class GuildGUI implements Listener {
                         event.getInventory().getTitle().contains("成员");
         if(unClickableGUI){
             event.setCancelled(true);
-            player.updateInventory();
-            if(event.getRawSlot()==0){
-                player.closeInventory();
-                player.openInventory(guildsGUI);
-            }
+//            player.updateInventory();
+//            if(event.getRawSlot()==0){
+//                player.closeInventory();
+//                player.openInventory(createGuildsGUI());
+//            }
         }
     }
 
