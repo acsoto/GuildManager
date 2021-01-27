@@ -47,7 +47,7 @@ public class GuildPAPI extends PlaceholderExpansion {
         }
         Guild guild = plugin.guilds.getPlayersGuild(player.getName());
         if(guild==null)
-            return null;
+            return "";
         //玩家所在公会的变量
         if(identifier.equals("id")){
             return guild.getID();
@@ -56,7 +56,9 @@ public class GuildPAPI extends PlaceholderExpansion {
             return guild.getName();
         }
         if(identifier.equals("prefix")){
-            return "§8[9"+guild.getName()+"§8]";
+            if(guild.isLeader(player.getName()))
+                return "";
+            else return "§8[9"+guild.getName()+"§8]";
         }
         if(identifier.equals("chairman")){
             return guild.getChairman();
@@ -79,10 +81,6 @@ public class GuildPAPI extends PlaceholderExpansion {
         }
         if(identifier.equals("max_player")){
             int n = guild.getMaxPlayers();
-            return Integer.toString(n);
-        }
-        if(identifier.equals("num_advanced_player")){
-            int n = guild.getAdvancedPlayersNum();
             return Integer.toString(n);
         }
         if(identifier.equals("max_advanced_player")){
@@ -113,9 +111,9 @@ public class GuildPAPI extends PlaceholderExpansion {
         if(identifier.equals("position_prefix")){
             String playerID = player.getName();
             if(guild.getChairman().equals(playerID))
-                return "§8[9"+guild.getName()+"§7|§4"+"会长"+"§8]";
+                return "§8["+guild.getName()+"§7|§4"+"会长"+"§8]";
             else if(guild.hasViceChairman(playerID))
-                return "§8[9"+guild.getName()+"§7|§c"+"副会长"+"§8]";
+                return "§8["+guild.getName()+"§7|§c"+"副会长"+"§8]";
             else if(guild.hasManager(playerID))
                 return "";
             else return "";

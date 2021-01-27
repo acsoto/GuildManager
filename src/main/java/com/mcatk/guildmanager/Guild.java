@@ -187,9 +187,6 @@ public class Guild implements ConfigurationSerializable {
     int getPlayersNum(){
         return Members.size();
     }
-    int getAdvancedPlayersNum(){
-        return MaxAdvancedPlayers;
-    }
     int getMaxPlayers() {
         return MaxPlayers;
     }
