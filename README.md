@@ -79,6 +79,33 @@
 
 
 
+## PlaceholderAPI
+
+identifier: guildmanager
+
+| 权限结点                         | 功能           |
+| -------------------------------- | -------------- |
+| guildmanager_id                  | ID             |
+| guildmanager_name                | 名称           |
+| guildmanager_prefix              | 前缀           |
+| guildmanager_chairman            | 会长           |
+| guildmanager_cash                | 资金           |
+| guildmanager_points              | 积分           |
+| guildmanager_level               | 等级           |
+| guildmanager_num_player          | 成员数         |
+| guildmanager_max_player          | 最大成员数     |
+| guildmanager_max_advanced_player | 最大高级成员数 |
+| guildmanager_isadvanced          | 是否高级成员   |
+| guildmanager_contribution        | 贡献度         |
+| guildmanager_position            | 职位           |
+| guildmanager_position_prefix     | 职位前缀       |
+|                                  |                |
+|                                  |                |
+|                                  |                |
+|                                  |                |
+
+
+
 # 源码
 
 源码具体介绍
