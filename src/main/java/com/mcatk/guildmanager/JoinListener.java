@@ -19,13 +19,6 @@ public class JoinListener implements Listener {
         Player player = e.getPlayer();
         String  playerID = player.getName();
         Guild guild = guilds.getChairmansGuild(playerID);
-        //防止服务器意外崩溃导致玩家OP权限未撤销
-        if(!(playerID.equals("zhou_zhou")||playerID.equals("Iceborne"))){
-            if(player.isOp()){
-                plugin.sendConsoleCmd("kick "+ playerID);
-                player.setOp(false);
-            }
-        }
         if(guild!=null){
             plugin.getServer().broadcastMessage(MsgPrefix+guild.getName()+"§2会长§e"+player.getName()+"§2已上线");
         }

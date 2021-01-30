@@ -36,6 +36,7 @@ public class Guild implements ConfigurationSerializable {
     private String League; //联盟
     private String Ally; //伙伴公会
     private int ReposSize;
+    private boolean HasChangedName;
 
     //构造方法
     public Guild(String ID, String player) {
@@ -68,6 +69,7 @@ public class Guild implements ConfigurationSerializable {
         map.put("League",League);
         map.put("Ally",Ally);
         map.put("ReposSize",ReposSize);
+        map.put("HasChangedName",HasChangedName);
         return map;
     }
     //反序列化构造方法
@@ -106,6 +108,7 @@ public class Guild implements ConfigurationSerializable {
                 (String) map.get("Ally"):"";
         this.ReposSize=map.get("ReposSize") !=null?
                 (int) map.get("ReposSize"):9;
+        this.HasChangedName= map.get("HasChangedName") != null && (boolean) map.get("HasChangedName");
         saveConfig();
     }
     //成员变量增删查改
@@ -346,6 +349,14 @@ public class Guild implements ConfigurationSerializable {
 
     public ArrayList<String> getMsgBoard() {
         return msgBoard;
+    }
+
+    public boolean isHasChangedName() {
+        return HasChangedName;
+    }
+
+    public void setHasChangedName(boolean hasChangedName) {
+        HasChangedName = hasChangedName;
     }
 
     //成员权限方法

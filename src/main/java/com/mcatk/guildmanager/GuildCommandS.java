@@ -199,12 +199,24 @@ public class GuildCommandS implements CommandExecutor {
         }
 
         if (args[0].equalsIgnoreCase("setname")){
-            if(args.length!=2){
-                sender.sendMessage(ErrorPrefix+"参数错误");
-                return true;
+            if(guild.isHasChangedName()){
+                sender.sendMessage(ErrorPrefix+"公会已设置名称,需要更名请使用公会更名卡");
             }
-            guild.setName(args[1]);
-            sender.sendMessage(MsgPrefix + "成功修改为"+args[1]);
+            else {
+                if (args.length != 2) {
+                    sender.sendMessage(ErrorPrefix + "参数错误");
+                }
+                else {
+                    if(args[1].contains("&")||args[1].contains("§")){
+                        sender.sendMessage(ErrorPrefix + "不可包含颜色代码");
+                    }
+                    else {
+                        guild.setName(args[1]);
+                        guild.setHasChangedName(true);
+                        sender.sendMessage(MsgPrefix + "成功修改为" + args[1]);
+                    }
+                }
+            }
             return true;
         }
         if (args[0].equalsIgnoreCase("levelup")){

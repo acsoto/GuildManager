@@ -81,8 +81,6 @@
 
 ## PlaceholderAPI
 
-identifier: guildmanager
-
 | 权限结点                         | 功能           |
 | -------------------------------- | -------------- |
 | guildmanager_id                  | ID             |

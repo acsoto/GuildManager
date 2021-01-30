@@ -58,7 +58,7 @@ public class GuildPAPI extends PlaceholderExpansion {
         if(identifier.equals("prefix")){
             if(guild.isLeader(player.getName()))
                 return "";
-            else return "§8[9"+guild.getName()+"§8]";
+            else return "§7["+guild.getName()+"§7]&r";
         }
         if(identifier.equals("chairman")){
             return guild.getChairman();
@@ -111,9 +111,9 @@ public class GuildPAPI extends PlaceholderExpansion {
         if(identifier.equals("position_prefix")){
             String playerID = player.getName();
             if(guild.getChairman().equals(playerID))
-                return "§8["+guild.getName()+"§7|§4"+"会长"+"§8]";
+                return "§7["+guild.getName()+"§f|§4"+"会长"+"§7]&r";
             else if(guild.hasViceChairman(playerID))
-                return "§8["+guild.getName()+"§7|§c"+"副会长"+"§8]";
+                return "§7["+guild.getName()+"§f|§c"+"副会长"+"§7]&r";
             else if(guild.hasManager(playerID))
                 return "";
             else return "";
