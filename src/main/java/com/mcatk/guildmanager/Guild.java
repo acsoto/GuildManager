@@ -31,12 +31,13 @@ public class Guild implements ConfigurationSerializable {
     private int Points; //积分
     private int RemoveMemLimitFlag; //成员删除限制flag
     private boolean ResidenceFLag; //是否拥有领地
-    private HashMap<String , Member> Members= new HashMap<>(); //成员
+    private HashMap<String , Member> Members = new HashMap<>(); //成员
     private int Cash; //资金
     private String League; //联盟
     private String Ally; //伙伴公会
     private int ReposSize;
     private boolean HasChangedName;
+    private ArrayList<String> ApplicantList =  new ArrayList<>();
 
     //构造方法
     public Guild(String ID, String player) {
@@ -474,6 +475,9 @@ public class Guild implements ConfigurationSerializable {
         return hasViceChairman(p);
     }
 
+    public ArrayList<String> getApplicantList() {
+        return ApplicantList;
+    }
 
     //存储方法
     void saveConfig(){

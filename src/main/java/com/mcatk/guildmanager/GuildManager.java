@@ -21,8 +21,10 @@ public final class GuildManager extends JavaPlugin {
     public GuildRepository guildRepository;
     public JoinListener joinListener;
     public GuildItem guildItem;
+    public PlayerCache playerCache;
     private static Economy econ;
     private int reqCreateGuildMoney;
+
 
     @Override
     public void onEnable() {
@@ -45,6 +47,7 @@ public final class GuildManager extends JavaPlugin {
         guildItem = new GuildItem();
         guildRepository = new GuildRepository();
         joinListener = new JoinListener(plugin,guilds);
+        playerCache = new PlayerCache();
         //生成配置文件
         saveDefaultConfig();
         //注册指令

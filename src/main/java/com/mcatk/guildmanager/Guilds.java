@@ -83,4 +83,14 @@ public class Guilds {
         }
         return 2;
     }
+
+    boolean isPlayerInAnyApplicantList(String p){
+        for (String key :
+                GuildList.keySet()) {
+            Guild  g = getGuild(key);
+            if (g.getApplicantList().contains(p))
+                return true;
+        }
+        return false;
+    }
 }

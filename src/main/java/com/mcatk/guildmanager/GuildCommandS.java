@@ -1,10 +1,13 @@
 package com.mcatk.guildmanager;
 
+import me.clip.placeholderapi.util.Msg;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+
+import java.util.function.Predicate;
 
 public class GuildCommandS implements CommandExecutor {
     final String MsgPrefix = "§6§l公会系统 §7>>> §a";
@@ -51,12 +54,35 @@ public class GuildCommandS implements CommandExecutor {
                 sender.sendMessage("§a/gmgs adda <player>  §2增加玩家到公会广场名单");
                 sender.sendMessage("§a/gmgs removea <player>  §2从公会广场名单删除玩家");
             }
-            sender.sendMessage("§a/gmgs add <player>  §2增加玩家");
+            sender.sendMessage("§a/gmgs app  §2查看公会加入申请");
+//            sender.sendMessage("§a/gmgs add <player>  §2增加玩家");
             sender.sendMessage("§a/gmgs remove <player>  §2删除玩家");
             sender.sendMessage("§a/gmgs buytpall (num) §2购买公会召集令");
             sender.sendMessage("§a/gmgs tpall  §2发起召集");
             sender.sendMessage("§a/gmgs clearmsg  §2清空留言板");
             return true;
+        }
+        if(args[0].equalsIgnoreCase("app")){
+            if(args.length==1) {
+                sender.sendMessage("申请列表");
+                for (String p :
+                        guild.getApplicantList()) {
+                    sender.sendMessage(p + "\n");
+                }
+                sender.sendMessage("输入/gmgs app <ID> 通过玩家申请");
+            }
+            else if(args.length!=2){
+                sender.sendMessage((ErrorPrefix+"参数错误"));
+            }
+            else {
+                if(guild.getApplicantList().contains(args[1])) {
+                    if (guild.addMembers(args[1])) {
+                        sender.sendMessage(MsgPrefix + "添加成功");
+                    }
+                    else sender.sendMessage(ErrorPrefix + "成员已满");
+                }
+                else sender.sendMessage(ErrorPrefix + "该玩家不在申请列表");
+            }
         }
         if (args[0].equalsIgnoreCase("add")){
             if(args.length<2) {

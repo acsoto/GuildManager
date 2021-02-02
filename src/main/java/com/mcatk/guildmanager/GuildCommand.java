@@ -22,12 +22,12 @@ public class GuildCommand implements CommandExecutor {
             sender.sendMessage("§e------------公会帮助------------");
             sender.sendMessage("§a/gmg list  §2公会列表");
             sender.sendMessage("§a/gmg gui  §2公会列表");
+            sender.sendMessage("§a/gmg join <ID>  §2申请加入公会");
             sender.sendMessage("§a/gmg check <ID>  §2查看公会详情");
             sender.sendMessage("§a/gmg tp <guild> §2传送到某公会主城");
             sender.sendMessage("§a/gmg create <ID> §2创建公会（ID必须为英文）");
             sender.sendMessage("§a/gmg t §2传送到自己的公会主城");
             sender.sendMessage("§a/gmg s §2查看公会状态");
-            sender.sendMessage("§a/gmg r §2打开公会仓库");
             sender.sendMessage("§a/gmg offer <AC点> §2捐助公会资金 1wAC = 1GuildCash");
             sender.sendMessage("§a/gmg msg §2公会留言");
             sender.sendMessage("§a/gmg mems §2查看公会成员列表");
@@ -42,6 +42,30 @@ public class GuildCommand implements CommandExecutor {
         }
         if(args[0].equalsIgnoreCase("gui")){
             plugin.gui.openGUI((Player)sender);
+            return true;
+        }
+        if(args[0].equalsIgnoreCase("join")){
+            if(args.length!=2) {
+                    sender.sendMessage(ErrorPrefix + "参数错误");
+                }
+            else if(guilds.getPlayersGuild(sender.getName())!=null){
+                sender.sendMessage(ErrorPrefix+"已有公会");
+            }
+            else {
+                Guild guild = guilds.getGuild(args[1]);
+                if(guild==null) {
+                    sender.sendMessage(ErrorPrefix + "不存在公会");
+                }
+                else {
+                    if(guilds.isPlayerInAnyApplicantList(sender.getName())){
+                        sender.sendMessage(ErrorPrefix+"今天已经申请过公会，明天再试");
+                    }
+                    else {
+                        guild.getApplicantList().add(sender.getName());
+                        sender.sendMessage(MsgPrefix+"申请成功，等待通过");
+                    }
+                }
+            }
             return true;
         }
         if(args[0].equalsIgnoreCase("check")){
