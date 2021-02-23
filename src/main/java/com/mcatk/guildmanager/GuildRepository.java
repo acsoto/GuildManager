@@ -3,7 +3,6 @@ package com.mcatk.guildmanager;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -14,15 +13,14 @@ import org.bukkit.inventory.ItemStack;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
 
 public class GuildRepository implements Listener {
     GuildManager plugin = GuildManager.plugin;
 
     void openRepos (Player player, Guild guild) throws IOException {
-        Inventory repos = newRepos(guild.getID(),guild.getReposSize());
-        restoreRepos(guild.getID(),repos);
+        Inventory repos = newRepos(guild.getId(),guild.getReposSize());
+        restoreRepos(guild.getId(),repos);
         player.openInventory(repos);
     }
 
@@ -60,7 +58,7 @@ public class GuildRepository implements Listener {
         if(event.getInventory().getTitle().contains("公会仓库")) {
             String playerID = event.getPlayer().getName();
             Guild guild = plugin.guilds.getPlayersGuild(playerID);
-            saveRepos(guild.getID(),event.getInventory());
+            saveRepos(guild.getId(),event.getInventory());
         }
     }
 

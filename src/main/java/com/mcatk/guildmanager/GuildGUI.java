@@ -31,7 +31,7 @@ public class GuildGUI implements Listener {
         ItemMeta meta =  item.getItemMeta();
         meta.setDisplayName(guild.getName());
         ArrayList<String> des = new ArrayList<>();
-        des.add("§2公会ID: §a" + guild.getID());
+        des.add("§2公会ID: §a" + guild.getId());
         des.add("§2会长: §a" + guild.getChairman());
         des.add(guild.checkViceChairman());
         des.add(guild.checkManager());
