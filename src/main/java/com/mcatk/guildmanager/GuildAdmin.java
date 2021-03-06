@@ -10,9 +10,9 @@ public class GuildAdmin implements CommandExecutor {
     private final GuildManager plugin;
     private final Guilds guilds;
     
-    GuildAdmin(GuildManager plugin, Guilds guilds) {
+    GuildAdmin(GuildManager plugin) {
         this.plugin = plugin;
-        this.guilds = guilds;
+        this.guilds = plugin.getGuilds();
     }
     
     @Override

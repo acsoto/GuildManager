@@ -4,8 +4,6 @@ import org.bukkit.Bukkit;
 
 public class ServerCmd {
     
-    
-    
     public static void sendConsoleCmd(String cmd) {
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd);
     }
@@ -17,6 +15,5 @@ public class ServerCmd {
     public static void removePermission(String player, String permission) {
         sendConsoleCmd("lp user " + player + " permission clear " + permission);
     }
-    
     
 }

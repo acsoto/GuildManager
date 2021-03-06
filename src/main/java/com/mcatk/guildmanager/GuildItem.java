@@ -1,5 +1,6 @@
 package com.mcatk.guildmanager;
 
+import com.mcatk.guildmanager.msgs.Message;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -12,12 +13,12 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.util.ArrayList;
 
 public class GuildItem implements Listener {
-    final String MsgPrefix = "§6§l公会系统 §7>>> §a";
-    final String ErrorPrefix = "§4§l错误 §7>>> §c";
+    private GuildManager plugin;
+    private Guilds guilds;
     private final ItemStack tpTicket;
-    private final Guilds guilds = GuildManager.plugin.guilds;
     
-    public GuildItem() {
+    public GuildItem(GuildManager plugin) {
+        guilds = plugin.getGuilds();
         //构造tpTicket
         tpTicket = new ItemStack(Material.PAPER);
         ItemMeta meta = tpTicket.getItemMeta();
@@ -55,7 +56,6 @@ public class GuildItem implements Listener {
         return 3;
     }
     
-    
     @EventHandler
     public void onRightClick(PlayerInteractEvent event) {
         if (event.getAction() == Action.RIGHT_CLICK_AIR) {
@@ -63,12 +63,13 @@ public class GuildItem implements Listener {
             if (player.getInventory().getItemInMainHand().isSimilar(tpTicket)) {
                 String playerID = player.getName();
                 Guild guild = guilds.getPlayersGuild(playerID);
-                if (guild == null)
-                    player.sendMessage(MsgPrefix + "你没有公会");
-                else if (!guild.hasLeader(playerID))
-                    player.sendMessage(MsgPrefix + "只有会长/副会长/管理员可以使用");
-                else {
-                    player.sendMessage(MsgPrefix + "已发动召集令");
+                if (guild == null) {
+                    player.sendMessage(Message.INFO + "你没有公会");
+                } else if (!guild.hasLeader(playerID)) {
+                    player.sendMessage(Message.INFO + "只有会长/副会长/管理员可以使用");
+                } else {
+                    plugin.tpAll(guild, player);
+                    player.sendMessage(Message.INFO + "已发动召集令");
                     consumeItem(player.getInventory().getItemInMainHand());
                 }
             }

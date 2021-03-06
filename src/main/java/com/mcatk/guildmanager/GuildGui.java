@@ -10,25 +10,27 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class GuildGUI implements Listener {
-
-    GuildManager plugin = GuildManager.plugin;
-    Guilds guilds = plugin.guilds;
-
-
+public class GuildGui implements Listener {
+    
+    private GuildManager plugin;
+    private Guilds guilds;
+    
     //公会列表GUI
-
-    void openGUI(Player player){
-        player.openInventory(createGuildsGUI());
+    public GuildGui(GuildManager plugin) {
+        this.plugin = plugin;
+        this.guilds = plugin.getGuilds();
     }
-
+    
+    void openGui(Player player) {
+        player.openInventory(createGuildsGui());
+    }
+    
     ItemStack getAnGuildButton(Guild guild) {
         ItemStack item = new ItemStack(Material.PAPER);
-        ItemMeta meta =  item.getItemMeta();
+        ItemMeta meta = item.getItemMeta();
         meta.setDisplayName(guild.getName());
         ArrayList<String> des = new ArrayList<>();
         des.add("§2公会ID: §a" + guild.getId());
@@ -40,107 +42,106 @@ public class GuildGUI implements Listener {
         des.add("§2等级: §a" + guild.getLevel());
         des.add("§2积分: §a" + guild.getPoints());
         des.add("§2资金: §a" + guild.getCash());
-        des.add("§2伙伴公会: §a" + guild.getAlly());
-        des.add("§2联盟: §a" + guild.getLeague());
         meta.setLore(des);
         item.setItemMeta(meta);
         return item;
     }
-
-    Inventory createGuildsGUI(){
-        Inventory guildsGUI = Bukkit.createInventory(null, 54, "§6公会列表");
+    
+    Inventory createGuildsGui() {
+        Inventory gui = Bukkit.createInventory(null, 54, "§6公会列表");
         for (String key :
-                guilds.getGuildList().keySet()) {
+                guilds.getGuildMap().keySet()) {
             Guild guild = guilds.getGuild(key);
             ItemStack button = getAnGuildButton(guild);
-            guildsGUI.addItem(button);
+            gui.addItem(button);
         }
-        return guildsGUI;
+        return gui;
     }
-
-
+    
+    
     //成员GUI
-
-    void openMemGUI(Player player, Guild guild){
-        player.openInventory(createGuildMemGUI(guild));
+    
+    void openMemGui(Player player, Guild guild) {
+        player.openInventory(createGuildMemGui(guild));
     }
-
-    Inventory createGuildMemGUI(Guild guild){
-        HashMap<String,Member> memList = guild.getMembers();
-        Inventory memGUI = Bukkit.createInventory(null, 54, guild.getName()+"§6成员");
+    
+    Inventory createGuildMemGui(Guild guild) {
+        HashMap<String, Member> memList = guild.getMembers();
+        Inventory gui = Bukkit.createInventory(null, 54, guild.getName() + "§6成员");
         for (String playerID :
                 memList.keySet()) {
             Member player = guild.getMember(playerID);
-            ItemStack button = getAnMemberButton(guild,player);
-            memGUI.addItem(button);
+            ItemStack button = getAnMemberButton(guild, player);
+            gui.addItem(button);
         }
-        return memGUI;
+        return gui;
     }
-
+    
     ItemStack getAnMemberButton(Guild guild, Member player) {
         ItemStack item = new ItemStack(Material.SKULL_ITEM);
-        ItemMeta meta =  item.getItemMeta();
-        meta.setDisplayName(player.getID());
+        ItemMeta meta = item.getItemMeta();
+        meta.setDisplayName(player.getId());
         ArrayList<String> des = new ArrayList<>();
-        if(guild.hasLeader(player.getID())){
-            String pName = player.getID();
-            if(guild.getChairman().equalsIgnoreCase(pName))
+        if (guild.hasLeader(player.getId())) {
+            String playerName = player.getId();
+            if (guild.getChairman().equalsIgnoreCase(playerName)) {
                 des.add("§6会长");
-            else if (guild.getViceChairman().contains(pName))
+            } else if (guild.getViceChairman().contains(playerName)) {
                 des.add("§6副会长");
-            else if (guild.getManager().contains(pName))
+            } else if (guild.getManager().contains(playerName)) {
                 des.add("§6管理员");
+            }
         }
-        des.add("§2ID: §a" + player.getID());
+        des.add("§2ID: §a" + player.getId());
         des.add("§2贡献度: §a" + player.getContribution());
         meta.setLore(des);
         item.setItemMeta(meta);
         return item;
     }
-
-        //留言板GUI
-    void openMsgGUI(Player player,Guild guild){
-        player.openInventory(createGuildMsgGUI(guild));
+    
+    //留言板GUI
+    void openMsgGui(Player player, Guild guild) {
+        player.openInventory(createGuildMsgGui(guild));
     }
-
-    Inventory createGuildMsgGUI(Guild guild){
-        ArrayList <String> msgBoard = guild.getMsgBoard();
-        Inventory msgGUI = Bukkit.createInventory(null, 18, guild.getName()+"§6留言板");
+    
+    Inventory createGuildMsgGui(Guild guild) {
+        ArrayList<String> msgBoard = guild.getMsgBoard();
+        Inventory gui = Bukkit.createInventory(null, 18, guild.getName() + "§6留言板");
         for (String str :
                 msgBoard) {
             ItemStack button = getAnMsgButton(str);
-            msgGUI.addItem(button);
+            gui.addItem(button);
         }
-        return msgGUI;
+        return gui;
     }
-
+    
     ItemStack getAnMsgButton(String str) {
         ItemStack item = new ItemStack(Material.PAPER);
-        ItemMeta meta =  item.getItemMeta();
+        ItemMeta meta = item.getItemMeta();
         meta.setDisplayName(str);
         item.setItemMeta(meta);
         return item;
     }
-
-
+    
+    
     //禁止玩家拿走物品
     @EventHandler
-    public void onInventoryClick(InventoryClickEvent event){
-        if(!(event.getWhoClicked() instanceof Player)){
+    public void onInventoryClick(InventoryClickEvent event) {
+        if (!(event.getWhoClicked() instanceof Player)) {
             return;
         }
         Player player = (Player) event.getWhoClicked();
-        boolean unClickableGUI =
-                event.getInventory().getTitle().equalsIgnoreCase("§6公会列表")||
+        boolean unClickableGui =
+                event.getInventory().getTitle().equalsIgnoreCase("§6公会列表") ||
                         event.getInventory().getTitle().contains("成员");
-        if(unClickableGUI){
+        if (unClickableGui) {
             event.setCancelled(true);
-//            player.updateInventory();
-//            if(event.getRawSlot()==0){
-//                player.closeInventory();
-//                player.openInventory(createGuildsGUI());
-//            }
+            //            player.updateInventory();
+            //            if(event.getRawSlot()==0){
+            //                player.closeInventory();
+            //                player.openInventory(createGuildsGUI());
+            //            }
         }
     }
-
+    
 }

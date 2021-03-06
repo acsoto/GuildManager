@@ -14,10 +14,10 @@ public class GuildCommandS implements CommandExecutor {
     private String[] args;
     private Guild guild;
     
-    GuildCommandS(GuildManager plugin, Guilds guilds) {
+    GuildCommandS(GuildManager plugin) {
         this.plugin = plugin;
-        this.guilds = guilds;
-        this.guildItem = new GuildItem();
+        this.guilds = plugin.getGuilds();
+        this.guildItem = new GuildItem(plugin);
     }
     
     @Override
@@ -79,9 +79,6 @@ public class GuildCommandS implements CommandExecutor {
         }
         if (args[0].equalsIgnoreCase("position")) {
             position();
-        }
-        if (args[0].equalsIgnoreCase("setally")) {
-            setAlly();
         }
     }
     
@@ -362,17 +359,6 @@ public class GuildCommandS implements CommandExecutor {
                     sender.sendMessage(Message.ERROR + "参数错误:应为v/m");
                 }
             }
-        }
-    }
-    
-    private void setAlly() {
-        if (args.length != 2) {
-            sendParameterError();
-        }
-        if (guilds.hasGuild(args[1])) {
-            guild.setAlly(args[1]);
-        } else {
-            sender.sendMessage(Message.ERROR + "无此公会");
         }
     }
     
