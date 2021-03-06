@@ -34,6 +34,7 @@ public class GuildPAPI extends PlaceholderExpansion {
         return "guildmanager";
     }
     
+    @Override
     public String getVersion() {
         return plugin.getDescription().getVersion();
     }
@@ -56,7 +57,7 @@ public class GuildPAPI extends PlaceholderExpansion {
             return guild.getName();
         }
         if (identifier.equals("prefix")) {
-            if (guild.isLeader(player.getName()))
+            if (guild.hasLeader(player.getName()))
                 return "";
             else return "§7[" + guild.getName() + "§7]&r";
         }

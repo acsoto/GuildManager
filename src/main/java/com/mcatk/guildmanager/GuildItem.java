@@ -65,7 +65,7 @@ public class GuildItem implements Listener {
                 Guild guild = guilds.getPlayersGuild(playerID);
                 if (guild == null)
                     player.sendMessage(MsgPrefix + "你没有公会");
-                else if (!guild.isLeader(playerID))
+                else if (!guild.hasLeader(playerID))
                     player.sendMessage(MsgPrefix + "只有会长/副会长/管理员可以使用");
                 else {
                     player.sendMessage(MsgPrefix + "已发动召集令");

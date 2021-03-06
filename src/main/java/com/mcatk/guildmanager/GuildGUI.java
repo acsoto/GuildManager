@@ -82,7 +82,7 @@ public class GuildGUI implements Listener {
         ItemMeta meta =  item.getItemMeta();
         meta.setDisplayName(player.getID());
         ArrayList<String> des = new ArrayList<>();
-        if(guild.isLeader(player.getID())){
+        if(guild.hasLeader(player.getID())){
             String pName = player.getID();
             if(guild.getChairman().equalsIgnoreCase(pName))
                 des.add("§6会长");

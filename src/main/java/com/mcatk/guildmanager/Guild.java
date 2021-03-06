@@ -164,8 +164,12 @@ public class Guild implements ConfigurationSerializable {
         return manager.remove(p);
     }
     
-    Boolean hasManager(String p) {
+    public boolean hasManager(String p) {
         return manager.contains(p);
+    }
+    
+    public boolean hasChairman(String p){
+        return p.equals(chairMan)||viceChairman.contains(p);
     }
     
     public int getReposSize() {
@@ -525,14 +529,8 @@ public class Guild implements ConfigurationSerializable {
     }
     
     //判断玩家是否为会长/副会长/管理员
-    Boolean isLeader(String p) {
-        if (chairMan.equals(p)) {
-            return true;
-        }
-        if (hasManager(p)) {
-            return true;
-        }
-        return hasViceChairman(p);
+    Boolean hasLeader(String p) {
+        return hasChairman(p)||hasManager(p);
     }
     
     public ArrayList<String> getApplicantList() {
@@ -544,5 +542,6 @@ public class Guild implements ConfigurationSerializable {
         guildsSec.set(this.id, this);
         plugin.saveConfig();
     }
+    
 }
 

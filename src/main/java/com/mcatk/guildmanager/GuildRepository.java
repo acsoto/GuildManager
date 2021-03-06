@@ -26,8 +26,7 @@ public class GuildRepository implements Listener {
 
     Inventory newRepos (String guildID , int size){
         Guild guild = plugin.guilds.getGuild(guildID);
-        Inventory repos = Bukkit.createInventory(null, size, guild.getName()+" §6公会仓库");
-        return repos;
+        return Bukkit.createInventory(null, size, guild.getName()+" §6公会仓库");
     }
 
 
@@ -44,7 +43,7 @@ public class GuildRepository implements Listener {
             Player player = (Player) event.getWhoClicked();
             String playerID = player.getName();
             Guild guild = plugin.guilds.getPlayersGuild(playerID);
-            if (guild.isLeader(playerID) ||
+            if (guild.hasLeader(playerID) ||
                     guild.getMember(playerID).getContribution() > 10) {
                 event.setCancelled(false);
             } else {
