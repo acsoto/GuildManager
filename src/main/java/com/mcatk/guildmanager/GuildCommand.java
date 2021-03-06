@@ -25,6 +25,7 @@ public class GuildCommand implements CommandExecutor {
         this.guild = guilds.getPlayersGuild(sender.getName());
         if (args.length == 0) {
             printHelp();
+            return true;
         }
         onCommandWithoutGuild();
         //以下要求发送者在一个公会之中

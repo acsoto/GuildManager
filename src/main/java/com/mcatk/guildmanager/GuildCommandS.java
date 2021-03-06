@@ -37,9 +37,7 @@ public class GuildCommandS implements CommandExecutor {
             printHelp();
             return true;
         }
-        if (guild.hasLeader(sender.getName())) {
-            onCommandLeader();
-        }
+        onCommandLeader();
         if (guild.hasChairman(sender.getName())) {
             onCommandChairman();
         }

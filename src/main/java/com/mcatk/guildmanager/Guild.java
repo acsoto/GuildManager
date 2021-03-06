@@ -44,6 +44,7 @@ public class Guild implements ConfigurationSerializable {
         this.viceChairman = new ArrayList<>();
         this.manager = new ArrayList<>();
         this.members = new HashMap<>();
+        addMembers(player);
         this.applicantList = new ArrayList<>();
     }
     
@@ -70,40 +71,39 @@ public class Guild implements ConfigurationSerializable {
         return map;
     }
     
-    //反序列化构造方法
-    @SuppressWarnings("unchecked")
-    public Guild(Map<String, Object> map) {
-        this.id = map.get("ID") != null ?
-                (String) map.get("ID") : null;
-        this.guildName = map.get("GuildName") != null ?
+    //反序列化
+    public static Guild deserialize(Map<String, Object> map) {
+        String id = (String) map.get("ID");
+        String chairman = (String) map.get("chairman");
+        Guild guild = new Guild(id, chairman);
+        guild.guildName = map.get("GuildName") != null ?
                 (String) map.get("GuildName") : "";
-        this.chairMan = map.get("ChairMan") != null ?
-                (String) map.get("ChairMan") : "";
-        this.viceChairman = map.get("viceChairman") != null ?
+        guild.viceChairman = map.get("viceChairman") != null ?
                 (ArrayList<String>) map.get("viceChairman") : new ArrayList<>();
-        this.manager = map.get("Manager") != null ?
+        guild.manager = map.get("Manager") != null ?
                 (ArrayList<String>) map.get("Manager") : new ArrayList<>();
-        this.level = map.get("Level") != null ?
+        guild.level = map.get("Level") != null ?
                 (int) map.get("Level") : 1;
-        this.maxPlayers = map.get("MaxPlayers") != null ?
+        guild.maxPlayers = map.get("MaxPlayers") != null ?
                 (int) map.get("MaxPlayers") : 10;
-        this.advancedPlayers = map.get("AdvancedPlayers") != null ?
+        guild.advancedPlayers = map.get("AdvancedPlayers") != null ?
                 (int) map.get("AdvancedPlayers") : 0;
-        this.maxAdvancedPlayers = map.get("MaxAdvancedPlayers") != null ?
+        guild.maxAdvancedPlayers = map.get("MaxAdvancedPlayers") != null ?
                 (int) map.get("MaxAdvancedPlayers") : 5;
-        this.points = map.get("Points") != null ?
+        guild.points = map.get("Points") != null ?
                 (int) map.get("Points") : 0;
-        this.removeMemLimitFlag = map.get("RemoveMemLimitFlag") != null ?
+        guild.removeMemLimitFlag = map.get("RemoveMemLimitFlag") != null ?
                 (int) map.get("RemoveMemLimitFlag") : 0;
-        this.residenceFLag = map.get("ResidenceFLag") != null && (boolean) map.get("ResidenceFLag");
-        this.members = map.get("Members") != null ?
+        guild.residenceFLag = map.get("ResidenceFLag") != null && (boolean) map.get("ResidenceFLag");
+        guild.members = map.get("Members") != null ?
                 (HashMap<String, Member>) map.get("Members") : new HashMap<>();
-        this.cash = map.get("Cash") != null ?
+        guild.cash = map.get("Cash") != null ?
                 (int) map.get("Cash") : 0;
-        this.reposSize = map.get("ReposSize") != null ?
+        guild.reposSize = map.get("ReposSize") != null ?
                 (int) map.get("ReposSize") : 9;
-        this.hasChangedName = map.get("HasChangedName") != null
+        guild.hasChangedName = map.get("HasChangedName") != null
                 && (boolean) map.get("HasChangedName");
+        return guild;
     }
     
     //成员变量增删查改
