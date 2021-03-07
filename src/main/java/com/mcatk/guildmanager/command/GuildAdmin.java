@@ -1,5 +1,8 @@
-package com.mcatk.guildmanager;
+package com.mcatk.guildmanager.command;
 
+import com.mcatk.guildmanager.Guild;
+import com.mcatk.guildmanager.GuildManager;
+import com.mcatk.guildmanager.Guilds;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -10,7 +13,7 @@ public class GuildAdmin implements CommandExecutor {
     private final GuildManager plugin;
     private final Guilds guilds;
     
-    GuildAdmin(GuildManager plugin) {
+    public GuildAdmin(GuildManager plugin) {
         this.plugin = plugin;
         this.guilds = plugin.getGuilds();
     }
@@ -24,7 +27,7 @@ public class GuildAdmin implements CommandExecutor {
         if (args.length == 0) {
             sender.sendMessage("§e------------ADMIN帮助------------");
             sender.sendMessage("§a/gmgadmin reload §2重载插件");
-            sender.sendMessage("§a/gmgadmin create <guild> (player)§2创建公会");
+            sender.sendMessage("§a/gmgadmin create <guild> <player>§2创建公会");
             sender.sendMessage("§a/gmgadmin remove <guild> §2移除公会");
             sender.sendMessage("§a/gmgadmin check <guild> §2查看公会情况");
             sender.sendMessage("§a/gmgadmin rename <guild> <player> §2修改公会名");
@@ -38,7 +41,7 @@ public class GuildAdmin implements CommandExecutor {
             return true;
         }
         if (args[0].equalsIgnoreCase("reload")) {
-            plugin.reloadPlugin();
+            
             return true;
         }
         if (args.length == 1) {
@@ -47,7 +50,7 @@ public class GuildAdmin implements CommandExecutor {
         }
         if (args[0].equalsIgnoreCase("create")) {
             if (args.length == 3) {
-                guilds.newGuild(args[1], args[2]);
+                guilds.addGuild(args[1], args[2]);
                 sender.sendMessage(msgPrefix + "创建成功");
                 return true;
             }
@@ -62,8 +65,7 @@ public class GuildAdmin implements CommandExecutor {
         if (args[0].equalsIgnoreCase("remove")) {
             if (guilds.removeGuild(args[1])) {
                 sender.sendMessage(msgPrefix + "删除成功");
-            }
-            else {
+            } else {
                 sender.sendMessage(msgPrefix + "§c不存在此公会");
             }
             return true;
@@ -88,20 +90,10 @@ public class GuildAdmin implements CommandExecutor {
             }
             return true;
         }
-        if (args[0].equalsIgnoreCase("sc")) {
-            if (args.length != 3) {
-                sender.sendMessage(msgPrefix + "§c参数有误");
-                return true;
-            }
-            guild.setChairman(args[2]);
-            sender.sendMessage(msgPrefix + "设置成功");
-            return true;
-        }
         if (args[0].equalsIgnoreCase("addmem")) {
             if (guild.addMembers(args[2])) {
                 sender.sendMessage(msgPrefix + "添加成功");
-            }
-            else {
+            } else {
                 sender.sendMessage(msgPrefix + "成员已满");
             }
             return true;
@@ -109,8 +101,7 @@ public class GuildAdmin implements CommandExecutor {
         if (args[0].equalsIgnoreCase("removemem")) {
             if (guild.removeMembers(args[2])) {
                 sender.sendMessage(msgPrefix + "删除成功");
-            }
-            else {
+            } else {
                 sender.sendMessage(msgPrefix + "不存在该玩家");
             }
             return true;
@@ -133,8 +124,7 @@ public class GuildAdmin implements CommandExecutor {
             int n = Integer.parseInt(args[2]);
             if (guild.takeCash(n)) {
                 sender.sendMessage(msgPrefix + "操作成功");
-            }
-            else {
+            } else {
                 sender.sendMessage(msgPrefix + "§c错误：超过其资金");
             }
             return true;
@@ -157,8 +147,7 @@ public class GuildAdmin implements CommandExecutor {
             int n = Integer.parseInt(args[2]);
             if (guild.takePoints(n)) {
                 sender.sendMessage(msgPrefix + "操作成功");
-            }
-            else {
+            } else {
                 sender.sendMessage(msgPrefix + "§c错误：超过其积分");
             }
             return true;

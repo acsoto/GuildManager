@@ -22,12 +22,6 @@ public class GuildRepository implements Listener {
         this.plugin = plugin;
     }
     
-    void openRepos(Player player, Guild guild) throws IOException {
-        Inventory repos = newRepos(guild.getId(), guild.getReposSize());
-        restoreRepos(guild.getId(), repos);
-        player.openInventory(repos);
-    }
-    
     Inventory newRepos(String guildID, int size) {
         Guild guild = plugin.getGuilds().getGuild(guildID);
         return Bukkit.createInventory(null, size, guild.getName() + " §6公会仓库");
@@ -43,12 +37,8 @@ public class GuildRepository implements Listener {
             Player player = (Player) event.getWhoClicked();
             String playerID = player.getName();
             Guild guild = plugin.getGuilds().getPlayersGuild(playerID);
-            if (guild.hasLeader(playerID) ||
-                    guild.getMember(playerID).getContribution() > 10) {
-                event.setCancelled(false);
-            } else {
-                event.setCancelled(true);
-            }
+            event.setCancelled(!guild.hasLeader(playerID) &&
+                    guild.getMember(playerID).getContribution() <= 10);
         }
     }
     
@@ -71,13 +61,5 @@ public class GuildRepository implements Listener {
         c.save(f);
     }
     
-    @SuppressWarnings("unchecked")
-    void restoreRepos(String guildID, Inventory repos) throws IOException {
-        File f = new File(plugin.getDataFolder().getAbsolutePath(),
-                "/Repositories/" + guildID + ".yml");
-        FileConfiguration c = YamlConfiguration.loadConfiguration(f);
-        ItemStack[] content = ((List<ItemStack>) c.get(guildID)).toArray(new ItemStack[0]);
-        repos.setStorageContents(content);
-    }
     
 }

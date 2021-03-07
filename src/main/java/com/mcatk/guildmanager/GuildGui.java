@@ -24,11 +24,11 @@ public class GuildGui implements Listener {
         this.guilds = plugin.getGuilds();
     }
     
-    void openGui(Player player) {
+    public void openGui(Player player) {
         player.openInventory(createGuildsGui());
     }
     
-    ItemStack getAnGuildButton(Guild guild) {
+    public ItemStack getAnGuildButton(Guild guild) {
         ItemStack item = new ItemStack(Material.PAPER);
         ItemMeta meta = item.getItemMeta();
         meta.setDisplayName(guild.getName());
@@ -37,7 +37,7 @@ public class GuildGui implements Listener {
         des.add("§2会长: §a" + guild.getChairman());
         des.add(guild.checkViceChairman());
         des.add(guild.checkManager());
-        des.add("§2成员: §a" + guild.getPlayersNum() + "§7/§2" + guild.getMaxPlayers());
+        des.add("§2成员: §a" + guild.getPlayerSize() + "§7/§2" + guild.getMaxPlayers());
         des.add("§2最大高级成员数: §a" + guild.getMaxAdvancedPlayers());
         des.add("§2等级: §a" + guild.getLevel());
         des.add("§2积分: §a" + guild.getPoints());
@@ -47,7 +47,7 @@ public class GuildGui implements Listener {
         return item;
     }
     
-    Inventory createGuildsGui() {
+    public Inventory createGuildsGui() {
         Inventory gui = Bukkit.createInventory(null, 54, "§6公会列表");
         for (String key :
                 guilds.getGuildMap().keySet()) {
@@ -61,11 +61,11 @@ public class GuildGui implements Listener {
     
     //成员GUI
     
-    void openMemGui(Player player, Guild guild) {
+    public void openMemGui(Player player, Guild guild) {
         player.openInventory(createGuildMemGui(guild));
     }
     
-    Inventory createGuildMemGui(Guild guild) {
+    public Inventory createGuildMemGui(Guild guild) {
         HashMap<String, Member> memList = guild.getMembers();
         Inventory gui = Bukkit.createInventory(null, 54, guild.getName() + "§6成员");
         for (String playerID :
@@ -77,7 +77,7 @@ public class GuildGui implements Listener {
         return gui;
     }
     
-    ItemStack getAnMemberButton(Guild guild, Member player) {
+    public ItemStack getAnMemberButton(Guild guild, Member player) {
         ItemStack item = new ItemStack(Material.SKULL_ITEM);
         ItemMeta meta = item.getItemMeta();
         meta.setDisplayName(player.getId());
@@ -100,11 +100,11 @@ public class GuildGui implements Listener {
     }
     
     //留言板GUI
-    void openMsgGui(Player player, Guild guild) {
+    public void openMsgGui(Player player, Guild guild) {
         player.openInventory(createGuildMsgGui(guild));
     }
     
-    Inventory createGuildMsgGui(Guild guild) {
+    public Inventory createGuildMsgGui(Guild guild) {
         ArrayList<String> msgBoard = guild.getMsgBoard();
         Inventory gui = Bukkit.createInventory(null, 18, guild.getName() + "§6留言板");
         for (String str :
@@ -115,7 +115,7 @@ public class GuildGui implements Listener {
         return gui;
     }
     
-    ItemStack getAnMsgButton(String str) {
+    public ItemStack getAnMsgButton(String str) {
         ItemStack item = new ItemStack(Material.PAPER);
         ItemMeta meta = item.getItemMeta();
         meta.setDisplayName(str);

@@ -43,7 +43,7 @@ public class GuildItem implements Listener {
         return item.equals(getTpTicket(1));
     }
     
-    int buyTpTickets(Guild guild, Player player, int n) {
+    public int buyTpTickets(Guild guild, Player player, int n) {
         if (n > 10) {
             return 0;
         } else if (guild.getCash() < n) {

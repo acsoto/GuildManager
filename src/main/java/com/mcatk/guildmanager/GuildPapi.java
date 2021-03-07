@@ -74,7 +74,7 @@ public class GuildPapi extends PlaceholderExpansion {
             return Integer.toString(guild.getLevel());
         }
         if (identifier.equals("num_player")) {
-            return Integer.toString(guild.getPlayersNum());
+            return Integer.toString(guild.getPlayerSize());
         }
         if (identifier.equals("max_player")) {
             return Integer.toString(guild.getMaxPlayers());

@@ -1,5 +1,10 @@
-package com.mcatk.guildmanager;
+package com.mcatk.guildmanager.command;
 
+import com.mcatk.guildmanager.Guild;
+import com.mcatk.guildmanager.GuildItem;
+import com.mcatk.guildmanager.GuildManager;
+import com.mcatk.guildmanager.Guilds;
+import com.mcatk.guildmanager.ServerCmd;
 import com.mcatk.guildmanager.msgs.Message;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -14,7 +19,7 @@ public class GuildCommandS implements CommandExecutor {
     private String[] args;
     private Guild guild;
     
-    GuildCommandS(GuildManager plugin) {
+    public GuildCommandS(GuildManager plugin) {
         this.plugin = plugin;
         this.guilds = plugin.getGuilds();
         this.guildItem = new GuildItem(plugin);
@@ -209,10 +214,7 @@ public class GuildCommandS implements CommandExecutor {
                     default:
                 }
             } else if (operate.equalsIgnoreCase("remove")) {
-                if (guild.getRemoveMemLimitFlag() > 0) {
-                    sender.sendMessage(Message.INFO + "§c已超过今日删除玩家次数，请明天再试");
-                } else if (guild.removeAdvancedMembers(player)) {
-                    guild.addRemoveMemLimitFlag();
+                if (guild.removeAdvancedMembers(player)) {
                     sender.sendMessage(Message.INFO + "删除成功");
                 } else {
                     sender.sendMessage(Message.ERROR + "不存在该玩家");
@@ -273,7 +275,7 @@ public class GuildCommandS implements CommandExecutor {
             if (guild.getResidenceFLag()) {
                 sender.sendMessage(Message.INFO + "请勿重复设置领地,领地 guild_" + guild.getId() + " 已存在");
             } else {
-                guild.createResidence((Player) sender);
+                ServerCmd.createResidence(guild, (Player) sender);
             }
         } else if (args[1].equalsIgnoreCase("remove")) {
             if (guild.getResidenceFLag()) {
@@ -315,7 +317,7 @@ public class GuildCommandS implements CommandExecutor {
                         sender.sendMessage(Message.ERROR + p + "已是副会长");
                         return;
                     }
-                    if (guild.setViceChairman(p)) {
+                    if (guild.addViceChairman(p)) {
                         sender.sendMessage(Message.INFO + "设置成功");
                     } else {
                         sender.sendMessage(Message.ERROR + "副会长名额已满，最多2人");
@@ -325,7 +327,7 @@ public class GuildCommandS implements CommandExecutor {
                         sender.sendMessage(Message.ERROR + p + "已是管理员");
                         return;
                     }
-                    if (guild.setManager(p)) {
+                    if (guild.addManager(p)) {
                         sender.sendMessage(Message.INFO + "设置成功");
                     } else {
                         sender.sendMessage(Message.ERROR + "管理员名额已满，最多3人");

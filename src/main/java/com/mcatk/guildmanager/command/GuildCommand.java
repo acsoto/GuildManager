@@ -1,5 +1,9 @@
-package com.mcatk.guildmanager;
+package com.mcatk.guildmanager.command;
 
+import com.mcatk.guildmanager.Guild;
+import com.mcatk.guildmanager.GuildGui;
+import com.mcatk.guildmanager.GuildManager;
+import com.mcatk.guildmanager.Guilds;
 import com.mcatk.guildmanager.msgs.Message;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -13,7 +17,7 @@ public class GuildCommand implements CommandExecutor {
     private String[] args;
     private Guild guild;
     
-    GuildCommand(GuildManager plugin) {
+    public GuildCommand(GuildManager plugin) {
         this.plugin = plugin;
         this.guilds = plugin.getGuilds();
     }
@@ -161,7 +165,7 @@ public class GuildCommand implements CommandExecutor {
             return;
         }
         if (plugin.takePlayerMoney((Player) sender, 500000)) {
-            guilds.newGuild(args[1], sender.getName());
+            guilds.addGuild(args[1], sender.getName());
             sender.sendMessage(Message.INFO + "创建成功");
             plugin.logInfo("玩家" + sender.getName() + "创建了公会" + args[1]);
         } else {
