@@ -1,5 +1,8 @@
-package com.mcatk.guildmanager;
+package com.mcatk.guildmanager.papi;
 
+import com.mcatk.guildmanager.Guild;
+import com.mcatk.guildmanager.GuildManager;
+import com.mcatk.guildmanager.Member;
 import org.bukkit.entity.Player;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 
@@ -55,7 +58,7 @@ public class GuildPapi extends PlaceholderExpansion {
             return guild.getName();
         }
         if (identifier.equals("prefix")) {
-            if (guild.hasLeader(player.getName())) {
+            if (guild.hasChairman(player.getName())) {
                 return "";
             } else {
                 return "§7[" + guild.getName() + "§7]&r";

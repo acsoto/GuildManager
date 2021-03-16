@@ -4,6 +4,7 @@ import com.mcatk.guildmanager.command.GuildAdmin;
 import com.mcatk.guildmanager.command.GuildCommand;
 import com.mcatk.guildmanager.command.GuildCommandS;
 import com.mcatk.guildmanager.file.FileOperation;
+import com.mcatk.guildmanager.papi.GuildPapi;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.economy.EconomyResponse;
 
