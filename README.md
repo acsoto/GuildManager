@@ -1,45 +1,50 @@
-# 简介
+## 简介
 
 基于Minecraft Spigot服务端开发的Bukkit插件
 
-使用maven管理依赖
+![image-20210403113744621](README.assets/image-20210403113744621.png)
 
-功能介绍和源码部分将具体说明各操作的实现
+![image-20210403113800521](README.assets/image-20210403113800521.png)
 
-## 主要思路
+![image-20210403113847983](README.assets/image-20210403113847983.png)
+
+![image-20210403113934479](README.assets/image-20210403113934479.png)
+
+### 主要功能
 
 - 通过控制台或玩家执行指令或行为监听执行操作
-- 所有公会存储于Guilds中的一个Hashmap
-- 每个公会对象具有一些基本参数，其中公会成员也是一个Hashmap
-- 文件读写利用Bukkit自带的configuration，实现序列化（方便）
+- 主要数据单元为Guilds
+- 文件储存利用Google Gson
 - 利用Bukkit的inventory类制作可视化菜单，如公会列表，成员列表，留言板等
-- 利用Bukkit的监听器监听玩家行为来实现召集令的触发和防止玩家拿走可视化菜单中的物品
+- 利用Bukkit的监听器监听玩家行为来实现召集令的触发等功能和防止玩家拿走可视化菜单中的物品
 - 调用Vault实现内部的经济操作
 - 调用placehoAPI提供变量
 
-## 效果展示
+### 依赖
 
+#### Maven依赖：
 
+`spigot` `VaultAPI`  `placeholderapi` `gson`
 
-## 使用方法
+#### Bukkit插件依赖：
 
-要求为 Spigot/Paper 1.12.2
+硬依赖：Vault
 
-将jar包放入服务端/plugins 中开启后开启服务器
+软依赖：PlaceholderAPI
 
-# 功能介绍
+### 使用方法
 
-## 指令全集
+服务端要求 Spigot/Paper 1.12.2
 
+将jar包放入服务端 /plugins 中开启后开启服务器
 
+## 功能介绍
 
+### 指令
 
+#### 基本操作
 
-
-
-## 基本操作
-
-### 普通玩家
+普通玩家
 
 /gmg
 
@@ -59,7 +64,7 @@
 | create                    | 创建公会（需要500000，调用vault模块操作玩家的货币）          |
 | msg                       | 留言板相关操作                                               |
 
-### 会长/副会长/管理员
+###### 会长/副会长/管理员
 
 /msg
 
@@ -79,7 +84,7 @@
 
 
 
-## PlaceholderAPI
+### PlaceholderAPI
 
 | 权限结点                         | 功能           |
 | -------------------------------- | -------------- |
@@ -115,74 +120,6 @@
 主类，用于接入Spigot的插件启动，关闭，注册以及插件的具体操作
 
 ###### 插件启动方法
-
-```java
-    @Override
-    public void onEnable() {
-        //检测前置插件
-        if (!setupEconomy() ) {
-            getLogger().warning("未找到前置插件Vault，即将关闭插件");
-            getServer().getPluginManager().disablePlugin(this);
-            return;
-        }
-        getLogger().info("检测到Vault，成功启动GuildManager");
-        if(Bukkit.getPluginManager().getPlugin("PlaceholderAPI")!=null){
-            getLogger().info("检测到PlaceholderAPI，已启动PAPI变量");
-            new GuildPAPI(this).register();
-        }
-        //实例化
-        getLogger().info("初始化...");
-        plugin = this;
-        guilds = new Guilds();
-        gui = new GuildGUI();
-        guildItem = new GuildItem();
-        guildRepository = new GuildRepository();
-        joinListener = new JoinListener(plugin,guilds);
-        //生成配置文件
-        saveDefaultConfig();
-        //注册指令
-        Bukkit.getPluginCommand("gmg").
-                setExecutor(new GuildCommand(plugin,guilds));
-        Bukkit.getPluginCommand("gmgs").
-                setExecutor(new GuildCommandS(plugin,guilds));
-        Bukkit.getPluginCommand("gmgadmin").
-                setExecutor(new GuildAdmin(plugin,guilds));
-        getLogger().info("成功注册指令");
-        //注册序列化
-        ConfigurationSerialization.registerClass(Member.class);
-        ConfigurationSerialization.registerClass(Guild.class);
-        getLogger().info("成功注册序列化");
-        //注册监听器
-        Bukkit.getPluginManager().
-                registerEvents(joinListener,this);
-        Bukkit.getPluginManager().
-                registerEvents(gui,this);
-        Bukkit.getPluginManager().
-                registerEvents(guildItem,this);
-        Bukkit.getPluginManager().
-                registerEvents(guildRepository,this);
-        getLogger().info("成功注册监听器");
-        //读取配置文件
-        if(!getConfig().contains("CreateGuildMoney")){
-            getLogger().warning("配置文件错误，即将关闭插件，请删除配置文件后重试");
-            getServer().getPluginManager().disablePlugin(this);
-            return;
-        }
-        reqCreateGuildMoney =
-                (int) getConfig().get("CreateGuildMoney");
-        getLogger().info("配置文件读取完毕");
-        //读取公会列表
-        getLogger().info("加载公会...");
-        if(getConfig().contains("Guilds")) {
-            loadGuildList();
-            gui.createGuildsGUI();
-        }
-        else {
-            getLogger().info("公会列表为空");
-        }
-        getLogger().info("公会管理插件已启动-soto");
-    }
-```
 
 1. 寻找前置vault和placeholapi（调用bukkit方法）
 2. 实例化各对象
