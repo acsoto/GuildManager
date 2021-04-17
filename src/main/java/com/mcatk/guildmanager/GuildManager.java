@@ -37,6 +37,7 @@ public final class GuildManager extends JavaPlugin {
         if (guilds == null) {
             guilds = new Guilds();
         }
+        guilds.refreshApplicantsList();
         registerCommand();
         registerListener();
         getLogger().info("公会管理插件已启动-soto");

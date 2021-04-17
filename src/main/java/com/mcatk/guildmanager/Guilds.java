@@ -61,4 +61,20 @@ public class Guilds {
         }
         return false;
     }
+    
+    public void refreshApplicantsList(){
+        for (Guild guild : guildMap.values()){
+            guild.getApplicantList().clear();
+        }
+    }
+    
+    public boolean isAdvanced(String player){
+        for (Guild guild : guildMap.values()){
+            if (guild.isAdvancedPlayer(player)){
+                return true;
+            }
+        }
+        return false;
+    }
+    
 }
