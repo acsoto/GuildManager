@@ -30,6 +30,7 @@ public class GuildGui implements Listener {
         player.openInventory(createGuildsGui());
     }
     
+    
     public ItemStack getAnGuildButton(Guild guild) {
         ItemStack item = new ItemStack(Material.SKULL_ITEM, 1 , (short) 3);
         SkullMeta meta = (SkullMeta) item.getItemMeta();
@@ -149,6 +150,11 @@ public class GuildGui implements Listener {
                         event.getInventory().getTitle().contains("成员");
         if (unClickableGui) {
             event.setCancelled(true);
+            if (event.getCurrentItem()!=null) {
+                if (event.getCurrentItem().getItemMeta().getDisplayName().equals("返回")) {
+                    ((Player) event.getWhoClicked()).chat("/menu");
+                }
+            }
             //            player.updateInventory();
             //            if(event.getRawSlot()==0){
             //                player.closeInventory();
