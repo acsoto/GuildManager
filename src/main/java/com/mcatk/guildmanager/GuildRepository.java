@@ -9,11 +9,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 
 public class GuildRepository implements Listener {
     private GuildManager plugin;
@@ -51,7 +49,6 @@ public class GuildRepository implements Listener {
         }
     }
     
-    
     //save and load
     void saveRepos(String guildID, Inventory repos) throws IOException {
         File f = new File(plugin.getDataFolder().getAbsolutePath(),
@@ -60,6 +57,5 @@ public class GuildRepository implements Listener {
         c.set(guildID, repos.getStorageContents());
         c.save(f);
     }
-    
     
 }

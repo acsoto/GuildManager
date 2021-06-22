@@ -2,7 +2,6 @@ package com.mcatk.guildmanager;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -30,9 +29,8 @@ public class GuildGui implements Listener {
         player.openInventory(createGuildsGui());
     }
     
-    
     public ItemStack getAnGuildButton(Guild guild) {
-        ItemStack item = new ItemStack(Material.SKULL_ITEM, 1 , (short) 3);
+        ItemStack item = new ItemStack(Material.SKULL_ITEM, 1, (short) 3);
         SkullMeta meta = (SkullMeta) item.getItemMeta();
         meta.setOwner(guild.getChairman());
         item.setItemMeta(meta);
@@ -60,7 +58,7 @@ public class GuildGui implements Listener {
             ItemStack button = getAnGuildButton(guild);
             gui.addItem(button);
         }
-        gui.setItem(53,getQuitIcon());
+        gui.setItem(53, getQuitIcon());
         return gui;
     }
     
@@ -129,8 +127,8 @@ public class GuildGui implements Listener {
         return item;
     }
     
-    private ItemStack getQuitIcon(){
-        ItemStack icon =  new ItemStack(Material.GOLD_NUGGET);
+    private ItemStack getQuitIcon() {
+        ItemStack icon = new ItemStack(Material.GOLD_NUGGET);
         ItemMeta meta = icon.getItemMeta();
         meta.setDisplayName("返回");
         icon.setItemMeta(meta);
@@ -150,7 +148,7 @@ public class GuildGui implements Listener {
                         event.getInventory().getTitle().contains("成员");
         if (unClickableGui) {
             event.setCancelled(true);
-            if (event.getCurrentItem()!=null) {
+            if (event.getCurrentItem() != null) {
                 if (event.getCurrentItem().getItemMeta().getDisplayName().equals("返回")) {
                     ((Player) event.getWhoClicked()).chat("/menu");
                 }
