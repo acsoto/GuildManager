@@ -3,21 +3,18 @@ package com.mcatk.guildmanager.command;
 import com.mcatk.guildmanager.Guild;
 import com.mcatk.guildmanager.GuildManager;
 import com.mcatk.guildmanager.Guilds;
+import com.mcatk.guildmanager.Msg;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
 public class GuildAdmin implements CommandExecutor {
-    private final String msgPrefix = "§6§l公会系统 §7>>> §a";
-    private final String errorPrefix = "§4§l错误 §7>>> §c";
-    private final GuildManager plugin;
     private final Guilds guilds;
     private CommandSender sender;
     private String[] args;
     
-    public GuildAdmin(GuildManager plugin) {
-        this.plugin = plugin;
-        this.guilds = plugin.getGuilds();
+    public GuildAdmin() {
+        this.guilds = GuildManager.getPlugin().getGuilds();
     }
     
     private void printHelp() {
@@ -48,21 +45,21 @@ public class GuildAdmin implements CommandExecutor {
             return true;
         }
         if (args.length == 1) {
-            sender.sendMessage(msgPrefix + "缺少参数");
+            sender.sendMessage(Msg.INFO + "缺少参数");
             return true;
         }
         if (args[0].equalsIgnoreCase("create")) {
             if (args.length == 3) {
                 guilds.addGuild(args[1], args[2]);
-                sender.sendMessage(msgPrefix + "创建成功");
+                sender.sendMessage(Msg.INFO + "创建成功");
                 return true;
             }
-            sender.sendMessage(errorPrefix + "缺少参数");
+            sender.sendMessage(Msg.ERROR + "缺少参数");
             return true;
         }
         Guild guild = guilds.getGuild(args[1]);
         if (guild == null) {
-            sender.sendMessage(errorPrefix + "不存在此公会");
+            sender.sendMessage(Msg.ERROR + "不存在此公会");
             return true;
         }
         if (args[0].equalsIgnoreCase("remove")) {
@@ -92,15 +89,15 @@ public class GuildAdmin implements CommandExecutor {
         if (args[0].equalsIgnoreCase("takepoints")) {
             takePoints(guild);
         }
-        //sender.sendMessage(msgPrefix + "§c指令输入错误");
+        //sender.sendMessage(Msg.INFO + "§c指令输入错误");
         return true;
     }
     
     private void remove() {
         if (guilds.removeGuild(args[1])) {
-            sender.sendMessage(msgPrefix + "删除成功");
+            sender.sendMessage(Msg.INFO + "删除成功");
         } else {
-            sender.sendMessage(msgPrefix + "§c不存在此公会");
+            sender.sendMessage(Msg.INFO + "§c不存在此公会");
         }
     }
     
@@ -108,80 +105,80 @@ public class GuildAdmin implements CommandExecutor {
         if (guilds.hasGuild(args[1])) {
             sender.sendMessage(guild.checkStatus());
         } else {
-            sender.sendMessage(msgPrefix + "§c不存在此公会");
+            sender.sendMessage(Msg.INFO + "§c不存在此公会");
         }
     }
     
     private void rename(Guild guild) {
         if (args.length < 3) {
-            sender.sendMessage(msgPrefix + "§c缺少参数");
+            sender.sendMessage(Msg.INFO + "§c缺少参数");
         } else if (guilds.hasGuild(args[1])) {
             guild.setName(args[2]);
-            sender.sendMessage(msgPrefix + "已修改为" + args[2]);
+            sender.sendMessage(Msg.INFO + "已修改为" + args[2]);
         } else {
-            sender.sendMessage(msgPrefix + "§c不存在此公会");
+            sender.sendMessage(Msg.INFO + "§c不存在此公会");
         }
     }
     
     private void addMember(Guild guild) {
         if (guild.addMembers(args[2])) {
-            sender.sendMessage(msgPrefix + "添加成功");
+            sender.sendMessage(Msg.INFO + "添加成功");
         } else {
-            sender.sendMessage(msgPrefix + "成员已满");
+            sender.sendMessage(Msg.INFO + "成员已满");
         }
     }
     
     private void removeMember(Guild guild) {
         if (guild.removeMembers(args[2])) {
-            sender.sendMessage(msgPrefix + "删除成功");
+            sender.sendMessage(Msg.INFO + "删除成功");
         } else {
-            sender.sendMessage(msgPrefix + "不存在该玩家");
+            sender.sendMessage(Msg.INFO + "不存在该玩家");
         }
     }
     
     private void addCash(Guild guild) {
         if (args.length < 3) {
-            sender.sendMessage(msgPrefix + "§c缺少参数");
+            sender.sendMessage(Msg.INFO + "§c缺少参数");
             return;
         }
         int n = Integer.parseInt(args[2]);
         guild.addCash(n);
-        sender.sendMessage(msgPrefix + "操作成功");
+        sender.sendMessage(Msg.INFO + "操作成功");
     }
     
     private void takeCash(Guild guild) {
         if (args.length < 3) {
-            sender.sendMessage(msgPrefix + "§c缺少参数");
+            sender.sendMessage(Msg.INFO + "§c缺少参数");
             return;
         }
         int n = Integer.parseInt(args[2]);
         if (guild.takeCash(n)) {
-            sender.sendMessage(msgPrefix + "操作成功");
+            sender.sendMessage(Msg.INFO + "操作成功");
         } else {
-            sender.sendMessage(msgPrefix + "§c错误：超过其资金");
+            sender.sendMessage(Msg.INFO + "§c错误：超过其资金");
         }
     }
     
     private void addPoints(Guild guild) {
         if (args.length < 3) {
-            sender.sendMessage(msgPrefix + "§c缺少参数");
+            sender.sendMessage(Msg.INFO + "§c缺少参数");
             return;
         }
         int n = Integer.parseInt(args[2]);
         guild.addPoints(n);
-        sender.sendMessage(msgPrefix + "操作成功");
+        sender.sendMessage(Msg.INFO + "操作成功");
     }
     
     private void takePoints(Guild guild) {
         if (args.length < 3) {
-            sender.sendMessage(msgPrefix + "§c缺少参数");
+            sender.sendMessage(Msg.INFO + "§c缺少参数");
             return;
         }
         int n = Integer.parseInt(args[2]);
         if (guild.takePoints(n)) {
-            sender.sendMessage(msgPrefix + "操作成功");
+            sender.sendMessage(Msg.INFO + "操作成功");
         } else {
-            sender.sendMessage(msgPrefix + "§c错误：超过其积分");
+            sender.sendMessage(Msg.INFO + "§c错误：超过其积分");
         }
     }
 }

@@ -14,12 +14,12 @@ public class Guilds {
     public void addGuild(String id, String player) {
         Guild g = new Guild(id, player);
         guildMap.put(id, g);
-        FileOperation.saveGuilds();
+        new FileOperation().saveGuilds();
     }
     
     public boolean removeGuild(String id) {
         if (guildMap.remove(id) != null) {
-            FileOperation.saveGuilds();
+            new FileOperation().saveGuilds();
             return true;
         }
         return false;

@@ -10,7 +10,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class FileOperation {
-    public static void saveGuilds() {
+    public void saveGuilds() {
         Gson gson = new Gson();
         try {
             File file = new File(GuildManager.getPlugin().getDataFolder(), "guilds.json");
@@ -22,7 +22,7 @@ public class FileOperation {
         }
     }
     
-    public static Guilds loadGuilds() {
+    public Guilds loadGuilds() {
         Gson gson = new Gson();
         try {
             File file = new File(GuildManager.getPlugin().getDataFolder(), "guilds.json");

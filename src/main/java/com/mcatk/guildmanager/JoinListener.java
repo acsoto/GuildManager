@@ -23,12 +23,12 @@ public class JoinListener implements Listener {
         if (guild != null) {
             if (guild.getChairman().equals(playerID)) {
                 plugin.getServer().broadcastMessage(
-                        Message.INFO + guild.getName() + "§2会长§e" + player.getName() + "§2已上线"
+                        Msg.INFO + guild.getName() + "§2会长§e" + player.getName() + "§2已上线"
                 );
             }
             if (plugin.getServer().getOnlinePlayers() != null) {
                 StringBuilder msg = new StringBuilder(
-                        Message.INFO + "§2您的公会" + guild.getName() + "§2现在在线玩家:"
+                        Msg.INFO + "§2您的公会" + guild.getName() + "§2现在在线玩家:"
                 );
                 for (Player p : plugin.getServer().getOnlinePlayers()) {
                     if (guild.hasPlayer(p.getName())) {
@@ -38,7 +38,7 @@ public class JoinListener implements Listener {
                 player.sendMessage(msg.toString());
             }
             if (guild.isAdvancedPlayer(player.getName())) {
-                player.sendMessage(Message.INFO + "§2您是公会高级成员，可以前往公会广场");
+                player.sendMessage(Msg.INFO + "§2您是公会高级成员，可以前往公会广场");
             }
             if (!guild.isMsgBoardEmpty()) {
                 player.sendMessage("§2公会留言板为空");

@@ -4,6 +4,7 @@ import com.mcatk.guildmanager.Guild;
 import com.mcatk.guildmanager.GuildGui;
 import com.mcatk.guildmanager.GuildManager;
 import com.mcatk.guildmanager.Guilds;
+import com.mcatk.guildmanager.Msg;
 import com.mcatk.guildmanager.msgs.Message;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -11,15 +12,14 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class GuildCommand implements CommandExecutor {
-    private GuildManager plugin;
+    
     private Guilds guilds;
     private CommandSender sender;
     private String[] args;
     private Guild guild;
     
-    public GuildCommand(GuildManager plugin) {
-        this.plugin = plugin;
-        this.guilds = plugin.getGuilds();
+    public GuildCommand() {
+        this.guilds = GuildManager.getPlugin().getGuilds();
     }
     
     @Override
@@ -41,7 +41,7 @@ public class GuildCommand implements CommandExecutor {
     
     private void onCommandWithoutGuild() {
         if (args[0].equalsIgnoreCase("gui")) {
-            new GuildGui(plugin).openGui((Player) sender);
+            new GuildGui(GuildManager.getPlugin()).openGui((Player) sender);
         }
         if (args[0].equalsIgnoreCase("apply")) {
             apply();
@@ -59,8 +59,8 @@ public class GuildCommand implements CommandExecutor {
     
     private void onCommandWithGuild() {
         if (args[0].equalsIgnoreCase("t")) {
-            plugin.tpGuild(guild.getName(), sender.getName());
-            sender.sendMessage(Message.INFO + "§a传送成功");
+            GuildManager.getPlugin().tpGuild(guild.getName(), sender.getName());
+            sender.sendMessage(Msg.INFO + "§a传送成功");
         }
         if (args[0].equalsIgnoreCase("s")) {
             sender.sendMessage(guild.checkStatus());
@@ -84,36 +84,36 @@ public class GuildCommand implements CommandExecutor {
         }
         if (args[0].equalsIgnoreCase("memgui")) {
             if (!(sender instanceof Player)) {
-                sender.sendMessage(Message.ERROR + "§c该指令只能由玩家发出");
+                sender.sendMessage(Msg.ERROR + "§c该指令只能由玩家发出");
                 return;
             }
-            new GuildGui(plugin).openMemGui((Player) sender, guild);
+            new GuildGui(GuildManager.getPlugin()).openMemGui((Player) sender, guild);
             return;
         }
         if (args[0].equalsIgnoreCase("msggui")) {
             if (!(sender instanceof Player)) {
-                sender.sendMessage(Message.ERROR + "§c该指令只能由玩家发出");
+                sender.sendMessage(Msg.ERROR + "§c该指令只能由玩家发出");
                 return;
             }
-            new GuildGui(plugin).openMsgGui((Player) sender, guild);
+            new GuildGui(GuildManager.getPlugin()).openMsgGui((Player) sender, guild);
         }
     }
     
     private void apply() {
         if (args.length != 2) {
-            sender.sendMessage(Message.ERROR + "参数错误");
+            sender.sendMessage(Msg.ERROR + "参数错误");
         } else if (guilds.getPlayersGuild(sender.getName()) != null) {
-            sender.sendMessage(Message.ERROR + "已有公会");
+            sender.sendMessage(Msg.ERROR + "已有公会");
         } else {
             Guild guild = guilds.getGuild(args[1]);
             if (guild == null) {
-                sender.sendMessage(Message.ERROR + "不存在公会");
+                sender.sendMessage(Msg.ERROR + "不存在公会");
             } else {
                 if (guilds.isPlayerInAnyApplicantList(sender.getName())) {
-                    sender.sendMessage(Message.ERROR + "今天已经申请过公会，明天再试");
+                    sender.sendMessage(Msg.ERROR + "今天已经申请过公会，明天再试");
                 } else {
                     guild.getApplicantList().add(sender.getName());
-                    sender.sendMessage(Message.INFO + "申请成功，等待通过");
+                    sender.sendMessage(Msg.INFO + "申请成功，等待通过");
                 }
             }
         }
@@ -121,96 +121,96 @@ public class GuildCommand implements CommandExecutor {
     
     private void check() {
         if (args.length == 1) {
-            sender.sendMessage(Message.INFO + "§c缺少参数");
+            sender.sendMessage(Msg.INFO + "§c缺少参数");
         } else if (guilds.hasGuild(args[1])) {
             Guild guild = guilds.getGuild(args[1]);
             if (guild == null) {
-                sender.sendMessage(Message.ERROR + "不存在此公会");
+                sender.sendMessage(Msg.ERROR + "不存在此公会");
                 return;
             }
             sender.sendMessage(guild.checkStatus());
         } else {
-            sender.sendMessage(Message.INFO + "§c不存在此公会");
+            sender.sendMessage(Msg.INFO + "§c不存在此公会");
         }
     }
     
     private void tp() {
         if (args.length == 1) {
-            sender.sendMessage(Message.INFO + "§c缺少参数");
+            sender.sendMessage(Msg.INFO + "§c缺少参数");
         } else if (guilds.hasGuild(args[1])) {
             String p = sender.getName();
-            plugin.tpGuild(args[1], p);
-            sender.sendMessage(Message.INFO + "§a传送成功");
+            GuildManager.getPlugin().tpGuild(args[1], p);
+            sender.sendMessage(Msg.INFO + "§a传送成功");
         } else {
-            sender.sendMessage(Message.INFO + "§c不存在此公会");
+            sender.sendMessage(Msg.INFO + "§c不存在此公会");
         }
     }
     
     private void create() {
         if (args.length != 2) {
-            sender.sendMessage(Message.ERROR + "参数错误");
+            sender.sendMessage(Msg.ERROR + "参数错误");
             return;
         }
         if (!isAlphabet(args[1])) {
-            sender.sendMessage(Message.ERROR + "ID只能是小写字母");
+            sender.sendMessage(Msg.ERROR + "ID只能是小写字母");
             return;
         }
         Guild guild = guilds.getPlayersGuild(sender.getName());
         if (guild != null) {
-            sender.sendMessage(Message.ERROR + "你已在公会" + guild.getName());
+            sender.sendMessage(Msg.ERROR + "你已在公会" + guild.getName());
             return;
         }
         if (!(sender instanceof Player)) {
-            sender.sendMessage(Message.ERROR + "§c该指令只能由玩家发出");
+            sender.sendMessage(Msg.ERROR + "§c该指令只能由玩家发出");
             return;
         }
-        if (plugin.takePlayerMoney((Player) sender, 500000)) {
+        if (GuildManager.getPlugin().takePlayerMoney((Player) sender, 500000)) {
             guilds.addGuild(args[1], sender.getName());
-            sender.sendMessage(Message.INFO + "创建成功");
-            plugin.logInfo("玩家" + sender.getName() + "创建了公会" + args[1]);
+            sender.sendMessage(Msg.INFO + "创建成功");
+            GuildManager.getPlugin().logInfo("玩家" + sender.getName() + "创建了公会" + args[1]);
         } else {
-            sender.sendMessage(Message.ERROR + "AC点不足！");
+            sender.sendMessage(Msg.ERROR + "AC点不足！");
         }
     }
     
     private void offer() {
         if (!(sender instanceof Player)) {
-            sender.sendMessage(Message.ERROR + "§c该指令只能由玩家发出");
+            sender.sendMessage(Msg.ERROR + "§c该指令只能由玩家发出");
             return;
         }
         String p = sender.getName();
         if (args.length != 2) {
-            sender.sendMessage(Message.INFO + "§c参数错误");
+            sender.sendMessage(Msg.INFO + "§c参数错误");
             return;
         }
         if (!isLegalMoney(args[1])) {
-            sender.sendMessage(Message.INFO + "§c必须是整数！");
+            sender.sendMessage(Msg.INFO + "§c必须是整数！");
             return;
         }
         int n;
         try {
             n = Integer.parseInt(args[1]);
         } catch (ClassCastException e) {
-            sender.sendMessage(Message.INFO + "§c必须是整数！");
+            sender.sendMessage(Msg.INFO + "§c必须是整数！");
             return;
         }
         if (!isLegalMoneyToCash(n)) {
-            sender.sendMessage(Message.INFO + "§c必须是10000的整数倍！");
+            sender.sendMessage(Msg.INFO + "§c必须是10000的整数倍！");
             return;
         }
-        if (plugin.takePlayerMoney((Player) sender, n)) {
+        if (GuildManager.getPlugin().takePlayerMoney((Player) sender, n)) {
             guild.addCash(n / 10000);
             //add contribution and check if is full.
             if (!guild.getMember(p).addContribution(n / 10000)) {
-                sender.sendMessage(Message.INFO + "您的贡献值已满，无法继续增长");
+                sender.sendMessage(Msg.INFO + "您的贡献值已满，无法继续增长");
             }
             sender.sendMessage(
-                    Message.INFO + "§a成功为" + guild.getName() +
+                    Msg.INFO + "§a成功为" + guild.getName() +
                             "§a捐赠" + n + "AC" + "折合为" + (n / 10000) + "公会资金"
             );
-            plugin.logInfo(p + "捐献了" + n + "给" + guild.getName());
+            GuildManager.getPlugin().logInfo(p + "捐献了" + n + "给" + guild.getName());
         } else {
-            sender.sendMessage(Message.ERROR + "AC点不足！");
+            sender.sendMessage(Msg.ERROR + "AC点不足！");
         }
     }
     
@@ -224,12 +224,12 @@ public class GuildCommand implements CommandExecutor {
         }
         if (args.length == 2) {
             if (guild.addMsgToBoard(args[1])) {
-                sender.sendMessage(Message.INFO + "添加成功");
+                sender.sendMessage(Msg.INFO + "添加成功");
             } else {
-                sender.sendMessage(Message.INFO + "留言板已满，请提醒会长清理");
+                sender.sendMessage(Msg.INFO + "留言板已满，请提醒会长清理");
             }
         } else {
-            sender.sendMessage(Message.ERROR + "不可以有空格哦");
+            sender.sendMessage(Msg.ERROR + "不可以有空格哦");
         }
     }
     

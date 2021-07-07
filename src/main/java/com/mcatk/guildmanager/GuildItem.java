@@ -64,12 +64,12 @@ public class GuildItem implements Listener {
                 String playerID = player.getName();
                 Guild guild = guilds.getPlayersGuild(playerID);
                 if (guild == null) {
-                    player.sendMessage(Message.INFO + "你没有公会");
+                    player.sendMessage(Msg.INFO + "你没有公会");
                 } else if (!guild.hasLeader(playerID)) {
-                    player.sendMessage(Message.INFO + "只有会长/副会长/管理员可以使用");
+                    player.sendMessage(Msg.INFO + "只有会长/副会长/管理员可以使用");
                 } else {
                     plugin.tpAll(guild, player);
-                    player.sendMessage(Message.INFO + "已发动召集令");
+                    player.sendMessage(Msg.INFO + "已发动召集令");
                     consumeItem(player.getInventory().getItemInMainHand());
                 }
             }

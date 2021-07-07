@@ -33,20 +33,16 @@ public final class GuildManager extends JavaPlugin {
         plugin = this;
         saveDefaultConfig();
         registerDependency();
-        guilds = FileOperation.loadGuilds();
-        if (guilds == null) {
-            guilds = new Guilds();
-        }
+        loadGuildsData();
         guilds.refreshApplicantsList();
         registerCommand();
         registerListener();
-        getLogger().info("公会管理插件已启动-soto");
+        getLogger().info("公会管理插件已启动");
     }
     
     @Override
     public void onDisable() {
-        FileOperation.saveGuilds();
-        getLogger().info("公会管理插件已关闭-soto");
+        getLogger().info("公会管理插件已关闭");
     }
     
     private void registerDependency() {
@@ -58,18 +54,18 @@ public final class GuildManager extends JavaPlugin {
         }
         getLogger().info("检测到Vault，成功启动依赖");
         if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
-            new GuildPapi(this).register();
+            new GuildPapi().register();
             getLogger().info("检测到PlaceholderAPI，已启动PAPI变量");
         }
     }
     
     private void registerCommand() {
         Bukkit.getPluginCommand("gmg").
-                setExecutor(new GuildCommand(plugin));
+                setExecutor(new GuildCommand());
         Bukkit.getPluginCommand("gmgs").
-                setExecutor(new GuildCommandS(plugin));
+                setExecutor(new GuildCommandS());
         Bukkit.getPluginCommand("gmgadmin").
-                setExecutor(new GuildAdmin(plugin));
+                setExecutor(new GuildAdmin());
         getLogger().info("注册指令注册完毕");
     }
     
@@ -83,6 +79,13 @@ public final class GuildManager extends JavaPlugin {
         Bukkit.getPluginManager().
                 registerEvents(new GuildRepository(this), this);
         getLogger().info("监听器注册完毕");
+    }
+    
+    public void loadGuildsData() {
+        guilds = new FileOperation().loadGuilds();
+        if (guilds == null) {
+            guilds = new Guilds();
+        }
     }
     
     //公会传送指令

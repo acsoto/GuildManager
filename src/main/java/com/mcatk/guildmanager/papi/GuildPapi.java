@@ -8,11 +8,6 @@ import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 
 //The class is used for PAPI
 public class GuildPapi extends PlaceholderExpansion {
-    private final GuildManager plugin;
-    
-    public GuildPapi(GuildManager plugin) {
-        this.plugin = plugin;
-    }
     
     //PAPI要求的重写
     @Override
@@ -27,7 +22,7 @@ public class GuildPapi extends PlaceholderExpansion {
     
     @Override
     public String getAuthor() {
-        return plugin.getDescription().getAuthors().toString();
+        return GuildManager.getPlugin().getDescription().getAuthors().toString();
     }
     
     @Override
@@ -37,7 +32,7 @@ public class GuildPapi extends PlaceholderExpansion {
     
     @Override
     public String getVersion() {
-        return plugin.getDescription().getVersion();
+        return GuildManager.getPlugin().getDescription().getVersion();
     }
     
     @Override
@@ -46,7 +41,7 @@ public class GuildPapi extends PlaceholderExpansion {
         if (player == null) {
             return "";
         }
-        Guild guild = plugin.getGuilds().getPlayersGuild(player.getName());
+        Guild guild = GuildManager.getPlugin().getGuilds().getPlayersGuild(player.getName());
         if (guild == null) {
             return "";
         }

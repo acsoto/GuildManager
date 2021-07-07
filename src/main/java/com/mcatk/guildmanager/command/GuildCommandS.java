@@ -4,6 +4,7 @@ import com.mcatk.guildmanager.Guild;
 import com.mcatk.guildmanager.GuildItem;
 import com.mcatk.guildmanager.GuildManager;
 import com.mcatk.guildmanager.Guilds;
+import com.mcatk.guildmanager.Msg;
 import com.mcatk.guildmanager.ServerCmd;
 import com.mcatk.guildmanager.msgs.Message;
 import org.bukkit.command.Command;
@@ -12,17 +13,15 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class GuildCommandS implements CommandExecutor {
-    private GuildManager plugin;
     private Guilds guilds;
     private GuildItem guildItem;
     private CommandSender sender;
     private String[] args;
     private Guild guild;
     
-    public GuildCommandS(GuildManager plugin) {
-        this.plugin = plugin;
-        this.guilds = plugin.getGuilds();
-        this.guildItem = new GuildItem(plugin);
+    public GuildCommandS() {
+        this.guilds = GuildManager.getPlugin().getGuilds();
+        this.guildItem = new GuildItem(GuildManager.getPlugin());
     }
     
     @Override
@@ -31,11 +30,11 @@ public class GuildCommandS implements CommandExecutor {
         this.args = args;
         this.guild = guilds.getPlayersGuild(sender.getName());
         if (guild == null) {
-            sender.sendMessage(Message.ERROR + "您不在任何公会");
+            sender.sendMessage(Msg.ERROR + "您不在任何公会");
             return true;
         }
         if (!guild.hasLeader(sender.getName())) {
-            sender.sendMessage(Message.ERROR + "您没有操作该公会的权限");
+            sender.sendMessage(Msg.ERROR + "您没有操作该公会的权限");
             return true;
         }
         if (args.length == 0) {
@@ -124,18 +123,18 @@ public class GuildCommandS implements CommandExecutor {
             if (guild.getApplicantList().contains(args[1])) {
                 if (guild.addMembers(args[1])) {
                     guild.getApplicantList().remove(args[1]);
-                    sender.sendMessage(Message.INFO + "添加成功");
+                    sender.sendMessage(Msg.INFO + "添加成功");
                 } else {
-                    sender.sendMessage(Message.ERROR + "成员已满");
+                    sender.sendMessage(Msg.ERROR + "成员已满");
                 }
             } else {
-                sender.sendMessage(Message.ERROR + "该玩家不在申请列表");
+                sender.sendMessage(Msg.ERROR + "该玩家不在申请列表");
             }
         }
     }
     
     private void sendParameterError() {
-        sender.sendMessage(Message.ERROR + "参数长度错误");
+        sender.sendMessage(Msg.ERROR + "参数长度错误");
     }
     
     private void remove() {
@@ -144,12 +143,12 @@ public class GuildCommandS implements CommandExecutor {
         } else {
             String playerID = args[1];
             if (playerID.equalsIgnoreCase(sender.getName())) {
-                sender.sendMessage(Message.ERROR + "不能删除你自己");
+                sender.sendMessage(Msg.ERROR + "不能删除你自己");
             } else {
                 if (guild.removeMembers(playerID)) {
-                    sender.sendMessage(Message.INFO + "删除成功");
+                    sender.sendMessage(Msg.INFO + "删除成功");
                 } else {
-                    sender.sendMessage(Message.INFO + "不存在该玩家");
+                    sender.sendMessage(Msg.INFO + "不存在该玩家");
                 }
             }
         }
@@ -164,23 +163,23 @@ public class GuildCommandS implements CommandExecutor {
                 int n = Integer.parseInt(args[1]);
                 flag = guildItem.buyTpTickets(guild, (Player) sender, n);
             } catch (NumberFormatException e) {
-                sender.sendMessage(Message.ERROR + "请输入整数");
+                sender.sendMessage(Msg.ERROR + "请输入整数");
             }
         } else {
             sendParameterError();
         }
         switch (flag) {
             case 0:
-                sender.sendMessage(Message.ERROR + "最多购买10份");
+                sender.sendMessage(Msg.ERROR + "最多购买10份");
                 break;
             case 1:
-                sender.sendMessage(Message.ERROR + "资金不足");
+                sender.sendMessage(Msg.ERROR + "资金不足");
                 break;
             case 2:
-                sender.sendMessage(Message.ERROR + "背包已满，请重试");
+                sender.sendMessage(Msg.ERROR + "背包已满，请重试");
                 break;
             case 3:
-                sender.sendMessage(Message.INFO + "购买成功：公会召集令x5");
+                sender.sendMessage(Msg.INFO + "购买成功：公会召集令x5");
                 break;
             default:
         }
@@ -200,24 +199,24 @@ public class GuildCommandS implements CommandExecutor {
                 int flag = guild.addAdvancedMembers(player);
                 switch (flag) {
                     case 0:
-                        sender.sendMessage(Message.ERROR + "该玩家已存在于公会广场名单");
+                        sender.sendMessage(Msg.ERROR + "该玩家已存在于公会广场名单");
                         break;
                     case 1:
-                        sender.sendMessage(Message.INFO + "增加成功");
+                        sender.sendMessage(Msg.INFO + "增加成功");
                         break;
                     case 2:
-                        sender.sendMessage(Message.ERROR + "已达到公会广场名单最大成员数");
+                        sender.sendMessage(Msg.ERROR + "已达到公会广场名单最大成员数");
                         break;
                     case 3:
-                        sender.sendMessage(Message.ERROR + "该玩家不在你的公会");
+                        sender.sendMessage(Msg.ERROR + "该玩家不在你的公会");
                         break;
                     default:
                 }
             } else if (operate.equalsIgnoreCase("remove")) {
                 if (guild.removeAdvancedMembers(player)) {
-                    sender.sendMessage(Message.INFO + "删除成功");
+                    sender.sendMessage(Msg.INFO + "删除成功");
                 } else {
-                    sender.sendMessage(Message.ERROR + "不存在该玩家");
+                    sender.sendMessage(Msg.ERROR + "不存在该玩家");
                 }
             }
         }
@@ -228,15 +227,15 @@ public class GuildCommandS implements CommandExecutor {
             sendParameterError();
         } else {
             if (guild.isHasChangedName()) {
-                sender.sendMessage(Message.ERROR + "名称已经设置，如需修改请使用更名卡");
+                sender.sendMessage(Msg.ERROR + "名称已经设置，如需修改请使用更名卡");
                 return;
             }
             if (args[1].contains("&") || args[1].contains("§")) {
-                sender.sendMessage(Message.ERROR + "不可包含颜色代码");
+                sender.sendMessage(Msg.ERROR + "不可包含颜色代码");
             } else {
                 guild.setName(args[1]);
                 guild.setHasChangedName(true);
-                sender.sendMessage(Message.INFO + "成功修改为" + args[1]);
+                sender.sendMessage(Msg.INFO + "成功修改为" + args[1]);
             }
         }
     }
@@ -246,22 +245,22 @@ public class GuildCommandS implements CommandExecutor {
             sendParameterError();
         }
         if (guild.getLevel() >= 5) {
-            sender.sendMessage(Message.INFO + "公会已达到满级");
+            sender.sendMessage(Msg.INFO + "公会已达到满级");
             return;
         }
         int value = guild.levelUP();
         if (value == 1) {
-            sender.sendMessage(Message.INFO + "公会积分不足，无法升级");
+            sender.sendMessage(Msg.INFO + "公会积分不足，无法升级");
             sender.sendMessage("需要积分：" + guild.getLevel() * 5);
             sender.sendMessage("实际积分：" + guild.getPoints());
         }
         if (value == 2) {
-            sender.sendMessage(Message.INFO + "公会资金不足，无法升级");
+            sender.sendMessage(Msg.INFO + "公会资金不足，无法升级");
             sender.sendMessage("需要资金：" + (guild.getLevel() * 10 + 20));
             sender.sendMessage("实际资金：" + guild.getCash());
         }
         if (value == 3) {
-            sender.sendMessage(Message.INFO + "公会升级成功，扣除公会资金" + guild.getLevel() * 5);
+            sender.sendMessage(Msg.INFO + "公会升级成功，扣除公会资金" + guild.getLevel() * 5);
             sender.sendMessage("目前公会等级+1，为" + guild.getLevel());
             sender.sendMessage("目前公会最大人数+5，为" + guild.getMaxPlayers());
             sender.sendMessage("目前公会最大高级玩家数+2，为" + guild.getMaxAdvancedPlayers());
@@ -270,20 +269,20 @@ public class GuildCommandS implements CommandExecutor {
     
     private void res() {
         if (args.length == 1) {
-            sender.sendMessage(Message.INFO + "§c缺少参数create或remove");
+            sender.sendMessage(Msg.INFO + "§c缺少参数create或remove");
         } else if (args[1].equalsIgnoreCase("create")) {
             if (guild.getResidenceFLag()) {
-                sender.sendMessage(Message.INFO + "请勿重复设置领地,领地 guild_" + guild.getId() + " 已存在");
+                sender.sendMessage(Msg.INFO + "请勿重复设置领地,领地 guild_" + guild.getId() + " 已存在");
             } else {
                 ServerCmd.createResidence(guild, (Player) sender);
             }
         } else if (args[1].equalsIgnoreCase("remove")) {
             if (guild.getResidenceFLag()) {
                 guild.removeResidence();
-                sender.sendMessage(Message.INFO + "领地 guild_" + guild.getId() + " 删除成功");
+                sender.sendMessage(Msg.INFO + "领地 guild_" + guild.getId() + " 删除成功");
             } else {
-                sender.sendMessage(Message.INFO + "尚未设置领地");
-                sender.sendMessage(Message.INFO + "请使用工具选点后输入创建指令");
+                sender.sendMessage(Msg.INFO + "尚未设置领地");
+                sender.sendMessage(Msg.INFO + "请使用工具选点后输入创建指令");
             }
         }
     }
@@ -293,10 +292,10 @@ public class GuildCommandS implements CommandExecutor {
             sendParameterError();
         } else {
             if (args[1].equalsIgnoreCase("set")) {
-                plugin.setWarp((Player) sender, guild.getId());
+                GuildManager.getPlugin().setWarp((Player) sender, guild.getId());
             }
             if (args[1].equalsIgnoreCase("del")) {
-                plugin.delWarp(guild.getId());
+                GuildManager.getPlugin().delWarp(guild.getId());
             }
         }
     }
@@ -309,54 +308,54 @@ public class GuildCommandS implements CommandExecutor {
             if (args[1].equalsIgnoreCase("set")) {
                 String p = args[2];
                 if (!guild.hasPlayer(p)) {
-                    sender.sendMessage(Message.ERROR + "公会无此玩家");
+                    sender.sendMessage(Msg.ERROR + "公会无此玩家");
                     return;
                 }
                 if (args[3].equalsIgnoreCase("v")) {
                     if (guild.hasViceChairman(p)) {
-                        sender.sendMessage(Message.ERROR + p + "已是副会长");
+                        sender.sendMessage(Msg.ERROR + p + "已是副会长");
                         return;
                     }
                     if (guild.addViceChairman(p)) {
-                        sender.sendMessage(Message.INFO + "设置成功");
+                        sender.sendMessage(Msg.INFO + "设置成功");
                     } else {
-                        sender.sendMessage(Message.ERROR + "副会长名额已满，最多2人");
+                        sender.sendMessage(Msg.ERROR + "副会长名额已满，最多2人");
                     }
                 } else if (args[3].equalsIgnoreCase("m")) {
                     if (guild.hasManager(p)) {
-                        sender.sendMessage(Message.ERROR + p + "已是管理员");
+                        sender.sendMessage(Msg.ERROR + p + "已是管理员");
                         return;
                     }
                     if (guild.addManager(p)) {
-                        sender.sendMessage(Message.INFO + "设置成功");
+                        sender.sendMessage(Msg.INFO + "设置成功");
                     } else {
-                        sender.sendMessage(Message.ERROR + "管理员名额已满，最多3人");
+                        sender.sendMessage(Msg.ERROR + "管理员名额已满，最多3人");
                     }
                 } else {
-                    sender.sendMessage(Message.ERROR + "参数错误:应为v/m");
+                    sender.sendMessage(Msg.ERROR + "参数错误:应为v/m");
                 }
                 return;
             }
             if (args[1].equalsIgnoreCase("remove")) {
                 String p = args[2];
                 if (!guild.hasPlayer(p)) {
-                    sender.sendMessage(Message.ERROR + "公会无此玩家");
+                    sender.sendMessage(Msg.ERROR + "公会无此玩家");
                     return;
                 }
                 if (args[3].equalsIgnoreCase("v")) {
                     if (guild.removeViceChairman(p)) {
-                        sender.sendMessage(Message.INFO + "撤销成功");
+                        sender.sendMessage(Msg.INFO + "撤销成功");
                     } else {
-                        sender.sendMessage(Message.ERROR + p + "不是副会长");
+                        sender.sendMessage(Msg.ERROR + p + "不是副会长");
                     }
                 } else if (args[3].equalsIgnoreCase("m")) {
                     if (guild.removeManager(p)) {
-                        sender.sendMessage(Message.INFO + "撤销成功");
+                        sender.sendMessage(Msg.INFO + "撤销成功");
                     } else {
-                        sender.sendMessage(Message.ERROR + p + "不是管理员");
+                        sender.sendMessage(Msg.ERROR + p + "不是管理员");
                     }
                 } else {
-                    sender.sendMessage(Message.ERROR + "参数错误:应为v/m");
+                    sender.sendMessage(Msg.ERROR + "参数错误:应为v/m");
                 }
             }
         }
