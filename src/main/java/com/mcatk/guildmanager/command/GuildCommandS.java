@@ -48,38 +48,44 @@ public class GuildCommandS implements CommandExecutor {
     }
     
     private void onCommandLeader() {
-        if (args[0].equalsIgnoreCase("app")) {
-            app();
-        }
-        if (args[0].equalsIgnoreCase("remove")) {
-            remove();
-        }
-        if (args[0].equalsIgnoreCase("buytpall")) {
-            buyTpAll();
-        }
-        if (args[0].equalsIgnoreCase("clearmsg")) {
-            clearMsg();
+        switch (args[0].toLowerCase()) {
+            case "app":
+                app();
+                break;
+            case "remove":
+                remove();
+                break;
+            case "buytpall":
+                buyTpAll();
+                break;
+            case "clearmsg":
+                clearMsg();
+                break;
+            default:
         }
     }
     
     private void onCommandChairman() {
-        if (args[0].equalsIgnoreCase("advance")) {
-            advance();
-        }
-        if (args[0].equalsIgnoreCase("setname")) {
-            setName();
-        }
-        if (args[0].equalsIgnoreCase("levelup")) {
-            levelUp();
-        }
-        if (args[0].equalsIgnoreCase("res")) {
-            res();
-        }
-        if (args[0].equalsIgnoreCase("warp")) {
-            warp();
-        }
-        if (args[0].equalsIgnoreCase("position")) {
-            position();
+        switch (args[0].toLowerCase()) {
+            case "advance":
+                advance();
+                break;
+            case "setname":
+                setName();
+                break;
+            case "levelup":
+                levelUp();
+                break;
+            case "res":
+                res();
+                break;
+            case "warp":
+                warp();
+                break;
+            case "position":
+                position();
+                break;
+            default:
         }
     }
     
