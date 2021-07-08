@@ -1,52 +1,48 @@
-## 简介
+# 简介
 
 基于Minecraft Spigot服务端开发的Bukkit插件
 
-![image-20210403113744621](README.assets/image-20210403113744621.png)
+![image-20210708112758753](README.assets/image-20210708112758753.png)
 
-![image-20210403113800521](README.assets/image-20210403113800521.png)
-
-![image-20210403113847983](README.assets/image-20210403113847983.png)
+![image-20210708112817624](README.assets/image-20210708112817624.png)
 
 ![image-20210403113934479](README.assets/image-20210403113934479.png)
 
-### 主要功能
+### 主要特性
 
-- 通过控制台或玩家执行指令或行为监听执行操作
-- 主要数据单元为Guilds
+- 公会-成员布局
 - 文件储存利用Google Gson
-- 利用Bukkit的inventory类制作可视化菜单，如公会列表，成员列表，留言板等
-- 利用Bukkit的监听器监听玩家行为来实现召集令的触发等功能和防止玩家拿走可视化菜单中的物品
-- 调用Vault实现内部的经济操作
-- 调用placehoAPI提供变量
+- 可视化菜单，如公会列表，成员列表，留言板等
+- 监听器监听玩家行为来实现召集令的触发等功能和防止玩家拿走可视化菜单中的物品
+- Vault实现内部的经济操作，placehoAPI提供变量
 
-### 依赖
+# 功能介绍
 
-#### Maven依赖：
+## 常用功能
 
-`spigot` `VaultAPI`  `placeholderapi` `gson`
+### 会长/副会长/管理员
 
-#### Bukkit插件依赖：
+#### 设置公会地标
 
-硬依赖：Vault
+站在需要设置的位置输入
 
-软依赖：PlaceholderAPI
+`/gmgs warp set`
 
-### 使用方法
+#### 设置公会领地
 
-服务端要求 Spigot/Paper 1.12.2
+与圈地基本操作相同，先使用圈地工具选择两点，确认无误后输入
 
-将jar包放入服务端 /plugins 中开启后开启服务器
+`/gmgs res create`
 
-## 功能介绍
+需要注意的是，处于灵活性考虑，该指令不限制范围大小，但是请勿圈过大范围或超过所需范围的领地，若滥用该功能将对公会进行强制解散
 
-### 指令
+## 基本指令
 
-#### 基本操作
-
-普通玩家
+### 普通玩家
 
 /gmg
+
+![image-20210708112913698](README.assets/image-20210708112913698.png)
 
 | 操作                      | 功能                                                         |
 | ------------------------- | ------------------------------------------------------------ |
@@ -64,9 +60,11 @@
 | create                    | 创建公会（需要500000，调用vault模块操作玩家的货币）          |
 | msg                       | 留言板相关操作                                               |
 
-###### 会长/副会长/管理员
+### 会长/副会长/管理员
 
-/msg
+/gmgs
+
+![image-20210708112940637](README.assets/image-20210708112940637.png)
 
 | 操作              | 功能                                                         |
 | ----------------- | ------------------------------------------------------------ |
@@ -82,9 +80,7 @@
 | posset/posremove  | 设置成员职位                                                 |
 | setally           | 设置伙伴公会                                                 |
 
-
-
-### PlaceholderAPI
+## PlaceholderAPI
 
 | 权限结点                         | 功能           |
 | -------------------------------- | -------------- |
@@ -109,13 +105,25 @@
 
 
 
+# 依赖
+
+#### Maven依赖
+
+`spigot` `VaultAPI`  `placholderapi` `gson`
+
+#### Bukkit插件依赖
+
+硬依赖：Vault
+
+软依赖：PlaceholderAPI
+
 # 源码
 
 源码具体介绍
 
 只介绍了各个源码文件中的主要方法，具体操作细节请参考源码中的注释
 
-## GuildManager
+### GuildManager
 
 主类，用于接入Spigot的插件启动，关闭，注册以及插件的具体操作
 
@@ -134,7 +142,7 @@
 - 初始化Vault依赖
 - 调用Bukkit使玩家发送指令操作的方法
 
-## Guild
+### Guild
 
 #### 成员变量
 
@@ -161,7 +169,7 @@ private int Cash; //资金
 - 强制使用命令调用领地创建删除操作
 - 保存配置文件
 
-## Member
+### Member
 
 #### 成员变量
 
@@ -176,14 +184,14 @@ private boolean isAdvanced;  //是否为高级成员
 - 成员变量的增删改查
 - 实现了序列化
 
-## Guilds
+### Guilds
 
 所有公会存储与本类的Hashmap中
 
 - 公会的增删查的方法
 - 根据玩家ID遍历得到其所在的公会的方法
 
-## 指令处理器
+### 指令处理器
 
 以下三个类类似，均为对玩家的发送的指令进行监听
 
@@ -215,7 +223,7 @@ if(args[0].equalsIgnoreCase("t")){
 
 公会会长/副会长/管理员指令处理器
 
-## GuildItem
+### GuildItem
 
 相关道具的数据和获取，使用方法
 
@@ -244,7 +252,7 @@ if(args[0].equalsIgnoreCase("t")){
 
 目前只有召集令的构造与使用，未来可能加入其他道具
 
-## JoinListener
+### JoinListener
 
 监听玩家上线并作出相应操作
 
@@ -252,13 +260,13 @@ if(args[0].equalsIgnoreCase("t")){
 - 若玩家是高级成员，提醒其可以前往公会广场
 - 若玩家是公会会长则发送全局公告
 
-## GuildPAPI
+### GuildPAPI
 
 实现papi变量的接入
 
 供其他插件调用变量
 
-## GuildGUI
+### GuildGUI
 
 这里并非使用了Java的GUI
 
@@ -275,7 +283,7 @@ if(args[0].equalsIgnoreCase("t")){
 
 内置监听器取消玩家的点击存取操作
 
-## GuildRepository
+### GuildRepository
 
 利用Bukkit的Inventory，创建虚拟的背包作为公会公共仓库
 
