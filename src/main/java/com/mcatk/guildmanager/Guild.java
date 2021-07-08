@@ -339,5 +339,10 @@ public class Guild {
         return applicantList;
     }
     
+    
+    @Override
+    public String toString() {
+        return guildName + "(" + id + ")";
+    }
 }
 

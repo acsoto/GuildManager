@@ -65,9 +65,6 @@ public class GuildAdmin implements CommandExecutor {
         if (args[0].equalsIgnoreCase("remove")) {
             remove();
         }
-        if (args[0].equalsIgnoreCase("check")) {
-            check(guild);
-        }
         if (args[0].equalsIgnoreCase("rename")) {
             rename(guild);
         }
@@ -96,14 +93,6 @@ public class GuildAdmin implements CommandExecutor {
     private void remove() {
         if (guilds.removeGuild(args[1])) {
             sender.sendMessage(Msg.INFO + "删除成功");
-        } else {
-            sender.sendMessage(Msg.INFO + "§c不存在此公会");
-        }
-    }
-    
-    private void check(Guild guild) {
-        if (guilds.hasGuild(args[1])) {
-            sender.sendMessage(guild.checkStatus());
         } else {
             sender.sendMessage(Msg.INFO + "§c不存在此公会");
         }
