@@ -5,7 +5,6 @@ import com.mcatk.guildmanager.GuildGui;
 import com.mcatk.guildmanager.GuildManager;
 import com.mcatk.guildmanager.Guilds;
 import com.mcatk.guildmanager.Msg;
-import com.mcatk.guildmanager.msgs.Message;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -18,14 +17,11 @@ public class GuildCommand implements CommandExecutor {
     private String[] args;
     private Guild guild;
     
-    public GuildCommand() {
-        this.guilds = GuildManager.getPlugin().getGuilds();
-    }
-    
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         this.sender = sender;
         this.args = args;
+        this.guilds = GuildManager.getPlugin().getGuilds();
         this.guild = guilds.getPlayersGuild(sender.getName());
         if (args.length == 0) {
             printHelp();
@@ -41,7 +37,7 @@ public class GuildCommand implements CommandExecutor {
     
     private void onCommandWithoutGuild() {
         if (args[0].equalsIgnoreCase("gui")) {
-            new GuildGui(GuildManager.getPlugin()).openGui((Player) sender);
+            new GuildGui().openGui((Player) sender);
         }
         if (args[0].equalsIgnoreCase("apply")) {
             apply();
@@ -87,7 +83,7 @@ public class GuildCommand implements CommandExecutor {
                 sender.sendMessage(Msg.ERROR + "§c该指令只能由玩家发出");
                 return;
             }
-            new GuildGui(GuildManager.getPlugin()).openMemGui((Player) sender, guild);
+            new GuildGui().openMemGui((Player) sender, guild);
             return;
         }
         if (args[0].equalsIgnoreCase("msggui")) {
@@ -95,7 +91,7 @@ public class GuildCommand implements CommandExecutor {
                 sender.sendMessage(Msg.ERROR + "§c该指令只能由玩家发出");
                 return;
             }
-            new GuildGui(GuildManager.getPlugin()).openMsgGui((Player) sender, guild);
+            new GuildGui().openMsgGui((Player) sender, guild);
         }
     }
     

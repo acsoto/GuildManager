@@ -1,6 +1,5 @@
 package com.mcatk.guildmanager;
 
-import com.mcatk.guildmanager.msgs.Message;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -13,12 +12,9 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.util.ArrayList;
 
 public class GuildItem implements Listener {
-    private GuildManager plugin;
-    private Guilds guilds;
     private final ItemStack tpTicket;
     
-    public GuildItem(GuildManager plugin) {
-        guilds = plugin.getGuilds();
+    public GuildItem() {
         //构造tpTicket
         tpTicket = new ItemStack(Material.PAPER);
         ItemMeta meta = tpTicket.getItemMeta();
@@ -62,13 +58,13 @@ public class GuildItem implements Listener {
             Player player = event.getPlayer();
             if (player.getInventory().getItemInMainHand().isSimilar(tpTicket)) {
                 String playerID = player.getName();
-                Guild guild = guilds.getPlayersGuild(playerID);
+                Guild guild = GuildManager.getPlugin().getGuilds().getPlayersGuild(playerID);
                 if (guild == null) {
                     player.sendMessage(Msg.INFO + "你没有公会");
                 } else if (!guild.hasLeader(playerID)) {
                     player.sendMessage(Msg.INFO + "只有会长/副会长/管理员可以使用");
                 } else {
-                    plugin.tpAll(guild, player);
+                    GuildManager.getPlugin().tpAll(guild, player);
                     player.sendMessage(Msg.INFO + "已发动召集令");
                     consumeItem(player.getInventory().getItemInMainHand());
                 }

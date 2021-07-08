@@ -6,7 +6,6 @@ import com.mcatk.guildmanager.GuildManager;
 import com.mcatk.guildmanager.Guilds;
 import com.mcatk.guildmanager.Msg;
 import com.mcatk.guildmanager.ServerCmd;
-import com.mcatk.guildmanager.msgs.Message;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -21,7 +20,7 @@ public class GuildCommandS implements CommandExecutor {
     
     public GuildCommandS() {
         this.guilds = GuildManager.getPlugin().getGuilds();
-        this.guildItem = new GuildItem(GuildManager.getPlugin());
+        this.guildItem = new GuildItem();
     }
     
     @Override
@@ -274,7 +273,7 @@ public class GuildCommandS implements CommandExecutor {
             if (guild.getResidenceFLag()) {
                 sender.sendMessage(Msg.INFO + "请勿重复设置领地,领地 guild_" + guild.getId() + " 已存在");
             } else {
-                ServerCmd.createResidence(guild, (Player) sender);
+                new ServerCmd().createResidence(guild, (Player) sender);
             }
         } else if (args[1].equalsIgnoreCase("remove")) {
             if (guild.getResidenceFLag()) {

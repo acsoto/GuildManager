@@ -14,14 +14,9 @@ import java.io.File;
 import java.io.IOException;
 
 public class GuildRepository implements Listener {
-    private GuildManager plugin;
-    
-    public GuildRepository(GuildManager plugin) {
-        this.plugin = plugin;
-    }
     
     Inventory newRepos(String guildID, int size) {
-        Guild guild = plugin.getGuilds().getGuild(guildID);
+        Guild guild = GuildManager.getPlugin().getGuilds().getGuild(guildID);
         return Bukkit.createInventory(null, size, guild.getName() + " §6公会仓库");
     }
     
@@ -34,7 +29,7 @@ public class GuildRepository implements Listener {
         if (event.getInventory().getTitle().contains("公会仓库")) {
             Player player = (Player) event.getWhoClicked();
             String playerID = player.getName();
-            Guild guild = plugin.getGuilds().getPlayersGuild(playerID);
+            Guild guild = GuildManager.getPlugin().getGuilds().getPlayersGuild(playerID);
             event.setCancelled(!guild.hasLeader(playerID) &&
                     guild.getMember(playerID).getContribution() <= 10);
         }
@@ -44,14 +39,14 @@ public class GuildRepository implements Listener {
     public void saveReposOnDisable(InventoryCloseEvent event) throws IOException {
         if (event.getInventory().getTitle().contains("公会仓库")) {
             String playerID = event.getPlayer().getName();
-            Guild guild = plugin.getGuilds().getPlayersGuild(playerID);
+            Guild guild = GuildManager.getPlugin().getGuilds().getPlayersGuild(playerID);
             saveRepos(guild.getId(), event.getInventory());
         }
     }
     
     //save and load
     void saveRepos(String guildID, Inventory repos) throws IOException {
-        File f = new File(plugin.getDataFolder().getAbsolutePath(),
+        File f = new File(GuildManager.getPlugin().getDataFolder().getAbsolutePath(),
                 "/Repositories/" + guildID + ".yml");
         FileConfiguration c = YamlConfiguration.loadConfiguration(f);
         c.set(guildID, repos.getStorageContents());

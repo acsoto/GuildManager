@@ -1,18 +1,15 @@
 package com.mcatk.guildmanager;
 
-import com.mcatk.guildmanager.msgs.Message;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
 public class JoinListener implements Listener {
-    private GuildManager plugin;
     private Guilds guilds;
     
-    JoinListener(GuildManager plugin) {
-        this.plugin = plugin;
-        this.guilds = plugin.getGuilds();
+    JoinListener() {
+        this.guilds = GuildManager.getPlugin().getGuilds();
     }
     
     @EventHandler
@@ -22,15 +19,15 @@ public class JoinListener implements Listener {
         Guild guild = guilds.getPlayersGuild(playerID);
         if (guild != null) {
             if (guild.getChairman().equals(playerID)) {
-                plugin.getServer().broadcastMessage(
+                GuildManager.getPlugin().getServer().broadcastMessage(
                         Msg.INFO + guild.getName() + "§2会长§e" + player.getName() + "§2已上线"
                 );
             }
-            if (plugin.getServer().getOnlinePlayers() != null) {
+            if (GuildManager.getPlugin().getServer().getOnlinePlayers() != null) {
                 StringBuilder msg = new StringBuilder(
                         Msg.INFO + "§2您的公会" + guild.getName() + "§2现在在线玩家:"
                 );
-                for (Player p : plugin.getServer().getOnlinePlayers()) {
+                for (Player p : GuildManager.getPlugin().getServer().getOnlinePlayers()) {
                     if (guild.hasPlayer(p.getName())) {
                         msg.append("§e").append(p.getName()).append(",");
                     }

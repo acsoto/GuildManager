@@ -71,13 +71,13 @@ public final class GuildManager extends JavaPlugin {
     
     private void registerListener() {
         Bukkit.getPluginManager().
-                registerEvents(new JoinListener(this), this);
+                registerEvents(new JoinListener(), this);
         Bukkit.getPluginManager().
-                registerEvents(new GuildGui(this), this);
+                registerEvents(new GuildGui(), this);
         Bukkit.getPluginManager().
-                registerEvents(new GuildItem(this), this);
+                registerEvents(new GuildItem(), this);
         Bukkit.getPluginManager().
-                registerEvents(new GuildRepository(this), this);
+                registerEvents(new GuildRepository(), this);
         getLogger().info("监听器注册完毕");
     }
     

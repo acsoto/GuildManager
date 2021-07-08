@@ -286,16 +286,16 @@ public class Guild {
     //成员权限方法
     //调用Bukkit
     public void giveGuildSquarePerm(String player) {
-        ServerCmd.sendConsoleCmd("res pset main.gh " + player + " move true");
+        new ServerCmd().sendConsoleCmd("res pset main.gh " + player + " move true");
     }
     
     public void removeGuildSquarePerm(String player) {
-        ServerCmd.sendConsoleCmd("res pset main.gh " + player + " move remove");
+        new ServerCmd().sendConsoleCmd("res pset main.gh " + player + " move remove");
     }
     
     public void removeResidence() {
-        ServerCmd.sendConsoleCmd("resadmin remove guild_" + id);
-        ServerCmd.sendConsoleCmd("resadmin confirm");
+        new ServerCmd().sendConsoleCmd("resadmin remove guild_" + id);
+        new ServerCmd().sendConsoleCmd("resadmin confirm");
         residenceFLag = false;
     }
     

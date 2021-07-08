@@ -16,15 +16,7 @@ import java.util.HashMap;
 
 public class GuildGui implements Listener {
     
-    private GuildManager plugin;
-    private Guilds guilds;
-    
     //公会列表GUI
-    public GuildGui(GuildManager plugin) {
-        this.plugin = plugin;
-        this.guilds = plugin.getGuilds();
-    }
-    
     public void openGui(Player player) {
         player.openInventory(createGuildsGui());
     }
@@ -53,8 +45,8 @@ public class GuildGui implements Listener {
     public Inventory createGuildsGui() {
         Inventory gui = Bukkit.createInventory(null, 54, "§6公会列表");
         for (String key :
-                guilds.getGuildMap().keySet()) {
-            Guild guild = guilds.getGuild(key);
+                GuildManager.getPlugin().getGuilds().getGuildMap().keySet()) {
+            Guild guild = GuildManager.getPlugin().getGuilds().getGuild(key);
             ItemStack button = getAnGuildButton(guild);
             gui.addItem(button);
         }
