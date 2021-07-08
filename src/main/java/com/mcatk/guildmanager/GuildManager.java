@@ -96,7 +96,7 @@ public final class GuildManager extends JavaPlugin {
     
     public void setWarp(Player player, String g) {
         player.setOp(true);
-        player.chat("/setwarp Guild_" + g);
+        player.chat("/setwarp" + g);
         player.setOp(false);
     }
     

@@ -98,8 +98,7 @@ public class GuildCommandS implements CommandExecutor {
             sender.sendMessage("§a/gmgs levelup  §2公会升级");
             sender.sendMessage("§a/gmgs res create §2公会圈地(工具选点后输入该指令)");
             sender.sendMessage("§a/gmgs res remove  §2删除公会领地");
-            sender.sendMessage("§a/gmgs setwarp  §2设置公会领地标");
-            sender.sendMessage("§a/gmgs delwarp  §2删除公会领地标");
+            sender.sendMessage("§a/gmgs warp set/del  §2设置/删除公会领地标");
             sender.sendMessage("§a/gmgs position set <player> v/m  §2设置玩家为副会长/管理员");
             sender.sendMessage("§a/gmgs position remove <player> v/m §2撤销玩家的副会长/管理员");
             sender.sendMessage("§a/gmgs setally <guildID> §2设置伙伴公会");
@@ -297,7 +296,7 @@ public class GuildCommandS implements CommandExecutor {
             sendParameterError();
         } else {
             if (args[1].equalsIgnoreCase("set")) {
-                GuildManager.getPlugin().setWarp((Player) sender, guild.getId());
+                GuildManager.getPlugin().setWarp((Player) sender, guild.getName());
             }
             if (args[1].equalsIgnoreCase("del")) {
                 GuildManager.getPlugin().delWarp(guild.getId());
