@@ -45,9 +45,6 @@ public class GuildCommand implements CommandExecutor {
             case "apply":
                 apply();
                 break;
-            case "check":
-                check();
-                break;
             case "tp":
                 tp();
                 break;
@@ -59,44 +56,31 @@ public class GuildCommand implements CommandExecutor {
     }
     
     private void onCommandWithGuild() {
-        if (args[0].equalsIgnoreCase("t")) {
-            GuildManager.getPlugin().tpGuild(guild.getName(), sender.getName());
-            sender.sendMessage(Msg.INFO + "§a传送成功");
-        }
-        if (args[0].equalsIgnoreCase("s")) {
-            sender.sendMessage(guild.checkStatus());
-        }
-        if (args[0].equalsIgnoreCase("offer")) {
-            offer();
-        }
-        if (args[0].equalsIgnoreCase("msg")) {
-            msg();
-        }
-        if (args[0].equalsIgnoreCase("msgs")) {
-            sender.sendMessage(guild.getMsgFromBoard());
-        }
-        if (args[0].equalsIgnoreCase("mems")) {
-            sender.sendMessage(guild.checkMemSize());
-            sender.sendMessage(guild.listMembers());
-        }
-        if (args[0].equalsIgnoreCase("amems")) {
-            sender.sendMessage(guild.checkAdvancedMemSize());
-            sender.sendMessage(guild.listAdvancedMembers());
-        }
-        if (args[0].equalsIgnoreCase("memgui")) {
-            if (!(sender instanceof Player)) {
-                sender.sendMessage(Msg.ERROR + "§c该指令只能由玩家发出");
+        switch (args[0].toLowerCase()) {
+            case "t":
+                GuildManager.getPlugin().tpGuild(guild.getName(), sender.getName());
+                sender.sendMessage(Msg.INFO + "§a传送成功");
+                break;
+            case "offer":
+                offer();
+                break;
+            case "msg":
+                msg();
+                break;
+            case "memgui":
+                if (!(sender instanceof Player)) {
+                    sender.sendMessage(Msg.ERROR + "§c该指令只能由玩家发出");
+                    return;
+                }
+                ((Player) sender).openInventory(new MemGui().getMemGui(guild));
                 return;
-            }
-            ((Player) sender).openInventory(new MemGui().getMemGui(guild));
-            return;
-        }
-        if (args[0].equalsIgnoreCase("msggui")) {
-            if (!(sender instanceof Player)) {
-                sender.sendMessage(Msg.ERROR + "§c该指令只能由玩家发出");
-                return;
-            }
-            ((Player) sender).openInventory(new MsgBoardGui().getMsgBoardGui(guild));
+            case "msggui":
+                if (!(sender instanceof Player)) {
+                    sender.sendMessage(Msg.ERROR + "§c该指令只能由玩家发出");
+                    return;
+                }
+                ((Player) sender).openInventory(new MsgBoardGui().getMsgBoardGui(guild));
+                break;
         }
     }
     
@@ -117,21 +101,6 @@ public class GuildCommand implements CommandExecutor {
                     sender.sendMessage(Msg.INFO + "申请成功，等待通过");
                 }
             }
-        }
-    }
-    
-    private void check() {
-        if (args.length == 1) {
-            sender.sendMessage(Msg.INFO + "§c缺少参数");
-        } else if (guilds.hasGuild(args[1])) {
-            Guild guild = guilds.getGuild(args[1]);
-            if (guild == null) {
-                sender.sendMessage(Msg.ERROR + "不存在此公会");
-                return;
-            }
-            sender.sendMessage(guild.checkStatus());
-        } else {
-            sender.sendMessage(Msg.INFO + "§c不存在此公会");
         }
     }
     
@@ -262,15 +231,11 @@ public class GuildCommand implements CommandExecutor {
         sender.sendMessage("§e------------公会帮助------------");
         sender.sendMessage("§a/gmg gui  §2公会列表");
         sender.sendMessage("§a/gmg apply <ID>  §2申请加入公会");
-        sender.sendMessage("§a/gmg check <ID>  §2查看公会详情");
         sender.sendMessage("§a/gmg tp <guild> §2传送到某公会主城");
         sender.sendMessage("§a/gmg create <ID> §2创建公会（ID必须为英文）");
         sender.sendMessage("§a/gmg t §2传送到自己的公会主城");
-        sender.sendMessage("§a/gmg s §2查看公会状态");
         sender.sendMessage("§a/gmg offer <AC点> §2捐助公会资金 1wAC = 1GuildCash");
         sender.sendMessage("§a/gmg msg §2公会留言");
-        sender.sendMessage("§a/gmg mems §2查看公会成员列表");
-        sender.sendMessage("§a/gmg amems §2查看公会名高级成员列表");
         sender.sendMessage("§a/gmg memgui §2查看公会成员菜单");
         sender.sendMessage("§a/gmg msggui §2查看留言板菜单");
     }

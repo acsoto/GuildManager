@@ -260,17 +260,6 @@ public class Guild {
         msgBoard.clear();
     }
     
-    //从留言板中获取字符串
-    public String getMsgFromBoard() {
-        StringBuilder msg =
-                new StringBuilder(GuildManager.getPlugin().colorFormat("&a&l留言板："));
-        for (String str :
-                msgBoard) {
-            msg.append(str);
-        }
-        return msg.toString();
-    }
-    
     public ArrayList<String> getMsgBoard() {
         return msgBoard;
     }
@@ -297,43 +286,6 @@ public class Guild {
         new ServerCmd().sendConsoleCmd("resadmin remove guild_" + id);
         new ServerCmd().sendConsoleCmd("resadmin confirm");
         residenceFLag = false;
-    }
-    
-    //查看公会情况，均为返回字符串
-    public String checkGuildName() {
-        return "§2公会名: " + "§a" + guildName + "\n";
-    }
-    
-    public String checkChairman() {
-        return "§2会长: " + "§6" + chairMan + "\n";
-    }
-    
-    public String checkCash() {
-        return "§2公会资金: " + "§6" + cash + "\n";
-    }
-    
-    public String checkPoints() {
-        return "§2公会积分: " + "§6" + points + "\n";
-    }
-    
-    public String checkMemSize() {
-        return "§2公会人数: " + "§a" + members.size() + "/" + maxPlayers + "\n";
-    }
-    
-    public String checkAdvancedMemSize() {
-        return "§2高级玩家: " + "§a" + advancedPlayers + "/" + maxAdvancedPlayers + "\n";
-    }
-    
-    public String checkStatus() {
-        String msg = "§2" + "公会ID: " + "§a" + id + "\n";
-        msg += checkGuildName();
-        msg += checkChairman();
-        msg += checkCash();
-        msg += checkPoints();
-        msg += checkMemSize();
-        msg += checkAdvancedMemSize();
-        msg += listMembers();
-        return msg;
     }
     
     public String checkViceChairman() {
