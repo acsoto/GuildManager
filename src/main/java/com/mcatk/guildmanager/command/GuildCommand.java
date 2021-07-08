@@ -1,10 +1,12 @@
 package com.mcatk.guildmanager.command;
 
 import com.mcatk.guildmanager.Guild;
-import com.mcatk.guildmanager.GuildGui;
+import com.mcatk.guildmanager.gui.GuildsGui;
 import com.mcatk.guildmanager.GuildManager;
 import com.mcatk.guildmanager.Guilds;
 import com.mcatk.guildmanager.Msg;
+import com.mcatk.guildmanager.gui.MemGui;
+import com.mcatk.guildmanager.gui.MsgBoardGui;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -36,20 +38,23 @@ public class GuildCommand implements CommandExecutor {
     }
     
     private void onCommandWithoutGuild() {
-        if (args[0].equalsIgnoreCase("gui")) {
-            new GuildGui().openGui((Player) sender);
-        }
-        if (args[0].equalsIgnoreCase("apply")) {
-            apply();
-        }
-        if (args[0].equalsIgnoreCase("check")) {
-            check();
-        }
-        if (args[0].equalsIgnoreCase("tp")) {
-            tp();
-        }
-        if (args[0].equalsIgnoreCase("create")) {
-            create();
+        switch (args[0].toLowerCase()) {
+            case "gui":
+                ((Player) sender).openInventory(new GuildsGui().getGuildsGui());
+                break;
+            case "apply":
+                apply();
+                break;
+            case "check":
+                check();
+                break;
+            case "tp":
+                tp();
+                break;
+            case "create":
+                create();
+                break;
+            default:
         }
     }
     
@@ -83,7 +88,7 @@ public class GuildCommand implements CommandExecutor {
                 sender.sendMessage(Msg.ERROR + "§c该指令只能由玩家发出");
                 return;
             }
-            new GuildGui().openMemGui((Player) sender, guild);
+            ((Player) sender).openInventory(new MemGui().getMemGui(guild));
             return;
         }
         if (args[0].equalsIgnoreCase("msggui")) {
@@ -91,7 +96,7 @@ public class GuildCommand implements CommandExecutor {
                 sender.sendMessage(Msg.ERROR + "§c该指令只能由玩家发出");
                 return;
             }
-            new GuildGui().openMsgGui((Player) sender, guild);
+            ((Player) sender).openInventory(new MsgBoardGui().getMsgBoardGui(guild));
         }
     }
     

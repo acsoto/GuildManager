@@ -4,6 +4,7 @@ import com.mcatk.guildmanager.command.GuildAdmin;
 import com.mcatk.guildmanager.command.GuildCommand;
 import com.mcatk.guildmanager.command.GuildCommandS;
 import com.mcatk.guildmanager.file.FileOperation;
+import com.mcatk.guildmanager.gui.GuiListener;
 import com.mcatk.guildmanager.papi.GuildPapi;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.economy.EconomyResponse;
@@ -73,7 +74,7 @@ public final class GuildManager extends JavaPlugin {
         Bukkit.getPluginManager().
                 registerEvents(new JoinListener(), this);
         Bukkit.getPluginManager().
-                registerEvents(new GuildGui(), this);
+                registerEvents(new GuiListener(), this);
         Bukkit.getPluginManager().
                 registerEvents(new GuildItem(), this);
         Bukkit.getPluginManager().
