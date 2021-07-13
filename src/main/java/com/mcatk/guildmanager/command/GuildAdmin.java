@@ -170,4 +170,17 @@ public class GuildAdmin implements CommandExecutor {
             sender.sendMessage(Msg.INFO + "§c错误：超过其积分");
         }
     }
+    
+    // gmgadmin resetname guild
+    private void resetNameFlag(Guild guild) {
+        guild.setHasChangedName(false);
+    }
+    
+    private boolean sendParaLengthError(int length) {
+        if (args.length != length) {
+            sender.sendMessage(Msg.ERROR + "§c参数长度有误，请重试。长度应为 " + length);
+            return true;
+        }
+        return false;
+    }
 }

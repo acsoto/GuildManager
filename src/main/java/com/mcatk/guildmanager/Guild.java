@@ -264,12 +264,12 @@ public class Guild {
         return msgBoard;
     }
     
-    public boolean isHasChangedName() {
-        return hasChangedName;
-    }
-    
     public void setHasChangedName(boolean hasChangedName) {
         this.hasChangedName = hasChangedName;
+    }
+    
+    public boolean isHasChangedName() {
+        return hasChangedName;
     }
     
     //成员权限方法
