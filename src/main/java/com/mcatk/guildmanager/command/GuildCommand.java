@@ -1,6 +1,7 @@
 package com.mcatk.guildmanager.command;
 
 import com.mcatk.guildmanager.Guild;
+import com.mcatk.guildmanager.exceptions.ParaLengthException;
 import com.mcatk.guildmanager.gui.GuildsGui;
 import com.mcatk.guildmanager.GuildManager;
 import com.mcatk.guildmanager.Guilds;
@@ -19,25 +20,44 @@ public class GuildCommand implements CommandExecutor {
     private String[] args;
     private Guild guild;
     
+    // usage: /gmg gui|apply|tp|create|t|quit|offer|msg|memgui|msggui
+    private void printHelp() {
+        sender.sendMessage("§e------------公会帮助------------");
+        sender.sendMessage("§a/gmg gui  §2公会列表");
+        sender.sendMessage("§a/gmg apply <ID>  §2申请加入公会");
+        sender.sendMessage("§a/gmg tp <guild> §2传送到某公会主城");
+        sender.sendMessage("§a/gmg create <ID> §2创建公会（ID必须为英文）");
+        sender.sendMessage("§a/gmg t §2传送到自己的公会主城");
+        sender.sendMessage("§a/gmg quit §2退出公会");
+        sender.sendMessage("§a/gmg offer <AC点> §2捐助公会资金 1wAC = 1GuildCash");
+        sender.sendMessage("§a/gmg msg §2公会留言");
+        sender.sendMessage("§a/gmg memgui §2查看公会成员菜单");
+        sender.sendMessage("§a/gmg msggui §2查看留言板菜单");
+    }
+    
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        this.sender = sender;
-        this.args = args;
-        this.guilds = GuildManager.getPlugin().getGuilds();
-        this.guild = guilds.getPlayersGuild(sender.getName());
         if (args.length == 0) {
             printHelp();
-            return true;
-        }
-        onCommandWithoutGuild();
-        //以下要求发送者在一个公会之中
-        if (guild != null) {
-            onCommandWithGuild();
+        } else {
+            this.sender = sender;
+            this.args = args;
+            this.guilds = GuildManager.getPlugin().getGuilds();
+            this.guild = guilds.getPlayersGuild(sender.getName());
+            try {
+                onCommandWithoutGuild();
+                //以下要求发送者在一个公会之中
+                if (guild != null) {
+                    onCommandWithGuild();
+                }
+            } catch (ParaLengthException e) {
+                sender.sendMessage(String.valueOf(e));
+            }
         }
         return true;
     }
     
-    private void onCommandWithoutGuild() {
+    private void onCommandWithoutGuild() throws ParaLengthException {
         switch (args[0].toLowerCase()) {
             case "gui":
                 ((Player) sender).openInventory(new GuildsGui().getGuildsGui());
@@ -55,7 +75,7 @@ public class GuildCommand implements CommandExecutor {
         }
     }
     
-    private void onCommandWithGuild() {
+    private void onCommandWithGuild() throws ParaLengthException {
         switch (args[0].toLowerCase()) {
             case "t":
                 GuildManager.getPlugin().tpGuild(guild.getName(), sender.getName());
@@ -80,10 +100,11 @@ public class GuildCommand implements CommandExecutor {
         }
     }
     
-    private void apply() {
+    private void apply() throws ParaLengthException {
         if (args.length != 2) {
-            sender.sendMessage(Msg.ERROR + "参数错误");
-        } else if (guilds.getPlayersGuild(sender.getName()) != null) {
+            throw new ParaLengthException(2);
+        }
+        if (guilds.getPlayersGuild(sender.getName()) != null) {
             sender.sendMessage(Msg.ERROR + "已有公会");
         } else {
             Guild guild = guilds.getGuild(args[1]);
@@ -100,9 +121,9 @@ public class GuildCommand implements CommandExecutor {
         }
     }
     
-    private void tp() {
-        if (args.length == 1) {
-            sender.sendMessage(Msg.INFO + "§c缺少参数");
+    private void tp() throws ParaLengthException {
+        if (args.length != 2) {
+            throw new ParaLengthException(2);
         } else if (guilds.hasGuild(args[1])) {
             String p = sender.getName();
             GuildManager.getPlugin().tpGuild(args[1], p);
@@ -112,10 +133,9 @@ public class GuildCommand implements CommandExecutor {
         }
     }
     
-    private void create() {
+    private void create() throws ParaLengthException {
         if (args.length != 2) {
-            sender.sendMessage(Msg.ERROR + "参数错误");
-            return;
+            throw new ParaLengthException(2);
         }
         if (!isAlphabet(args[1])) {
             sender.sendMessage(Msg.ERROR + "ID只能是小写字母");
@@ -139,15 +159,14 @@ public class GuildCommand implements CommandExecutor {
         }
     }
     
-    private void offer() {
+    private void offer() throws ParaLengthException {
         if (!(sender instanceof Player)) {
             sender.sendMessage(Msg.ERROR + "§c该指令只能由玩家发出");
             return;
         }
         String p = sender.getName();
         if (args.length != 2) {
-            sender.sendMessage(Msg.INFO + "§c参数错误");
-            return;
+            throw new ParaLengthException(2);
         }
         if (!isLegalMoney(args[1])) {
             sender.sendMessage(Msg.INFO + "§c必须是整数！");
@@ -223,18 +242,4 @@ public class GuildCommand implements CommandExecutor {
         return true;
     }
     
-    // usage: /gmg gui|apply|tp|create|t|quit|offer|msg|memgui|msggui
-    private void printHelp() {
-        sender.sendMessage("§e------------公会帮助------------");
-        sender.sendMessage("§a/gmg gui  §2公会列表");
-        sender.sendMessage("§a/gmg apply <ID>  §2申请加入公会");
-        sender.sendMessage("§a/gmg tp <guild> §2传送到某公会主城");
-        sender.sendMessage("§a/gmg create <ID> §2创建公会（ID必须为英文）");
-        sender.sendMessage("§a/gmg t §2传送到自己的公会主城");
-        sender.sendMessage("§a/gmg quit §2退出公会");
-        sender.sendMessage("§a/gmg offer <AC点> §2捐助公会资金 1wAC = 1GuildCash");
-        sender.sendMessage("§a/gmg msg §2公会留言");
-        sender.sendMessage("§a/gmg memgui §2查看公会成员菜单");
-        sender.sendMessage("§a/gmg msggui §2查看留言板菜单");
-    }
 }

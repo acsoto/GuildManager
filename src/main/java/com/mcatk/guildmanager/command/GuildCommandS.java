@@ -6,6 +6,7 @@ import com.mcatk.guildmanager.GuildManager;
 import com.mcatk.guildmanager.Guilds;
 import com.mcatk.guildmanager.Msg;
 import com.mcatk.guildmanager.ServerCmd;
+import com.mcatk.guildmanager.exceptions.ParaLengthException;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -40,14 +41,18 @@ public class GuildCommandS implements CommandExecutor {
             printHelp();
             return true;
         }
-        onCommandLeader();
-        if (guild.hasChairman(sender.getName())) {
-            onCommandChairman();
+        try {
+            onCommandLeader();
+            if (guild.hasChairman(sender.getName())) {
+                onCommandChairman();
+            }
+        } catch (ParaLengthException e) {
+            sender.sendMessage(String.valueOf(e));
         }
         return true;
     }
     
-    private void onCommandLeader() {
+    private void onCommandLeader() throws ParaLengthException {
         switch (args[0].toLowerCase()) {
             case "app":
                 app();
@@ -65,7 +70,7 @@ public class GuildCommandS implements CommandExecutor {
         }
     }
     
-    private void onCommandChairman() {
+    private void onCommandChairman() throws ParaLengthException {
         switch (args[0].toLowerCase()) {
             case "advance":
                 advance();
@@ -115,7 +120,7 @@ public class GuildCommandS implements CommandExecutor {
         sender.sendMessage("§a/gmgs clearmsg  §2清空留言板");
     }
     
-    void app() {
+    void app() throws ParaLengthException {
         if (args.length == 1) {
             sender.sendMessage("申请列表:");
             for (String p : guild.getApplicantList()) {
@@ -123,7 +128,7 @@ public class GuildCommandS implements CommandExecutor {
             }
             sender.sendMessage("输入/gmgs app <ID> 通过玩家的入会申请");
         } else if (args.length != 2) {
-            sendParameterError();
+            throw new ParaLengthException(2);
         } else {
             if (guild.getApplicantList().contains(args[1])) {
                 if (guild.addMembers(args[1])) {
@@ -142,9 +147,9 @@ public class GuildCommandS implements CommandExecutor {
         sender.sendMessage(Msg.ERROR + "参数长度错误");
     }
     
-    private void remove() {
+    private void remove() throws ParaLengthException {
         if (args.length != 2) {
-            sendParameterError();
+            throw new ParaLengthException(2);
         } else {
             String playerID = args[1];
             if (playerID.equalsIgnoreCase(sender.getName())) {
@@ -194,9 +199,9 @@ public class GuildCommandS implements CommandExecutor {
         guild.clearMsgBoard();
     }
     
-    private void advance() {
+    private void advance() throws ParaLengthException {
         if (args.length != 3) {
-            sendParameterError();
+            throw new ParaLengthException(3);
         } else {
             String operate = args[1];
             String player = args[2];
@@ -227,9 +232,9 @@ public class GuildCommandS implements CommandExecutor {
         }
     }
     
-    private void setName() {
+    private void setName() throws ParaLengthException {
         if (args.length != 2) {
-            sendParameterError();
+            throw new ParaLengthException(2);
         } else {
             if (guild.isHasChangedName()) {
                 sender.sendMessage(Msg.ERROR + "名称已经设置，如需修改请使用更名卡");
@@ -246,9 +251,6 @@ public class GuildCommandS implements CommandExecutor {
     }
     
     private void levelUp() {
-        if (args.length != 1) {
-            sendParameterError();
-        }
         if (guild.getLevel() >= 5) {
             sender.sendMessage(Msg.INFO + "公会已达到满级");
             return;
@@ -292,9 +294,9 @@ public class GuildCommandS implements CommandExecutor {
         }
     }
     
-    private void warp() {
+    private void warp() throws ParaLengthException {
         if (args.length != 2) {
-            sendParameterError();
+            throw new ParaLengthException(2);
         } else {
             if (args[1].equalsIgnoreCase("set")) {
                 GuildManager.getPlugin().setWarp((Player) sender, guild.getName());
@@ -305,10 +307,9 @@ public class GuildCommandS implements CommandExecutor {
         }
     }
     
-    private void position() {
+    private void position() throws ParaLengthException {
         if (args.length != 4) {
-            sendParameterError();
-            sender.sendMessage("§a/gmg position set/remove <player> v/m  §2设置玩家为副会长/管理员");
+            throw new ParaLengthException(4);
         } else {
             if (args[1].equalsIgnoreCase("set")) {
                 String p = args[2];

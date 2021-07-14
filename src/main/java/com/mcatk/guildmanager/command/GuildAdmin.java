@@ -4,6 +4,7 @@ import com.mcatk.guildmanager.Guild;
 import com.mcatk.guildmanager.GuildManager;
 import com.mcatk.guildmanager.Guilds;
 import com.mcatk.guildmanager.Msg;
+import com.mcatk.guildmanager.exceptions.ParaLengthException;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -100,9 +101,7 @@ public class GuildAdmin implements CommandExecutor {
     }
     
     private void rename(Guild guild) {
-        if (args.length < 3) {
-            sender.sendMessage(Msg.INFO + "§c缺少参数");
-        } else if (guilds.hasGuild(args[1])) {
+        if (guilds.hasGuild(args[1])) {
             guild.setName(args[2]);
             sender.sendMessage(Msg.INFO + "已修改为" + args[2]);
         } else {
@@ -127,20 +126,12 @@ public class GuildAdmin implements CommandExecutor {
     }
     
     private void addCash(Guild guild) {
-        if (args.length < 3) {
-            sender.sendMessage(Msg.INFO + "§c缺少参数");
-            return;
-        }
         int n = Integer.parseInt(args[2]);
         guild.addCash(n);
         sender.sendMessage(Msg.INFO + "操作成功");
     }
     
     private void takeCash(Guild guild) {
-        if (args.length < 3) {
-            sender.sendMessage(Msg.INFO + "§c缺少参数");
-            return;
-        }
         int n = Integer.parseInt(args[2]);
         if (guild.takeCash(n)) {
             sender.sendMessage(Msg.INFO + "操作成功");
@@ -150,20 +141,12 @@ public class GuildAdmin implements CommandExecutor {
     }
     
     private void addPoints(Guild guild) {
-        if (args.length < 3) {
-            sender.sendMessage(Msg.INFO + "§c缺少参数");
-            return;
-        }
         int n = Integer.parseInt(args[2]);
         guild.addPoints(n);
         sender.sendMessage(Msg.INFO + "操作成功");
     }
     
     private void takePoints(Guild guild) {
-        if (args.length < 3) {
-            sender.sendMessage(Msg.INFO + "§c缺少参数");
-            return;
-        }
         int n = Integer.parseInt(args[2]);
         if (guild.takePoints(n)) {
             sender.sendMessage(Msg.INFO + "操作成功");
