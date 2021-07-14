@@ -14,7 +14,7 @@ import java.util.ArrayList;
 public class GuildsGui {
     
     public Inventory getGuildsGui() {
-        Inventory gui = Bukkit.createInventory(null, 54, "§6公会列表");
+        Inventory gui = Bukkit.createInventory(GuiHolder.getGuiHolder(), 54, "§6公会列表");
         for (String key :
                 GuildManager.getPlugin().getGuilds().getGuildMap().keySet()) {
             Guild guild = GuildManager.getPlugin().getGuilds().getGuild(key);

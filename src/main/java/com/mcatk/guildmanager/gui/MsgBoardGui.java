@@ -13,7 +13,7 @@ public class MsgBoardGui {
     
     public Inventory getMsgBoardGui(Guild guild) {
         ArrayList<String> msgBoard = guild.getMsgBoard();
-        Inventory gui = Bukkit.createInventory(null, 18, guild.getName() + "§6留言板");
+        Inventory gui = Bukkit.createInventory(GuiHolder.getGuiHolder(), 18, guild.getName() + "§6留言板");
         for (String str :
                 msgBoard) {
             ItemStack button = getAnMsgButton(str);

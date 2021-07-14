@@ -6,6 +6,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 
 public class GuiListener implements Listener {
+    
+    private String[] unClickableGuiTitles = {"公会列表", "成员", "留言板"};
+    
     //禁止玩家拿走物品
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
@@ -13,11 +16,7 @@ public class GuiListener implements Listener {
             return;
         }
         Player player = (Player) event.getWhoClicked();
-        boolean unClickableGui =
-                event.getInventory().getTitle().equalsIgnoreCase("§6公会列表") ||
-                        event.getInventory().getTitle().contains("成员") ||
-                        event.getInventory().getTitle().contains("留言板");
-        if (unClickableGui) {
+        if (event.getInventory().getHolder().equals(GuiHolder.getGuiHolder())) {
             event.setCancelled(true);
             if (event.getCurrentItem() != null) {
                 if (event.getCurrentItem().getItemMeta().getDisplayName().equals("返回")) {
@@ -31,4 +30,5 @@ public class GuiListener implements Listener {
             //            }
         }
     }
+    
 }

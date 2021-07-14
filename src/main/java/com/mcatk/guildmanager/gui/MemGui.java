@@ -15,7 +15,7 @@ public class MemGui {
     
     public Inventory getMemGui(Guild guild) {
         HashMap<String, Member> memList = guild.getMembers();
-        Inventory gui = Bukkit.createInventory(null, 54, guild.getName() + "§6成员");
+        Inventory gui = Bukkit.createInventory(GuiHolder.getGuiHolder(), 54, guild.getName() + "§6成员");
         for (String playerID :
                 memList.keySet()) {
             Member player = guild.getMember(playerID);
