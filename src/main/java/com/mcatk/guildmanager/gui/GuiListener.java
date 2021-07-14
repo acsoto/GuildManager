@@ -23,11 +23,6 @@ public class GuiListener implements Listener {
                     ((Player) event.getWhoClicked()).chat("/menu");
                 }
             }
-            //            player.updateInventory();
-            //            if(event.getRawSlot()==0){
-            //                player.closeInventory();
-            //                player.openInventory(createGuildsGUI());
-            //            }
         }
     }
     

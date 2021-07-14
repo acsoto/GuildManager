@@ -2,6 +2,7 @@ package com.mcatk.guildmanager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class Guild {
     private ArrayList<String> msgBoard; //留言板
@@ -339,6 +340,17 @@ public class Guild {
         return applicantList;
     }
     
+    public List<String> getMembersList(boolean pure) {
+        ArrayList<String> list = new ArrayList<>();
+        for (Member member : members.values()) {
+            if (pure) {
+                list.add(member.getId());
+            } else {
+                list.add("§e" + member.getId());
+            }
+        }
+        return list;
+    }
     
     @Override
     public String toString() {
