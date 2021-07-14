@@ -19,7 +19,6 @@ public class ServerCmd {
     
     public void createResidence(Guild guild, Player player) {
         player.setOp(true);
-        player.chat("/resadmin select vert");
         player.chat("/resadmin create guild_" + guild.getId());
         player.setOp(false);
     }
