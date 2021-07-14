@@ -17,20 +17,21 @@ public class GuildAdmin implements CommandExecutor {
         this.guilds = GuildManager.getPlugin().getGuilds();
     }
     
+    // usage: /gmga reload|create|remove|check|rename|sc|addmem|removemem|addcash|takecash|addpoints|takepoints
     private void printHelp() {
         sender.sendMessage("§e------------ADMIN帮助------------");
-        sender.sendMessage("§a/gmgadmin reload §2重载插件");
-        sender.sendMessage("§a/gmgadmin create <guild> <player>§2创建公会");
-        sender.sendMessage("§a/gmgadmin remove <guild> §2移除公会");
-        sender.sendMessage("§a/gmgadmin check <guild> §2查看公会情况");
-        sender.sendMessage("§a/gmgadmin rename <guild> <player> §2修改公会名");
-        sender.sendMessage("§a/gmgadmin sc <guild> <player>  §2设置会长");
-        sender.sendMessage("§a/gmgadmin addmem <guild> <player> §2添加成员");
-        sender.sendMessage("§a/gmgadmin removemem <guild> <player> §2删除成员");
-        sender.sendMessage("§a/gmgadmin addcash <guild> <cash> §2增加资金");
-        sender.sendMessage("§a/gmgadmin takecash <guild> <cash> §2减少资金");
-        sender.sendMessage("§a/gmgadmin addpoints <guild> <points> §2增加积分");
-        sender.sendMessage("§a/gmgadmin takepoints <guild> <points> §2减少积分");
+        sender.sendMessage("§a/gmga reload §2重载插件");
+        sender.sendMessage("§a/gmga create <guild> <player>§2创建公会");
+        sender.sendMessage("§a/gmga remove <guild> §2移除公会");
+        sender.sendMessage("§a/gmga check <guild> §2查看公会情况");
+        sender.sendMessage("§a/gmga rename <guild> <player> §2修改公会名");
+        sender.sendMessage("§a/gmga sc <guild> <player>  §2设置会长");
+        sender.sendMessage("§a/gmga addmem <guild> <player> §2添加成员");
+        sender.sendMessage("§a/gmga removemem <guild> <player> §2删除成员");
+        sender.sendMessage("§a/gmga addcash <guild> <cash> §2增加资金");
+        sender.sendMessage("§a/gmga takecash <guild> <cash> §2减少资金");
+        sender.sendMessage("§a/gmga addpoints <guild> <points> §2增加积分");
+        sender.sendMessage("§a/gmga takepoints <guild> <points> §2减少积分");
     }
     
     @Override

@@ -61,11 +61,11 @@ public final class GuildManager extends JavaPlugin {
     }
     
     private void registerCommand() {
-        Bukkit.getPluginCommand("gmg").
+        Bukkit.getPluginCommand("guildmanager").
                 setExecutor(new GuildCommand());
-        Bukkit.getPluginCommand("gmgs").
+        Bukkit.getPluginCommand("guildmanagers").
                 setExecutor(new GuildCommandS());
-        Bukkit.getPluginCommand("gmgadmin").
+        Bukkit.getPluginCommand("guildmanageradmin").
                 setExecutor(new GuildAdmin());
         getLogger().info("注册指令注册完毕");
     }

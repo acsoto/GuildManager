@@ -89,6 +89,7 @@ public class GuildCommandS implements CommandExecutor {
         }
     }
     
+    // usage: /gmgs setname|levelup|res create|res remove|warp set|warp del|position set|position removve|setally|advance add|advance remove|app|remove|buytpall|tpall|clearmsg
     void printHelp() {
         boolean isChairman = guild.getChairman().equalsIgnoreCase(sender.getName());
         boolean isViceChairman = guild.getViceChairman().contains(sender.getName());

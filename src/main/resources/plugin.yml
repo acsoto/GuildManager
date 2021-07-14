@@ -3,12 +3,20 @@ version: ${project.version}
 main: com.mcatk.guildmanager.GuildManager
 authors: [ soto ]
 website: www.mcatk.com
-depend: [Vault]
-softdepend: [PlaceholderAPI]
+depend: [ Vault ]
+softdepend: [ PlaceholderAPI ]
 commands:
-  gmg:
+  guildmanager:
     description: main command
-  gmgs:
+    aliases: [ gmg ]
+    usage: /gmg gui|apply|tp|create|t|quit|offer|msg|memgui|msggui
+  guildmanagers:
     description: leader operate command
-  gmgadmin:
+    aliases: [ gmgs ]
+    usage: /gmgs setname|levelup|res create|res remove|warp set|warp del|position set|position removve|setally|advance add|advance remove|app|remove|buytpall|tpall|clearmsg
+  guildmanageradmin:
     description: admin command
+    aliases:
+      - gmga
+      - gmgadmin
+    usage: /gmga reload|create|remove|check|rename|sc|addmem|removemem|addcash|takecash|addpoints|takepoints

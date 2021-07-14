@@ -223,6 +223,7 @@ public class GuildCommand implements CommandExecutor {
         return true;
     }
     
+    // usage: /gmg gui|apply|tp|create|t|quit|offer|msg|memgui|msggui
     private void printHelp() {
         sender.sendMessage("§e------------公会帮助------------");
         sender.sendMessage("§a/gmg gui  §2公会列表");
