@@ -34,7 +34,7 @@ public final class GuildManager extends JavaPlugin {
         plugin = this;
         saveDefaultConfig();
         registerDependency();
-        loadGuildsData();
+        new FileOperation().loadGuilds();
         guilds.refreshApplicantsList();
         registerCommand();
         registerListener();
@@ -80,13 +80,6 @@ public final class GuildManager extends JavaPlugin {
         Bukkit.getPluginManager().
                 registerEvents(new GuildRepository(), this);
         getLogger().info("监听器注册完毕");
-    }
-    
-    public void loadGuildsData() {
-        guilds = new FileOperation().loadGuilds();
-        if (guilds == null) {
-            guilds = new Guilds();
-        }
     }
     
     //公会传送指令

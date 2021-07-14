@@ -24,15 +24,19 @@ public class FileOperation {
     
     public Guilds loadGuilds() {
         Gson gson = new Gson();
+        Guilds guilds = new Guilds();
         try {
             File file = new File(GuildManager.getPlugin().getDataFolder(), "guilds.json");
             if (file.exists()) {
                 FileReader reader = new FileReader(file);
-                return gson.fromJson(reader, Guilds.class);
+                guilds = gson.fromJson(reader, Guilds.class);
+                if (guilds == null) {
+                    guilds = new Guilds();
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return null;
+        return guilds;
     }
 }

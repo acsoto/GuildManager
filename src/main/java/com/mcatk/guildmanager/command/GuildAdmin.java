@@ -4,7 +4,7 @@ import com.mcatk.guildmanager.Guild;
 import com.mcatk.guildmanager.GuildManager;
 import com.mcatk.guildmanager.Guilds;
 import com.mcatk.guildmanager.Msg;
-import com.mcatk.guildmanager.exceptions.ParaLengthException;
+import com.mcatk.guildmanager.file.FileOperation;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -37,8 +37,6 @@ public class GuildAdmin implements CommandExecutor {
     
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        this.sender = sender;
-        this.args = args;
         if (!sender.isOp()) {
             return false;
         }
@@ -46,10 +44,9 @@ public class GuildAdmin implements CommandExecutor {
             printHelp();
             return true;
         }
-        if (args.length == 1) {
-            sender.sendMessage(Msg.INFO + "缺少参数");
-            return true;
-        }
+        this.sender = sender;
+        this.args = args;
+        Guild guild = guilds.getGuild(args[1]);
         if (args[0].equalsIgnoreCase("create")) {
             if (args.length == 3) {
                 guilds.addGuild(args[1], args[2]);
@@ -59,36 +56,43 @@ public class GuildAdmin implements CommandExecutor {
             sender.sendMessage(Msg.ERROR + "缺少参数");
             return true;
         }
-        Guild guild = guilds.getGuild(args[1]);
         if (guild == null) {
             sender.sendMessage(Msg.ERROR + "不存在此公会");
             return true;
         }
-        if (args[0].equalsIgnoreCase("remove")) {
-            remove();
+        switch (args[0].toLowerCase()) {
+            case "remove":
+                remove();
+                break;
+            case "rename":
+                rename(guild);
+                break;
+            case "resetname":
+                guild.setHasChangedName(false);
+                break;
+            case "reload":
+                new FileOperation().loadGuilds();
+            case "addmem":
+                addMember(guild);
+                break;
+            case "removemem":
+                removeMember(guild);
+                break;
+            case "addcash":
+                addCash(guild);
+                break;
+            case "takecash":
+                takeCash(guild);
+                break;
+            case "addpoints":
+                addPoints(guild);
+                break;
+            case "takepoints":
+                takePoints(guild);
+                break;
+            default:
         }
-        if (args[0].equalsIgnoreCase("rename")) {
-            rename(guild);
-        }
-        if (args[0].equalsIgnoreCase("addmem")) {
-            addMember(guild);
-        }
-        if (args[0].equalsIgnoreCase("removemem")) {
-            removeMember(guild);
-        }
-        if (args[0].equalsIgnoreCase("addcash")) {
-            addCash(guild);
-        }
-        if (args[0].equalsIgnoreCase("takecash")) {
-            takeCash(guild);
-        }
-        if (args[0].equalsIgnoreCase("addpoints")) {
-            addPoints(guild);
-        }
-        if (args[0].equalsIgnoreCase("takepoints")) {
-            takePoints(guild);
-        }
-        //sender.sendMessage(Msg.INFO + "§c指令输入错误");
+        new FileOperation().saveGuilds();
         return true;
     }
     
@@ -155,16 +159,4 @@ public class GuildAdmin implements CommandExecutor {
         }
     }
     
-    // gmgadmin resetname guild
-    private void resetNameFlag(Guild guild) {
-        guild.setHasChangedName(false);
-    }
-    
-    private boolean sendParaLengthError(int length) {
-        if (args.length != length) {
-            sender.sendMessage(Msg.ERROR + "§c参数长度有误，请重试。长度应为 " + length);
-            return true;
-        }
-        return false;
-    }
 }

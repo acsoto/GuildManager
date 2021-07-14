@@ -2,6 +2,7 @@ package com.mcatk.guildmanager.command;
 
 import com.mcatk.guildmanager.Guild;
 import com.mcatk.guildmanager.exceptions.ParaLengthException;
+import com.mcatk.guildmanager.file.FileOperation;
 import com.mcatk.guildmanager.gui.GuildsGui;
 import com.mcatk.guildmanager.GuildManager;
 import com.mcatk.guildmanager.Guilds;
@@ -54,6 +55,7 @@ public class GuildCommand implements CommandExecutor {
                 sender.sendMessage(String.valueOf(e));
             }
         }
+        new FileOperation().saveGuilds();
         return true;
     }
     
