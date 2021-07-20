@@ -51,11 +51,11 @@ public class GuildCommand implements CommandExecutor {
                 if (guild != null) {
                     onCommandWithGuild();
                 }
+                new FileOperation().saveGuilds();
             } catch (ParaLengthException e) {
                 sender.sendMessage(String.valueOf(e));
             }
         }
-        new FileOperation().saveGuilds();
         return true;
     }
     
