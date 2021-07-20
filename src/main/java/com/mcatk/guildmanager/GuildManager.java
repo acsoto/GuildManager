@@ -34,7 +34,7 @@ public final class GuildManager extends JavaPlugin {
         plugin = this;
         saveDefaultConfig();
         registerDependency();
-        new FileOperation().loadGuilds();
+        loadGuilds();
         guilds.refreshApplicantsList();
         registerCommand();
         registerListener();
@@ -143,4 +143,7 @@ public final class GuildManager extends JavaPlugin {
         return ChatColor.translateAlternateColorCodes('&', str);
     }
     
+    public void loadGuilds() {
+        guilds = new FileOperation().loadGuilds();
+    }
 }

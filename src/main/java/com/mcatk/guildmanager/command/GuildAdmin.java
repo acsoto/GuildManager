@@ -37,6 +37,8 @@ public class GuildAdmin implements CommandExecutor {
     
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        this.sender = sender;
+        this.args = args;
         if (!sender.isOp()) {
             return false;
         }
@@ -44,8 +46,6 @@ public class GuildAdmin implements CommandExecutor {
             printHelp();
             return true;
         }
-        this.sender = sender;
-        this.args = args;
         Guild guild = guilds.getGuild(args[1]);
         if (args[0].equalsIgnoreCase("create")) {
             if (args.length == 3) {
@@ -71,7 +71,7 @@ public class GuildAdmin implements CommandExecutor {
                 guild.setHasChangedName(false);
                 break;
             case "reload":
-                new FileOperation().loadGuilds();
+                GuildManager.getPlugin().loadGuilds();
             case "addmem":
                 addMember(guild);
                 break;

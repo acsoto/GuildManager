@@ -38,11 +38,11 @@ public class GuildCommand implements CommandExecutor {
     
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        this.sender = sender;
+        this.args = args;
         if (args.length == 0) {
             printHelp();
         } else {
-            this.sender = sender;
-            this.args = args;
             this.guilds = GuildManager.getPlugin().getGuilds();
             this.guild = guilds.getPlayersGuild(sender.getName());
             try {
