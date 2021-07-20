@@ -9,14 +9,11 @@ commands:
   guildmanager:
     description: main command
     aliases: [ gmg ]
-    usage: /gmg gui|apply|tp|create|t|quit|offer|msg|memgui|msggui
   guildmanagers:
     description: leader operate command
     aliases: [ gmgs ]
-    usage: /gmgs setname|levelup|res create|res remove|warp set|warp del|position set|position removve|setally|advance add|advance remove|app|remove|buytpall|tpall|clearmsg
   guildmanageradmin:
     description: admin command
     aliases:
       - gmga
       - gmgadmin
-    usage: /gmga reload|create|remove|check|rename|sc|addmem|removemem|addcash|takecash|addpoints|takepoints
