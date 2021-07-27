@@ -14,7 +14,6 @@ public class Guild {
     private ArrayList<String> manager; //管理员
     private int level; //等级
     private int maxPlayers; //最大成员数
-    private int advancedPlayers; //高级成员数
     private int maxAdvancedPlayers; //最大高级成员数
     private int points; //积分
     private int removeMemLimitFlag; //成员删除限制flag
@@ -183,6 +182,16 @@ public class Guild {
         }
     }
     
+    public int getAdvancedMembersNum() {
+        int n = 0;
+        for (Member member : members.values()) {
+            if (member.isAdvanced()) {
+                n++;
+            }
+        }
+        return n;
+    }
+    
     //设置玩家为高级成员并保存
     //判断是否满员
     public int addAdvancedMembers(String p) {
@@ -190,9 +199,8 @@ public class Guild {
         if (member != null) {
             if (member.isAdvanced()) {
                 return 0;
-            } else if (advancedPlayers < maxAdvancedPlayers) {
+            } else if (getAdvancedMembersNum() < maxAdvancedPlayers) {
                 member.setAdvanced(true);
-                advancedPlayers++;
                 giveGuildSquarePerm(p);
                 return 1;
             } else {
@@ -354,7 +362,7 @@ public class Guild {
     
     @Override
     public String toString() {
-        return guildName + "(" + id + ")";
+        return guildName + ":" + id;
     }
 }
 

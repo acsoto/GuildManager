@@ -14,7 +14,7 @@ import java.util.ArrayList;
 public class GuildsGui {
     
     public Inventory getGuildsGui() {
-        Inventory gui = Bukkit.createInventory(GuiHolder.getGuiHolder(), 54, "§6公会列表");
+        Inventory gui = Bukkit.createInventory(GuiType.GUILDS_GUI, 54, "§6公会列表");
         for (String key :
                 GuildManager.getPlugin().getGuilds().getGuildMap().keySet()) {
             Guild guild = GuildManager.getPlugin().getGuilds().getGuild(key);
@@ -26,12 +26,13 @@ public class GuildsGui {
     }
     
     private ItemStack getAnGuildButton(Guild guild) {
-        ItemStack item = new ItemStack(Material.SKULL_ITEM, 1, (short) 3);
+        GuildIcon item = new GuildIcon(Material.SKULL_ITEM, guild.getId());
         SkullMeta meta = (SkullMeta) item.getItemMeta();
         meta.setOwner(guild.getChairman());
         item.setItemMeta(meta);
         meta.setDisplayName(guild.getName());
         ArrayList<String> des = new ArrayList<>();
+        des.add("§0:" + guild.getId());
         des.add("§2公会ID: §a" + guild.getId());
         des.add("§2会长: §a" + guild.getChairman());
         des.add(guild.checkViceChairman());

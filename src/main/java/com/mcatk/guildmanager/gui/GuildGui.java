@@ -1,6 +1,7 @@
 package com.mcatk.guildmanager.gui;
 
 import com.mcatk.guildmanager.Guild;
+import com.mcatk.guildmanager.Msg;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
@@ -16,25 +17,34 @@ public class GuildGui {
     }
     
     public Inventory getGui() {
-        Inventory gui = Bukkit.createInventory(GuiHolder.getGuiHolder(), 9, guild.toString());
-        gui.addItem(getTpIcon());
-        gui.addItem(getMemberIcon());
+        Inventory gui = Bukkit.createInventory(GuiType.GUILD_GUI, 9, guild.toString());
+        gui.setItem(0, getTpIcon());
+        gui.setItem(1, getMemberIcon());
+        gui.setItem(8, getQuitIcon());
         return gui;
     }
     
     private ItemStack getTpIcon() {
-        ItemStack icon = new ItemStack(Material.BED);
+        ItemStack icon = new ItemStack(Material.ENDER_PEARL);
         ItemMeta meta = icon.getItemMeta();
-        meta.setDisplayName("§5点击传送到公会");
+        meta.setDisplayName(Msg.GUILD_GUI_TP.toString());
         icon.setItemMeta(meta);
         return icon;
     }
     
     private ItemStack getMemberIcon() {
-        ItemStack icon = new ItemStack(Material.SKULL);
+        ItemStack icon = new ItemStack(Material.GOLD_HELMET);
         ItemMeta meta = icon.getItemMeta();
         meta.setDisplayName("§6成员列表");
         meta.setLore(guild.getMembersList(true));
+        icon.setItemMeta(meta);
+        return icon;
+    }
+    
+    private ItemStack getQuitIcon() {
+        ItemStack icon = new ItemStack(Material.GOLD_NUGGET);
+        ItemMeta meta = icon.getItemMeta();
+        meta.setDisplayName(Msg.GUI_BACK.toString());
         icon.setItemMeta(meta);
         return icon;
     }

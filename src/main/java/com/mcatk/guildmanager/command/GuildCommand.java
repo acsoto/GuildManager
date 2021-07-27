@@ -7,8 +7,6 @@ import com.mcatk.guildmanager.gui.GuildsGui;
 import com.mcatk.guildmanager.GuildManager;
 import com.mcatk.guildmanager.Guilds;
 import com.mcatk.guildmanager.Msg;
-import com.mcatk.guildmanager.gui.MemGui;
-import com.mcatk.guildmanager.gui.MsgBoardGui;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -30,10 +28,10 @@ public class GuildCommand implements CommandExecutor {
         sender.sendMessage("§a/gmg create <ID> §2创建公会（ID必须为英文）");
         sender.sendMessage("§a/gmg t §2传送到自己的公会主城");
         sender.sendMessage("§a/gmg quit §2退出公会");
+        sender.sendMessage("§a/gmg mem §2查看成员列表");
+        sender.sendMessage("§a/gmg amem §2查看高级成员列表");
         sender.sendMessage("§a/gmg offer <AC点> §2捐助公会资金 1wAC = 1GuildCash");
         sender.sendMessage("§a/gmg msg §2公会留言");
-        sender.sendMessage("§a/gmg memgui §2查看公会成员菜单");
-        sender.sendMessage("§a/gmg msggui §2查看留言板菜单");
     }
     
     @Override
@@ -89,15 +87,15 @@ public class GuildCommand implements CommandExecutor {
             case "msg":
                 msg();
                 break;
-            case "memgui":
-                ((Player) sender).openInventory(new MemGui().getMemGui(guild));
-                return;
-            case "msggui":
-                ((Player) sender).openInventory(new MsgBoardGui().getMsgBoardGui(guild));
-                break;
             case "quit":
                 guild.removeMembers(sender.getName());
                 sender.sendMessage(Msg.INFO + "成功退出" + guild);
+                break;
+            case "mem":
+                sender.sendMessage(guild.listMembers());
+                break;
+            case "amem":
+                sender.sendMessage(guild.listAdvancedMembers());
                 break;
         }
     }
