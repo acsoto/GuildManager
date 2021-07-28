@@ -5,6 +5,7 @@ import com.mcatk.guildmanager.GuildItem;
 import com.mcatk.guildmanager.GuildManager;
 import com.mcatk.guildmanager.Guilds;
 import com.mcatk.guildmanager.Msg;
+import com.mcatk.guildmanager.Operation;
 import com.mcatk.guildmanager.ServerCmd;
 import com.mcatk.guildmanager.exceptions.ParaLengthException;
 import com.mcatk.guildmanager.file.FileOperation;
@@ -301,10 +302,10 @@ public class GuildCommandS implements CommandExecutor {
             throw new ParaLengthException(2);
         } else {
             if (args[1].equalsIgnoreCase("set")) {
-                GuildManager.getPlugin().setWarp((Player) sender, guild.getName());
+                new Operation().setWarp((Player) sender, guild);
             }
             if (args[1].equalsIgnoreCase("del")) {
-                GuildManager.getPlugin().delWarp(guild.getId());
+                new Operation().delWarp(guild);
             }
         }
     }

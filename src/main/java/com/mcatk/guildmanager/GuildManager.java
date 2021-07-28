@@ -82,21 +82,6 @@ public final class GuildManager extends JavaPlugin {
         getLogger().info("监听器注册完毕");
     }
     
-    //公会传送指令
-    public void tpGuild(String g, String p) {
-        sendConsoleCmd("warp Guild_" + g + " " + p);
-    }
-    
-    public void setWarp(Player player, String g) {
-        player.setOp(true);
-        player.chat("/setwarp" + g);
-        player.setOp(false);
-    }
-    
-    public void delWarp(String g) {
-        sendConsoleCmd("/delwarp Guild_" + g);
-    }
-    
     public void tpAll(Guild guild, Player player) {
         for (Player p :
                 getServer().getOnlinePlayers()) {
@@ -131,11 +116,6 @@ public final class GuildManager extends JavaPlugin {
     //log
     public void logInfo(String s) {
         getLogger().info(s);
-    }
-    
-    //console command
-    public void sendConsoleCmd(String cmd) {
-        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd);
     }
     
     //color

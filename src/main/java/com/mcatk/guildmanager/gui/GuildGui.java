@@ -36,7 +36,7 @@ public class GuildGui {
         ItemStack icon = new ItemStack(Material.GOLD_HELMET);
         ItemMeta meta = icon.getItemMeta();
         meta.setDisplayName("§6成员列表");
-        meta.setLore(guild.getMembersList(true));
+        meta.setLore(guild.getMembersList(false));
         icon.setItemMeta(meta);
         return icon;
     }

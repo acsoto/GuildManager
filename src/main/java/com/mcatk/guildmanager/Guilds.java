@@ -1,7 +1,5 @@
 package com.mcatk.guildmanager;
 
-import com.mcatk.guildmanager.file.FileOperation;
-
 import java.util.HashMap;
 
 public class Guilds {

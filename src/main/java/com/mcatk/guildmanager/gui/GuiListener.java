@@ -3,6 +3,7 @@ package com.mcatk.guildmanager.gui;
 import com.mcatk.guildmanager.Guild;
 import com.mcatk.guildmanager.GuildManager;
 import com.mcatk.guildmanager.Msg;
+import com.mcatk.guildmanager.Operation;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -43,7 +44,7 @@ public class GuiListener implements Listener {
                     GuildManager.getPlugin().getGuilds().getGuild(event.getInventory().getTitle().split(":")[1]);
             if (event.getCurrentItem().getType().equals(Material.AIR)) {
             } else if (event.getCurrentItem().getItemMeta().getDisplayName().equals(Msg.GUILD_GUI_TP.toString())) {
-                GuildManager.getPlugin().tpGuild(guild.getName(), event.getWhoClicked().getName());
+                new Operation().tpGuild(guild, event.getWhoClicked().getName());
             } else if (event.getCurrentItem().getItemMeta().getDisplayName().equals(Msg.GUI_BACK.toString())) {
                 player.openInventory(new GuildsGui().getGuildsGui());
             }

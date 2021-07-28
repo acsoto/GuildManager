@@ -1,6 +1,7 @@
 package com.mcatk.guildmanager.command;
 
 import com.mcatk.guildmanager.Guild;
+import com.mcatk.guildmanager.Operation;
 import com.mcatk.guildmanager.exceptions.ParaLengthException;
 import com.mcatk.guildmanager.file.FileOperation;
 import com.mcatk.guildmanager.gui.GuildsGui;
@@ -78,7 +79,7 @@ public class GuildCommand implements CommandExecutor {
     private void onCommandWithGuild() throws ParaLengthException {
         switch (args[0].toLowerCase()) {
             case "t":
-                GuildManager.getPlugin().tpGuild(guild.getName(), sender.getName());
+                new Operation().tpGuild(guild, sender.getName());
                 sender.sendMessage(Msg.INFO + "§a传送成功");
                 break;
             case "offer":
@@ -125,8 +126,9 @@ public class GuildCommand implements CommandExecutor {
         if (args.length != 2) {
             throw new ParaLengthException(2);
         } else if (guilds.hasGuild(args[1])) {
+            guild = GuildManager.getPlugin().getGuilds().getGuild(args[1]);
             String p = sender.getName();
-            GuildManager.getPlugin().tpGuild(args[1], p);
+            new Operation().tpGuild(guild, p);
             sender.sendMessage(Msg.INFO + "§a传送成功");
         } else {
             sender.sendMessage(Msg.INFO + "§c不存在此公会");

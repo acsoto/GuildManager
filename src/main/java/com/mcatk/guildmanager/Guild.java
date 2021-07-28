@@ -354,7 +354,11 @@ public class Guild {
             if (pure) {
                 list.add(member.getId());
             } else {
-                list.add("§e" + member.getId());
+                if (member.isAdvanced()) {
+                    list.add("§6" + member.getId());
+                } else {
+                    list.add("§e" + member.getId());
+                }
             }
         }
         return list;
