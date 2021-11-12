@@ -31,4 +31,12 @@ public class Operation {
     public void delWarp(Guild guild) {
         sendConsoleCmd("delwarp " + guild);
     }
+
+    public void giveGuildSquarePerm(String player) {
+        new ServerCmd().sendConsoleCmd("res pset main.gh " + player + " move true");
+    }
+
+    public void removeGuildSquarePerm(String player) {
+        new ServerCmd().sendConsoleCmd("res pset main.gh " + player + " move remove");
+    }
 }

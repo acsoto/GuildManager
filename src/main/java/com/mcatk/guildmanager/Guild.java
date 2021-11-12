@@ -173,7 +173,7 @@ public class Guild {
     public boolean removeMembers(String p) {
         Member member = members.remove(p);
         if (member != null) {
-            removeGuildSquarePerm(p);
+            new Operation().removeGuildSquarePerm(p);
             removeViceChairman(p);
             removeManager(p);
             return true;
@@ -201,7 +201,7 @@ public class Guild {
                 return 0;
             } else if (getAdvancedMembersNum() < maxAdvancedPlayers) {
                 member.setAdvanced(true);
-                giveGuildSquarePerm(p);
+                new Operation().giveGuildSquarePerm(p);
                 return 1;
             } else {
                 return 2;
@@ -214,7 +214,7 @@ public class Guild {
     public boolean removeAdvancedMembers(String p) {
         Member member = members.get(p);
         if (member != null) {
-            removeGuildSquarePerm(p);
+            new Operation().removeGuildSquarePerm(p);
             return true;
         } else {
             return false;
@@ -283,13 +283,7 @@ public class Guild {
     
     //成员权限方法
     //调用Bukkit
-    public void giveGuildSquarePerm(String player) {
-        new ServerCmd().sendConsoleCmd("res pset main.gh " + player + " move true");
-    }
-    
-    public void removeGuildSquarePerm(String player) {
-        new ServerCmd().sendConsoleCmd("res pset main.gh " + player + " move remove");
-    }
+
     
     public void removeResidence() {
         new ServerCmd().sendConsoleCmd("resadmin remove guild_" + id);

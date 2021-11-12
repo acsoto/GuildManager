@@ -26,9 +26,8 @@ public class GuildsGui {
     }
     
     private ItemStack getAnGuildButton(Guild guild) {
-        GuildIcon item = new GuildIcon(Material.SKULL_ITEM, guild.getId());
-        SkullMeta meta = (SkullMeta) item.getItemMeta();
-        meta.setOwner(guild.getChairman());
+        GuildIcon item = new GuildIcon(Material.STAINED_GLASS, guild.getId());
+        ItemMeta meta = item.getItemMeta();
         item.setItemMeta(meta);
         meta.setDisplayName(guild.getName());
         ArrayList<String> des = new ArrayList<>();
