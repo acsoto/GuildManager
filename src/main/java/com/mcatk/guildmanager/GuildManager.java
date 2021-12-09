@@ -1,10 +1,9 @@
 package com.mcatk.guildmanager;
 
-import com.mcatk.guildmanager.command.GuildAdmin;
 import com.mcatk.guildmanager.command.GuildCommand;
 import com.mcatk.guildmanager.command.GuildCommandS;
-import com.mcatk.guildmanager.file.FileOperation;
 import com.mcatk.guildmanager.gui.GuiListener;
+import com.mcatk.guildmanager.models.Guild;
 import com.mcatk.guildmanager.papi.GuildPapi;
 import com.mcatk.guildmanager.sql.SQLManager;
 import net.milkbowl.vault.economy.Economy;
@@ -19,15 +18,10 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 public final class GuildManager extends JavaPlugin {
 
     private static GuildManager plugin;
-    private Guilds guilds;
     private static Economy econ;
 
     public static GuildManager getPlugin() {
         return plugin;
-    }
-
-    public Guilds getGuilds() {
-        return guilds;
     }
 
     @Override
@@ -35,8 +29,6 @@ public final class GuildManager extends JavaPlugin {
         plugin = this;
         saveDefaultConfig();
         registerDependency();
-        loadGuilds();
-        guilds.refreshApplicantsList();
         registerCommand();
         registerListener();
         getLogger().info("公会管理插件已启动");
@@ -66,8 +58,8 @@ public final class GuildManager extends JavaPlugin {
                 setExecutor(new GuildCommand());
         Bukkit.getPluginCommand("guildmanagers").
                 setExecutor(new GuildCommandS());
-        Bukkit.getPluginCommand("guildmanageradmin").
-                setExecutor(new GuildAdmin());
+//        Bukkit.getPluginCommand("guildmanageradmin").
+//                setExecutor(new GuildAdmin());
         getLogger().info("注册指令注册完毕");
     }
 
@@ -78,17 +70,16 @@ public final class GuildManager extends JavaPlugin {
                 registerEvents(new GuiListener(), this);
         Bukkit.getPluginManager().
                 registerEvents(new GuildItem(), this);
-        Bukkit.getPluginManager().
-                registerEvents(new GuildRepository(), this);
+//        Bukkit.getPluginManager().
+//                registerEvents(new GuildRepository(), this);
         getLogger().info("监听器注册完毕");
     }
 
     public void tpAll(Guild guild, Player player) {
         for (Player p :
                 getServer().getOnlinePlayers()) {
-            String playerName = p.getName();
-            if (guild.hasPlayer(playerName)) {
-                player.chat("/tpahere " + playerName);
+            if (guild.getId().equals(SQLManager.getInstance().getPlayerGuild(p.getName()).getId())) {
+                player.chat("/tpahere " + p.getName());
             }
         }
     }
@@ -124,7 +115,4 @@ public final class GuildManager extends JavaPlugin {
         return ChatColor.translateAlternateColorCodes('&', str);
     }
 
-    public void loadGuilds() {
-        guilds = SQLManager.getInstance().loadGuilds();
-    }
 }

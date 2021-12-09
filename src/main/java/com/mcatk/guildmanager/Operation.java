@@ -1,5 +1,6 @@
 package com.mcatk.guildmanager;
 
+import com.mcatk.guildmanager.models.Guild;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -20,12 +21,12 @@ public class Operation {
     }
     
     public void setWarp(Player player, Guild guild) {
-        sendCmdWithOp(player, "setwarp " + guild.getName());
+        sendCmdWithOp(player, "setwarp " + guild.getGuildName());
     }
     
     //公会传送指令
     public void tpGuild(Guild guild, String player) {
-        sendConsoleCmd("warp " + guild.getName() + " " + player);
+        sendConsoleCmd("warp " + guild.getGuildName() + " " + player);
     }
     
     public void delWarp(Guild guild) {

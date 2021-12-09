@@ -1,47 +1,49 @@
 package com.mcatk.guildmanager.papi;
 
-import com.mcatk.guildmanager.Guild;
 import com.mcatk.guildmanager.GuildManager;
-import com.mcatk.guildmanager.Member;
+import com.mcatk.guildmanager.models.Guild;
+import com.mcatk.guildmanager.models.GuildBasicInfo;
+import com.mcatk.guildmanager.models.Member;
+import com.mcatk.guildmanager.sql.SQLManager;
 import org.bukkit.entity.Player;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 
 //The class is used for PAPI
 public class GuildPapi extends PlaceholderExpansion {
-    
+
     //PAPI要求的重写
     @Override
     public boolean persist() {
         return true;
     }
-    
+
     @Override
     public boolean canRegister() {
         return true;
     }
-    
+
     @Override
     public String getAuthor() {
         return GuildManager.getPlugin().getDescription().getAuthors().toString();
     }
-    
+
     @Override
     public String getIdentifier() {
         return "guildmanager";
     }
-    
+
     @Override
     public String getVersion() {
         return GuildManager.getPlugin().getDescription().getVersion();
     }
-    
+
     @Override
     public String onPlaceholderRequest(Player player, String identifier) {
-        
+
         if (player == null) {
             return "";
         }
-        Guild guild = GuildManager.getPlugin().getGuilds().getPlayersGuild(player.getName());
+        Guild guild = SQLManager.getInstance().getPlayerGuild(player.getName());
         if (guild == null) {
             return "";
         }
@@ -50,13 +52,13 @@ public class GuildPapi extends PlaceholderExpansion {
             return guild.getId();
         }
         if (identifier.equals("name")) {
-            return guild.getName();
+            return guild.getGuildName();
         }
         if (identifier.equals("prefix")) {
-            if (guild.hasChairman(player.getName())) {
+            if (guild.getChairman().equals(player.getName())) {
                 return "";
             } else {
-                return "§7[" + guild.getName() + "§7]&r";
+                return "§7[" + guild.getGuildName() + "§7]&r";
             }
         }
         if (identifier.equals("chairman")) {
@@ -72,16 +74,16 @@ public class GuildPapi extends PlaceholderExpansion {
             return Integer.toString(guild.getLevel());
         }
         if (identifier.equals("num_player")) {
-            return Integer.toString(guild.getPlayerSize());
+            return Integer.toString(SQLManager.getInstance().getGuildMembers(guild.getId()).size());
         }
         if (identifier.equals("max_player")) {
-            return Integer.toString(guild.getMaxPlayers());
+            return Integer.toString(GuildBasicInfo.getMaxPlayer(guild.getLevel()));
         }
         if (identifier.equals("max_advanced_player")) {
-            return Integer.toString(guild.getMaxAdvancedPlayers());
+            return Integer.toString(GuildBasicInfo.getMaxAdvancedPlayer(guild.getLevel()));
         }
         //玩家的相关变量
-        Member member = guild.getMember(player.getName());
+        Member member = SQLManager.getInstance().getMember(player.getName());
         if (identifier.equals("contribution")) {
             return Integer.toString(member.getContribution());
         }
@@ -93,28 +95,20 @@ public class GuildPapi extends PlaceholderExpansion {
         }
         return null;
     }
-    
+
     private String position(Guild guild, Player player) {
         String playerID = player.getName();
         if (guild.getChairman().equals(playerID)) {
             return "会长";
-        } else if (guild.hasViceChairman(playerID)) {
-            return "副会长";
-        } else if (guild.hasManager(playerID)) {
-            return "管理员";
         } else {
             return "无";
         }
     }
-    
+
     private String positionPrefix(Guild guild, Player player) {
         String playerID = player.getName();
         if (guild.getChairman().equals(playerID)) {
-            return "§7[" + guild.getName() + "§f|§4" + "会长" + "§7]&r";
-        } else if (guild.hasViceChairman(playerID)) {
-            return "§7[" + guild.getName() + "§f|§c" + "副会长" + "§7]&r";
-        } else if (guild.hasManager(playerID)) {
-            return "";
+            return "§7[" + guild.getGuildName() + "§f|§4" + "会长" + "§7]&r";
         } else {
             return "";
         }

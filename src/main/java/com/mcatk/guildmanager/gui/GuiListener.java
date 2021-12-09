@@ -1,9 +1,9 @@
 package com.mcatk.guildmanager.gui;
 
-import com.mcatk.guildmanager.Guild;
-import com.mcatk.guildmanager.GuildManager;
 import com.mcatk.guildmanager.Msg;
 import com.mcatk.guildmanager.Operation;
+import com.mcatk.guildmanager.models.Guild;
+import com.mcatk.guildmanager.sql.SQLManager;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -11,7 +11,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 
 public class GuiListener implements Listener {
-    
+
     //禁止玩家拿走物品
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
@@ -30,10 +30,10 @@ public class GuiListener implements Listener {
                     } else if (event.getCurrentItem().getItemMeta().getDisplayName().equals("返回")) {
                         ((Player) event.getWhoClicked()).chat("/menu");
                     } else {
-                        String guildId =
+                        String guildID =
                                 event.getCurrentItem().getItemMeta().getLore().get(0).split(":")[1];
                         Guild guild =
-                                GuildManager.getPlugin().getGuilds().getGuild(guildId);
+                                SQLManager.getInstance().getGuild(guildID);
                         player.openInventory(new GuildGui(guild).getGui());
                     }
                 }
@@ -41,7 +41,7 @@ public class GuiListener implements Listener {
         } else if (event.getInventory().getHolder().equals(GuiType.GUILD_GUI)) {
             event.setCancelled(true);
             Guild guild =
-                    GuildManager.getPlugin().getGuilds().getGuild(event.getInventory().getTitle().split(":")[1]);
+                    SQLManager.getInstance().getGuild(event.getInventory().getTitle().split(":")[1]);
             if (event.getCurrentItem().getType().equals(Material.AIR)) {
             } else if (event.getCurrentItem().getItemMeta().getDisplayName().equals(Msg.GUILD_GUI_TP.toString())) {
                 new Operation().tpGuild(guild, event.getWhoClicked().getName());
@@ -50,5 +50,5 @@ public class GuiListener implements Listener {
             }
         }
     }
-    
+
 }
