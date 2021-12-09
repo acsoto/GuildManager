@@ -6,6 +6,7 @@ import com.mcatk.guildmanager.gui.GuildsGui;
 import com.mcatk.guildmanager.GuildManager;
 import com.mcatk.guildmanager.Msg;
 import com.mcatk.guildmanager.models.Guild;
+import com.mcatk.guildmanager.sql.SQLCommand;
 import com.mcatk.guildmanager.sql.SQLManager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -44,7 +45,7 @@ public class GuildCommand implements CommandExecutor {
                 if (guild != null) {
                     onCommandWithGuild();
                 }
-            }catch (ParaLengthException e){
+            } catch (ParaLengthException e) {
                 sender.sendMessage("参数错误");
             }
         }
@@ -183,6 +184,7 @@ public class GuildCommand implements CommandExecutor {
                             "§a捐赠" + n + "AC" + "折合为" + (n / 10000) + "公会资金"
             );
             GuildManager.getPlugin().logInfo(p + "捐献了" + n + "给" + guild.getGuildName());
+            SQLManager.getInstance().saveGuild(guild);
         } else {
             sender.sendMessage(Msg.ERROR + "AC点不足！");
         }
