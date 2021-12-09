@@ -5,6 +5,7 @@ import com.mcatk.guildmanager.GuildManager;
 import com.mcatk.guildmanager.Guilds;
 import com.mcatk.guildmanager.Msg;
 import com.mcatk.guildmanager.file.FileOperation;
+import com.mcatk.guildmanager.sql.SQLManager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -44,6 +45,10 @@ public class GuildAdmin implements CommandExecutor {
         }
         if (args.length == 0) {
             printHelp();
+            return true;
+        }
+        if(args[0].equalsIgnoreCase("migrate")){
+            SQLManager.getInstance().saveGuilds();
             return true;
         }
         Guild guild = guilds.getGuild(args[1]);
@@ -92,7 +97,7 @@ public class GuildAdmin implements CommandExecutor {
                 break;
             default:
         }
-        new FileOperation().saveGuilds();
+        SQLManager.getInstance().saveGuilds();
         return true;
     }
     

@@ -9,6 +9,7 @@ import com.mcatk.guildmanager.Operation;
 import com.mcatk.guildmanager.ServerCmd;
 import com.mcatk.guildmanager.exceptions.ParaLengthException;
 import com.mcatk.guildmanager.file.FileOperation;
+import com.mcatk.guildmanager.sql.SQLManager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -51,7 +52,7 @@ public class GuildCommandS implements CommandExecutor {
         } catch (ParaLengthException e) {
             sender.sendMessage(String.valueOf(e));
         }
-        new FileOperation().saveGuilds();
+        SQLManager.getInstance().saveGuilds();
         return true;
     }
     

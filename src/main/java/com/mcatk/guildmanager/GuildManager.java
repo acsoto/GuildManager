@@ -6,6 +6,7 @@ import com.mcatk.guildmanager.command.GuildCommandS;
 import com.mcatk.guildmanager.file.FileOperation;
 import com.mcatk.guildmanager.gui.GuiListener;
 import com.mcatk.guildmanager.papi.GuildPapi;
+import com.mcatk.guildmanager.sql.SQLManager;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.economy.EconomyResponse;
 
@@ -16,19 +17,19 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
 public final class GuildManager extends JavaPlugin {
-    
+
     private static GuildManager plugin;
     private Guilds guilds;
     private static Economy econ;
-    
+
     public static GuildManager getPlugin() {
         return plugin;
     }
-    
+
     public Guilds getGuilds() {
         return guilds;
     }
-    
+
     @Override
     public void onEnable() {
         plugin = this;
@@ -40,12 +41,12 @@ public final class GuildManager extends JavaPlugin {
         registerListener();
         getLogger().info("公会管理插件已启动");
     }
-    
+
     @Override
     public void onDisable() {
         getLogger().info("公会管理插件已关闭");
     }
-    
+
     private void registerDependency() {
         //检测前置插件
         if (!setupEconomy()) {
@@ -59,7 +60,7 @@ public final class GuildManager extends JavaPlugin {
             getLogger().info("检测到PlaceholderAPI，已启动PAPI变量");
         }
     }
-    
+
     private void registerCommand() {
         Bukkit.getPluginCommand("guildmanager").
                 setExecutor(new GuildCommand());
@@ -69,7 +70,7 @@ public final class GuildManager extends JavaPlugin {
                 setExecutor(new GuildAdmin());
         getLogger().info("注册指令注册完毕");
     }
-    
+
     private void registerListener() {
         Bukkit.getPluginManager().
                 registerEvents(new JoinListener(), this);
@@ -81,7 +82,7 @@ public final class GuildManager extends JavaPlugin {
                 registerEvents(new GuildRepository(), this);
         getLogger().info("监听器注册完毕");
     }
-    
+
     public void tpAll(Guild guild, Player player) {
         for (Player p :
                 getServer().getOnlinePlayers()) {
@@ -91,7 +92,7 @@ public final class GuildManager extends JavaPlugin {
             }
         }
     }
-    
+
     //启动Vault依赖
     private boolean setupEconomy() {
         if (getServer().getPluginManager().getPlugin("Vault") == null) {
@@ -106,24 +107,24 @@ public final class GuildManager extends JavaPlugin {
         econ = rsp.getProvider();
         return econ != null;
     }
-    
+
     //经济操作
     public boolean takePlayerMoney(Player p, double m) {
         EconomyResponse r = econ.withdrawPlayer(p, m);
         return r.transactionSuccess();
     }
-    
+
     //log
     public void logInfo(String s) {
         getLogger().info(s);
     }
-    
+
     //color
     public String colorFormat(String str) {
         return ChatColor.translateAlternateColorCodes('&', str);
     }
-    
+
     public void loadGuilds() {
-        guilds = new FileOperation().loadGuilds();
+        guilds = SQLManager.getInstance().loadGuilds();
     }
 }

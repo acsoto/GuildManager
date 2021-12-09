@@ -40,7 +40,18 @@ public class Guild {
         addMembers(player);
         this.applicantList = new ArrayList<>();
     }
-    
+
+    public Guild(String id, String guildName, String chairMan, int level, int points, boolean residenceFLag, int cash, boolean hasChangedName) {
+        this.id = id;
+        this.guildName = guildName;
+        this.chairMan = chairMan;
+        this.level = level;
+        this.points = points;
+        this.residenceFLag = residenceFLag;
+        this.cash = cash;
+        this.hasChangedName = hasChangedName;
+    }
+
     //成员变量增删查改
     public String getId() {
         return id;
