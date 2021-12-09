@@ -32,8 +32,7 @@ public class GuildsGui {
         des.add("§0:" + guild.getId());
         des.add("§2公会ID: §a" + guild.getId());
         des.add("§2会长: §a" + guild.getChairman());
-        des.add("§2成员: §a" + 0 + "§7/§2" + GuildBasicInfo.getMaxPlayer(guild.getLevel()));
-        // TODO: 2021/12/9 最大人数
+        des.add("§2成员: §a" + SQLManager.getInstance().getGuildMembers(guild.getId()).size() + "§7/§2" + GuildBasicInfo.getMaxPlayer(guild.getLevel()));
         des.add("§2最大高级成员数: §a" + GuildBasicInfo.getMaxAdvancedPlayer(guild.getLevel()));
         des.add("§2等级: §a" + guild.getLevel());
         des.add("§2积分: §a" + guild.getPoints());

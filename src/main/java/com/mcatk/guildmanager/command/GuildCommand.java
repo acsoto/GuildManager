@@ -6,6 +6,7 @@ import com.mcatk.guildmanager.gui.GuildsGui;
 import com.mcatk.guildmanager.GuildManager;
 import com.mcatk.guildmanager.Msg;
 import com.mcatk.guildmanager.models.Guild;
+import com.mcatk.guildmanager.models.Member;
 import com.mcatk.guildmanager.sql.SQLCommand;
 import com.mcatk.guildmanager.sql.SQLManager;
 import org.bukkit.command.Command;
@@ -81,8 +82,7 @@ public class GuildCommand implements CommandExecutor {
                 offer();
                 break;
             case "quit":
-//                guild.removeMembers(sender.getName());
-                // TODO: 2021/12/9 删除成员
+                SQLManager.getInstance().removeMember(sender.getName());
                 sender.sendMessage(Msg.INFO + "退出公会" + guild);
                 break;
         }
@@ -175,10 +175,12 @@ public class GuildCommand implements CommandExecutor {
         if (GuildManager.getPlugin().takePlayerMoney((Player) sender, n)) {
             guild.setCash(guild.getCash() + n / 10000);
             //add contribution and check if is full.
-//            if (!guild.getMember(p).addContribution(n / 10000)) {
-//                sender.sendMessage(Msg.INFO + "您的贡献值已满，无法继续增长");
-//            }
-            // TODO: 2021/12/9 增加贡献值
+            Member member = SQLManager.getInstance().getMember(sender.getName());
+            if (member.getContribution() + n / 10000 > 100) {
+                sender.sendMessage(Msg.INFO + "您的贡献值已满，无法继续增长");
+            } else {
+                member.setContribution(member.getContribution() + n / 10000);
+            }
             sender.sendMessage(
                     Msg.INFO + "§a成功为" + guild.getGuildName() +
                             "§a捐赠" + n + "AC" + "折合为" + (n / 10000) + "公会资金"
