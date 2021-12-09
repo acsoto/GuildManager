@@ -7,7 +7,6 @@ import com.mcatk.guildmanager.GuildManager;
 import com.mcatk.guildmanager.Msg;
 import com.mcatk.guildmanager.models.Guild;
 import com.mcatk.guildmanager.models.Member;
-import com.mcatk.guildmanager.sql.SQLCommand;
 import com.mcatk.guildmanager.sql.SQLManager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -90,7 +89,7 @@ public class GuildCommand implements CommandExecutor {
 
     private void apply() throws ParaLengthException {
         if (args.length != 2) {
-            return;
+            throw new ParaLengthException(2);
         }
         if (SQLManager.getInstance().getPlayerGuild(sender.getName()) != null) {
             sender.sendMessage(Msg.ERROR + "已有公会");
@@ -124,7 +123,7 @@ public class GuildCommand implements CommandExecutor {
 
     private void create() throws ParaLengthException {
         if (args.length != 2) {
-            return;
+            throw new ParaLengthException(2);
         }
         if (!isAlphabet(args[1])) {
             sender.sendMessage(Msg.ERROR + "ID只能是小写字母");
