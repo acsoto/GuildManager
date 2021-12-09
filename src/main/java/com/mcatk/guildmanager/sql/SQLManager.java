@@ -52,11 +52,13 @@ public class SQLManager {
             PreparedStatement ps = connection.prepareStatement(SQLCommand.GET_PLAYER_GUILD.toString());
             ps.setString(1, name);
             ResultSet rs = ps.executeQuery();
-            String guild_id = rs.getString("g.guild_id");
-            if (guild_id == null) {
-                return null;
+            if (rs.next()) {
+                String guild_id = rs.getString("g.guild_id");
+                if (guild_id == null) {
+                    return null;
+                }
+                return getGuild(guild_id);
             }
-            return getGuild(guild_id);
         } catch (SQLException e) {
             e.printStackTrace();
         }
