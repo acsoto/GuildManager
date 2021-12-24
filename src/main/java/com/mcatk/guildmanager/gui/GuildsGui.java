@@ -29,7 +29,7 @@ public class GuildsGui {
         item.setItemMeta(meta);
         meta.setDisplayName(guild.getGuildName());
         ArrayList<String> des = new ArrayList<>();
-        des.add("§0:" + guild.getId());
+        des.add("§0-" + guild.getId());
         des.add("§2公会ID: §a" + guild.getId());
         des.add("§2会长: §a" + guild.getChairman());
         des.add("§2成员: §a" + SQLManager.getInstance().getGuildMembers(guild.getId()).size() + "§7/§2" + GuildBasicInfo.getMaxPlayer(guild.getLevel()));

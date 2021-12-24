@@ -26,27 +26,29 @@ public class GuiListener implements Listener {
             event.setCancelled(true);
             if (event.getCurrentItem() != null) {
                 if (event.getCurrentItem().getItemMeta() != null) {
-                    if (event.getCurrentItem().getType().equals(Material.AIR)) {
-                    } else if (event.getCurrentItem().getItemMeta().getDisplayName().equals("返回")) {
-                        ((Player) event.getWhoClicked()).chat("/menu");
-                    } else {
-                        String guildID =
-                                event.getCurrentItem().getItemMeta().getLore().get(0).split(":")[1];
-                        Guild guild =
-                                SQLManager.getInstance().getGuild(guildID);
-                        player.openInventory(new GuildGui(guild).getGui());
+                    if (!event.getCurrentItem().getType().equals(Material.AIR)) {
+                        if (event.getCurrentItem().getItemMeta().getDisplayName().equals("返回")) {
+                            ((Player) event.getWhoClicked()).chat("/menu");
+                        } else {
+                            String guildID =
+                                    event.getCurrentItem().getItemMeta().getLore().get(0).split("-")[1];
+                            Guild guild =
+                                    SQLManager.getInstance().getGuild(guildID);
+                            player.openInventory(new GuildGui(guild).getGui());
+                        }
                     }
                 }
             }
         } else if (event.getInventory().getHolder().equals(GuiType.GUILD_GUI)) {
             event.setCancelled(true);
             Guild guild =
-                    SQLManager.getInstance().getGuild(event.getInventory().getTitle().split(":")[1]);
+                    SQLManager.getInstance().getGuild(event.getInventory().getTitle().split("-")[1]);
             if (event.getCurrentItem().getType().equals(Material.AIR)) {
-            } else if (event.getCurrentItem().getItemMeta().getDisplayName().equals(Msg.GUILD_GUI_TP.toString())) {
-                new Operation().tpGuild(guild, event.getWhoClicked().getName());
-            } else if (event.getCurrentItem().getItemMeta().getDisplayName().equals(Msg.GUI_BACK.toString())) {
-                player.openInventory(new GuildsGui().getGuildsGui());
+                if (event.getCurrentItem().getItemMeta().getDisplayName().equals(Msg.GUILD_GUI_TP.toString())) {
+                    new Operation().tpGuild(guild, event.getWhoClicked().getName());
+                } else if (event.getCurrentItem().getItemMeta().getDisplayName().equals(Msg.GUI_BACK.toString())) {
+                    player.openInventory(new GuildsGui().getGuildsGui());
+                }
             }
         }
     }

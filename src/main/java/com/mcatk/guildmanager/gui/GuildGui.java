@@ -18,7 +18,7 @@ public class GuildGui {
     }
 
     public Inventory getGui() {
-        Inventory gui = Bukkit.createInventory(GuiType.GUILD_GUI, 9, guild.toString());
+        Inventory gui = Bukkit.createInventory(GuiType.GUILD_GUI, 9, guild.getGuildName()+"-"+guild.getId());
         gui.setItem(0, getTpIcon());
         gui.setItem(1, getMemberIcon());
         gui.setItem(8, getQuitIcon());
