@@ -72,17 +72,11 @@ public class GuildCommand implements CommandExecutor {
 
     private void onCommandWithGuild() throws ParaLengthException {
         switch (args[0].toLowerCase()) {
-            case "t":
-//                new Operation().tpGuild(guild, sender.getName());
-                // TODO: 2021/12/9 公会传送
-                sender.sendMessage(Msg.INFO + "§a传送成功");
-                break;
             case "offer":
                 offer();
                 break;
             case "quit":
-                SQLManager.getInstance().removeMember(sender.getName());
-                sender.sendMessage(Msg.INFO + "退出公会" + guild);
+                quit();
                 break;
         }
     }
@@ -125,6 +119,7 @@ public class GuildCommand implements CommandExecutor {
         if (args.length != 2) {
             throw new ParaLengthException(2);
         }
+        String guildID = args[1];
         if (!isAlphabet(args[1])) {
             sender.sendMessage(Msg.ERROR + "ID只能是小写字母");
             return;
@@ -139,7 +134,8 @@ public class GuildCommand implements CommandExecutor {
             return;
         }
         if (GuildManager.getPlugin().takePlayerMoney((Player) sender, 500000)) {
-            SQLManager.getInstance().createGuild(args[1], sender.getName());
+            SQLManager.getInstance().createGuild(guildID, sender.getName());
+            SQLManager.getInstance().addMember(sender.getName(), guildID);
             sender.sendMessage(Msg.INFO + "创建成功");
             GuildManager.getPlugin().logInfo("玩家" + sender.getName() + "创建了公会" + args[1]);
         } else {
@@ -148,10 +144,6 @@ public class GuildCommand implements CommandExecutor {
     }
 
     private void offer() throws ParaLengthException {
-        if (!(sender instanceof Player)) {
-            sender.sendMessage(Msg.ERROR + "§c该指令只能由玩家发出");
-            return;
-        }
         String p = sender.getName();
         if (args.length != 2) {
             throw new ParaLengthException(2);
@@ -188,6 +180,17 @@ public class GuildCommand implements CommandExecutor {
             SQLManager.getInstance().saveGuild(guild);
         } else {
             sender.sendMessage(Msg.ERROR + "AC点不足！");
+        }
+    }
+
+    private void quit() {
+        if (guild.getChairman().equals(sender.getName()) ||
+                guild.getViceChairman1().equals(sender.getName()) ||
+                guild.getViceChairman2().equals(sender.getName())) {
+            sender.sendMessage("请先撤销你的公会职务");
+        } else {
+            SQLManager.getInstance().removeMember(sender.getName());
+            sender.sendMessage(Msg.INFO + "退出公会" + guild);
         }
     }
 

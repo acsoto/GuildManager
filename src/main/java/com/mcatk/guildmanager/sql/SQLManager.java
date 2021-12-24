@@ -36,10 +36,10 @@ public class SQLManager {
         }
     }
 
-    public void createGuild(String name, String chairman) {
+    public void createGuild(String id, String chairman) {
         try {
             PreparedStatement ps = connection.prepareStatement(SQLCommand.CREATE_GUILD.toString());
-            ps.setString(1, name);
+            ps.setString(1, id);
             ps.setString(2, chairman);
             ps.executeUpdate();
         } catch (SQLException e) {

@@ -3,7 +3,7 @@ package com.mcatk.guildmanager.sql;
 public enum SQLCommand {
     CREATE_GUILD(
             "INSERT INTO `guild` " +
-                    "(`guild_name`, `guild_chairman`)" +
+                    "(`guild_id`, `guild_chairman`)" +
                     "VALUES " +
                     "(?,?)"
     ),

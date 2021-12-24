@@ -6,6 +6,8 @@ public class Guild {
     private String id = "";
     private String guildName = "";
     private String chairman = "";
+    private String viceChairman1 = "";
+    private String viceChairman2 = "";
     private int level = 0;
     private int points = 0;
     private int cash = 0;
@@ -35,6 +37,22 @@ public class Guild {
 
     public void setChairman(String chairman) {
         this.chairman = chairman;
+    }
+
+    public String getViceChairman1() {
+        return viceChairman1;
+    }
+
+    public void setViceChairman1(String viceChairman1) {
+        this.viceChairman1 = viceChairman1;
+    }
+
+    public String getViceChairman2() {
+        return viceChairman2;
+    }
+
+    public void setViceChairman2(String viceChairman2) {
+        this.viceChairman2 = viceChairman2;
     }
 
     public int getLevel() {
