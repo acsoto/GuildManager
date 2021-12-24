@@ -75,10 +75,14 @@ public class GuildCommandS implements CommandExecutor {
                 warp();
                 break;
             case "setvice1":
-                guild.setViceChairman1(args[1]);
+                if (SQLManager.getInstance().getGuildMembers(guild.getId()).contains(args[1])) {
+                    guild.setViceChairman1(args[1]);
+                }
                 break;
             case "setvice2":
-                guild.setViceChairman2(args[1]);
+                if (SQLManager.getInstance().getGuildMembers(guild.getId()).contains(args[1])) {
+                    guild.setViceChairman2(args[1]);
+                }
                 break;
             default:
         }
