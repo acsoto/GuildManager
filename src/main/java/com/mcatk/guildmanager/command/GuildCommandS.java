@@ -32,7 +32,7 @@ public class GuildCommandS implements CommandExecutor {
             sender.sendMessage(Msg.ERROR + "您不在任何公会");
             return true;
         }
-        if (!guild.getChairman().equals(sender.getName())) {
+        if (!guild.isManager(sender.getName())) {
             sender.sendMessage(Msg.ERROR + "您没有操作该公会的权限");
             return true;
         }
@@ -41,7 +41,6 @@ public class GuildCommandS implements CommandExecutor {
             return true;
         }
         try {
-            onCommandLeader();
             onCommandChairman();
         } catch (ParaLengthException e) {
             sender.sendMessage(String.valueOf(e));
@@ -50,7 +49,7 @@ public class GuildCommandS implements CommandExecutor {
         return true;
     }
 
-    private void onCommandLeader() throws ParaLengthException {
+    private void onCommandChairman() throws ParaLengthException {
         switch (args[0].toLowerCase()) {
             case "app":
                 app();
@@ -61,12 +60,6 @@ public class GuildCommandS implements CommandExecutor {
             case "buytpall":
                 buyTpAll();
                 break;
-            default:
-        }
-    }
-
-    private void onCommandChairman() throws ParaLengthException {
-        switch (args[0].toLowerCase()) {
             case "advance":
                 advance();
                 break;
@@ -79,33 +72,32 @@ public class GuildCommandS implements CommandExecutor {
             case "warp":
                 warp();
                 break;
+            case "setvice1":
+                guild.setViceChairman1(args[1]);
+                break;
+            case "setvice2":
+                guild.setViceChairman2(args[1]);
+                break;
             default:
         }
     }
 
     // usage: /gmgs setname|levelup|res create|res remove|warp set|warp del|position set|position removve|setally|advance add|advance remove|app|remove|buytpall|tpall|clearmsg
     void printHelp() {
-        boolean isChairman = guild.getChairman().equalsIgnoreCase(sender.getName());
         sender.sendMessage("§e------------公会操作帮助------------");
-        if (isChairman) {
-            sender.sendMessage("§a/gmgs setname <name>  §2公会名称设置");
-            sender.sendMessage("§a/gmgs levelup  §2公会升级");
-            sender.sendMessage("§a/gmgs res create §2公会圈地(工具选点后输入该指令)");
-            sender.sendMessage("§a/gmgs res remove  §2删除公会领地");
-            sender.sendMessage("§a/gmgs warp set/del  §2设置/删除公会领地标");
-            sender.sendMessage("§a/gmgs position set <player> v/m  §2设置玩家为副会长/管理员");
-            sender.sendMessage("§a/gmgs position remove <player> v/m §2撤销玩家的副会长/管理员");
-            sender.sendMessage("§a/gmgs setally <guildID> §2设置伙伴公会");
-        }
-        if (isChairman) {
-            sender.sendMessage("§a/gmgs advance add <player>  §2增加玩家到公会广场名单");
-            sender.sendMessage("§a/gmgs advance remove <player>  §2从公会广场名单删除玩家");
-        }
+        sender.sendMessage("§a/gmgs setname <name>  §2公会名称设置");
+        sender.sendMessage("§a/gmgs levelup  §2公会升级");
+        sender.sendMessage("§a/gmgs res create §2公会圈地(工具选点后输入该指令)");
+        sender.sendMessage("§a/gmgs res remove  §2删除公会领地");
+        sender.sendMessage("§a/gmgs warp set/del  §2设置/删除公会领地标");
+        sender.sendMessage("§a/gmgs setvice1 <player>  §2设置玩家为副会长1");
+        sender.sendMessage("§a/gmgs setvice2 <player>  §2设置玩家为副会长2");
+        sender.sendMessage("§a/gmgs advance add <player>  §2增加玩家到公会广场名单");
+        sender.sendMessage("§a/gmgs advance remove <player>  §2从公会广场名单删除玩家");
         sender.sendMessage("§a/gmgs app  §2查看公会加入申请");
         sender.sendMessage("§a/gmgs remove <player>  §2删除玩家");
         sender.sendMessage("§a/gmgs buytpall (num) §2购买公会召集令");
         sender.sendMessage("§a/gmgs tpall  §2发起召集");
-        sender.sendMessage("§a/gmgs clearmsg  §2清空留言板");
     }
 
     void app() throws ParaLengthException {
@@ -289,66 +281,6 @@ public class GuildCommandS implements CommandExecutor {
             }
         }
     }
-
-//    private void position() throws ParaLengthException {
-//        if (args.length != 4) {
-//            throw new ParaLengthException(4);
-//        } else {
-//            if (args[1].equalsIgnoreCase("set")) {
-//                String p = args[2];
-//                if (!guild.hasPlayer(p)) {
-//                    sender.sendMessage(Msg.ERROR + "公会无此玩家");
-//                    return;
-//                }
-//                if (args[3].equalsIgnoreCase("v")) {
-//                    if (guild.hasViceChairman(p)) {
-//                        sender.sendMessage(Msg.ERROR + p + "已是副会长");
-//                        return;
-//                    }
-//                    if (guild.addViceChairman(p)) {
-//                        sender.sendMessage(Msg.INFO + "设置成功");
-//                    } else {
-//                        sender.sendMessage(Msg.ERROR + "副会长名额已满，最多2人");
-//                    }
-//                } else if (args[3].equalsIgnoreCase("m")) {
-//                    if (guild.hasManager(p)) {
-//                        sender.sendMessage(Msg.ERROR + p + "已是管理员");
-//                        return;
-//                    }
-//                    if (guild.addManager(p)) {
-//                        sender.sendMessage(Msg.INFO + "设置成功");
-//                    } else {
-//                        sender.sendMessage(Msg.ERROR + "管理员名额已满，最多3人");
-//                    }
-//                } else {
-//                    sender.sendMessage(Msg.ERROR + "参数错误:应为v/m");
-//                }
-//                return;
-//            }
-//            if (args[1].equalsIgnoreCase("remove")) {
-//                String p = args[2];
-//                if (!guild.hasPlayer(p)) {
-//                    sender.sendMessage(Msg.ERROR + "公会无此玩家");
-//                    return;
-//                }
-//                if (args[3].equalsIgnoreCase("v")) {
-//                    if (guild.removeViceChairman(p)) {
-//                        sender.sendMessage(Msg.INFO + "撤销成功");
-//                    } else {
-//                        sender.sendMessage(Msg.ERROR + p + "不是副会长");
-//                    }
-//                } else if (args[3].equalsIgnoreCase("m")) {
-//                    if (guild.removeManager(p)) {
-//                        sender.sendMessage(Msg.INFO + "撤销成功");
-//                    } else {
-//                        sender.sendMessage(Msg.ERROR + p + "不是管理员");
-//                    }
-//                } else {
-//                    sender.sendMessage(Msg.ERROR + "参数错误:应为v/m");
-//                }
-//            }
-//        }
-//    }
 
 }
     

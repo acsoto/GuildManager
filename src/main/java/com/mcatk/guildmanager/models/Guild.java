@@ -102,4 +102,10 @@ public class Guild {
     public void setApplicantList(ArrayList<String> applicantList) {
         this.applicantList = applicantList;
     }
+
+    public boolean isManager(String playerID) {
+        return chairman.equals(playerID) ||
+                viceChairman1.equals(playerID) ||
+                viceChairman2.equals(playerID);
+    }
 }
