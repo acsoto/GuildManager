@@ -1,6 +1,7 @@
 package com.mcatk.guildmanager;
 
 import com.mcatk.guildmanager.models.Guild;
+import com.mcatk.guildmanager.models.Member;
 import com.mcatk.guildmanager.sql.SQLManager;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -20,18 +21,12 @@ public class JoinListener implements Listener {
                 GuildManager.getPlugin().getServer().broadcastMessage(
                         Msg.INFO + guild.getGuildName() + "§2会长§e" + player.getName() + "§2已上线"
                 );
-                new Operation().giveGuildSquarePerm(playerID);
             }
-            if (GuildManager.getPlugin().getServer().getOnlinePlayers() != null) {
-                StringBuilder msg = new StringBuilder(
-                        Msg.INFO + "§2您的公会" + guild.getGuildName() + "§2现在在线玩家:"
-                );
-                for (Player p : GuildManager.getPlugin().getServer().getOnlinePlayers()) {
-                    if (guild.getId().equals(SQLManager.getInstance().getPlayerGuild(p.getName()).getId())) {
-                        msg.append("§e").append(p.getName()).append(",");
-                    }
-                }
-                player.sendMessage(msg.toString());
+            Member member = SQLManager.getInstance().getMember(playerID);
+            if (member.isAdvanced()) {
+                new Operation().giveGuildSquarePerm(playerID);
+            } else {
+                new Operation().removeGuildSquarePerm(playerID);
             }
         } else {
             // 玩家无公会
