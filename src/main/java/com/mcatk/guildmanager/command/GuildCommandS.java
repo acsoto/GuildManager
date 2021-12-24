@@ -5,7 +5,9 @@ import com.mcatk.guildmanager.Msg;
 import com.mcatk.guildmanager.Operation;
 import com.mcatk.guildmanager.ServerCmd;
 import com.mcatk.guildmanager.exceptions.ParaLengthException;
+import com.mcatk.guildmanager.models.ApplicantsList;
 import com.mcatk.guildmanager.models.Guild;
+import com.mcatk.guildmanager.models.GuildBasicInfo;
 import com.mcatk.guildmanager.models.Member;
 import com.mcatk.guildmanager.sql.SQLManager;
 import org.bukkit.command.Command;
@@ -103,16 +105,16 @@ public class GuildCommandS implements CommandExecutor {
     void app() throws ParaLengthException {
         if (args.length == 1) {
             sender.sendMessage("申请列表:");
-            for (String p : guild.getApplicantList()) {
+            for (String p : ApplicantsList.getApplicantsList().getList(guild.getId())) {
                 sender.sendMessage(p + "\n");
             }
             sender.sendMessage("输入/gmgs app <ID> 通过玩家的入会申请");
         } else if (args.length != 2) {
             throw new ParaLengthException(2);
         } else {
-            if (guild.getApplicantList().contains(args[1])) {
-                if (true) {
-                    guild.getApplicantList().remove(args[1]);
+            if (ApplicantsList.getApplicantsList().getList(guild.getId()).contains(args[1])) {
+                if (SQLManager.getInstance().getGuildAdvancedMembers(guild.getId()).size() < GuildBasicInfo.getMaxPlayer(guild.getLevel())) {
+                    ApplicantsList.getApplicantsList().getList(guild.getId()).remove(args[1]);
                     SQLManager.getInstance().addMember(args[1], guild.getId());
                     sender.sendMessage(Msg.INFO + "添加成功");
                 } else {
@@ -179,28 +181,26 @@ public class GuildCommandS implements CommandExecutor {
             String operate = args[1];
             String player = args[2];
             if (operate.equalsIgnoreCase("add")) {
-                Member member = SQLManager.getInstance().getMember(player);
-                member.setAdvanced(true);
-                SQLManager.getInstance().saveMember(member);
-                switch (1) {
-                    case 0:
-                        sender.sendMessage(Msg.ERROR + "该玩家已存在于公会广场名单");
-                        break;
-                    case 1:
+                if (SQLManager.getInstance().getGuildAdvancedMembers(guild.getId()).size() < GuildBasicInfo.getMaxAdvancedPlayer(guild.getLevel())) {
+                    if (SQLManager.getInstance().getGuildMembers(guild.getId()).contains(player)) {
+                        Member member = SQLManager.getInstance().getMember(player);
+                        member.setAdvanced(true);
+                        SQLManager.getInstance().saveMember(member);
                         sender.sendMessage(Msg.INFO + "增加成功");
-                        break;
-                    case 2:
-                        sender.sendMessage(Msg.ERROR + "已达到公会广场名单最大成员数");
-                        break;
-                    case 3:
-                        sender.sendMessage(Msg.ERROR + "该玩家不在你的公会");
-                        break;
-                    default:
+                    } else {
+                        sender.sendMessage(Msg.ERROR + "不是公会成员");
+                    }
+                } else {
+                    sender.sendMessage(Msg.ERROR + "已达到公会广场名单最大成员数");
                 }
             } else if (operate.equalsIgnoreCase("remove")) {
-                Member member = SQLManager.getInstance().getMember(player);
-                member.setAdvanced(false);
-                SQLManager.getInstance().saveMember(member);
+                if (SQLManager.getInstance().getGuildMembers(guild.getId()).contains(player)) {
+                    Member member = SQLManager.getInstance().getMember(player);
+                    member.setAdvanced(false);
+                    SQLManager.getInstance().saveMember(member);
+                } else {
+                    sender.sendMessage(Msg.ERROR + "不是公会成员");
+                }
             }
         }
     }

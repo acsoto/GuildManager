@@ -1,5 +1,7 @@
 package com.mcatk.guildmanager.models;
 
+import com.mcatk.guildmanager.sql.SQLManager;
+
 import java.util.ArrayList;
 
 public class Guild {
@@ -13,7 +15,6 @@ public class Guild {
     private int cash = 0;
     private boolean residenceFLag = false;
     private boolean hasChangedName = false;
-    private ArrayList<String> applicantList = new ArrayList<>();
 
     public String getId() {
         return id;
@@ -93,14 +94,6 @@ public class Guild {
 
     public void setHasChangedName(boolean hasChangedName) {
         this.hasChangedName = hasChangedName;
-    }
-
-    public ArrayList<String> getApplicantList() {
-        return applicantList;
-    }
-
-    public void setApplicantList(ArrayList<String> applicantList) {
-        this.applicantList = applicantList;
     }
 
     public boolean isManager(String playerID) {

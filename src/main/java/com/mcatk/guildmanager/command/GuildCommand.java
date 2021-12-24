@@ -5,6 +5,7 @@ import com.mcatk.guildmanager.exceptions.ParaLengthException;
 import com.mcatk.guildmanager.gui.GuildsGui;
 import com.mcatk.guildmanager.GuildManager;
 import com.mcatk.guildmanager.Msg;
+import com.mcatk.guildmanager.models.ApplicantsList;
 import com.mcatk.guildmanager.models.Guild;
 import com.mcatk.guildmanager.models.Member;
 import com.mcatk.guildmanager.sql.SQLManager;
@@ -88,14 +89,14 @@ public class GuildCommand implements CommandExecutor {
         if (SQLManager.getInstance().getPlayerGuild(sender.getName()) != null) {
             sender.sendMessage(Msg.ERROR + "已有公会");
         } else {
-            Guild guild = SQLManager.getInstance().getGuild(args[1]);
+            String guildID = args[1];
             if (guild == null) {
                 sender.sendMessage(Msg.ERROR + "不存在公会");
             } else {
-                if (guild.getApplicantList().contains(sender.getName())) {
+                if (ApplicantsList.getApplicantsList().getList(guildID).contains(sender.getName())) {
                     sender.sendMessage(Msg.ERROR + "今天已经申请过公会，明天再试");
                 } else {
-                    guild.getApplicantList().add(sender.getName());
+                    ApplicantsList.getApplicantsList().getList(guildID).add(sender.getName());
                     sender.sendMessage(Msg.INFO + "申请成功，等待通过");
                 }
             }
