@@ -134,7 +134,7 @@ public class GuildCommand implements CommandExecutor {
             sender.sendMessage(Msg.ERROR + "§c该指令只能由玩家发出");
             return;
         }
-        if (GuildManager.getPlugin().takePlayerMoney((Player) sender, 500000)) {
+        if (GuildManager.getPlugin().takePlayerMoney((Player) sender, 1000000)) {
             SQLManager.getInstance().createGuild(guildID, sender.getName());
             SQLManager.getInstance().addMember(sender.getName(), guildID);
             sender.sendMessage(Msg.INFO + "创建成功");
