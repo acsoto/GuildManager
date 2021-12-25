@@ -90,6 +90,7 @@ public class GuildCommand implements CommandExecutor {
             sender.sendMessage(Msg.ERROR + "已有公会");
         } else {
             String guildID = args[1];
+            Guild guild = SQLManager.getInstance().getGuild(guildID);
             if (guild == null) {
                 sender.sendMessage(Msg.ERROR + "不存在公会");
             } else {
