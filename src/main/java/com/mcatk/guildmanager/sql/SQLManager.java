@@ -70,12 +70,14 @@ public class SQLManager {
             PreparedStatement ps = connection.prepareStatement(SQLCommand.UPDATE_GUILD.toString());
             ps.setString(1, g.getGuildName());
             ps.setString(2, g.getChairman());
-            ps.setInt(3, g.getLevel());
-            ps.setInt(4, g.getPoints());
-            ps.setInt(5, g.getCash());
-            ps.setBoolean(6, g.getResidenceFLag());
-            ps.setBoolean(7, g.getHasChangedName());
-            ps.setString(8, g.getId());
+            ps.setString(3, g.getViceChairman1());
+            ps.setString(4, g.getViceChairman2());
+            ps.setInt(5, g.getLevel());
+            ps.setInt(6, g.getPoints());
+            ps.setInt(7, g.getCash());
+            ps.setBoolean(8, g.getResidenceFLag());
+            ps.setBoolean(9, g.getHasChangedName());
+            ps.setString(10, g.getId());
             ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();

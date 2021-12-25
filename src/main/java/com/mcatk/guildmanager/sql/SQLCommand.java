@@ -20,6 +20,8 @@ public enum SQLCommand {
             "UPDATE guild t " +
                     "SET t.guild_name             = ?, " +
                     "    t.guild_chairman         = ?, " +
+                    "    t.guild_vice_chairman_1         = ?, " +
+                    "    t.guild_vice_chairman_2         = ?, " +
                     "    t.guild_level            = ?, " +
                     "    t.guild_points           = ?, " +
                     "    t.guild_cash             = ?, " +
