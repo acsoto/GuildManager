@@ -95,6 +95,8 @@ public class SQLManager {
                 g.setId(rs.getString("guild_id"));
                 g.setGuildName(rs.getString("guild_name"));
                 g.setChairman(rs.getString("guild_chairman"));
+                g.setViceChairman1(rs.getString("guild_vice_chairman_1"));
+                g.setViceChairman2(rs.getString("guild_vice_chairman_2"));
                 g.setLevel(rs.getInt("guild_level"));
                 g.setPoints(rs.getInt("guild_points"));
                 g.setCash(rs.getInt("guild_cash"));
