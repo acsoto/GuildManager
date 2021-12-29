@@ -186,9 +186,7 @@ public class GuildCommand implements CommandExecutor {
     }
 
     private void quit() {
-        if (guild.getChairman().equals(sender.getName()) ||
-                guild.getViceChairman1().equals(sender.getName()) ||
-                guild.getViceChairman2().equals(sender.getName())) {
+        if (guild.isManager(sender.getName())) {
             sender.sendMessage("请先撤销你的公会职务");
         } else {
             SQLManager.getInstance().removeMember(sender.getName());

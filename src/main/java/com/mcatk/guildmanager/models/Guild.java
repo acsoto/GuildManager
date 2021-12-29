@@ -97,8 +97,8 @@ public class Guild {
     }
 
     public boolean isManager(String playerID) {
-        return chairman.equals(playerID) ||
-                viceChairman1.equals(playerID) ||
-                viceChairman2.equals(playerID);
+        return playerID.equals(chairman) ||
+                playerID.equals(viceChairman1) ||
+                playerID.equals(viceChairman2);
     }
 }
