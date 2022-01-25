@@ -39,7 +39,6 @@ public class GuildPapi extends PlaceholderExpansion {
 
     @Override
     public String onPlaceholderRequest(Player player, String identifier) {
-
         if (player == null) {
             return "";
         }
@@ -56,7 +55,9 @@ public class GuildPapi extends PlaceholderExpansion {
         }
         if (identifier.equals("prefix")) {
             if (guild.getChairman().equals(player.getName())) {
-                return "";
+                return "§7[" + guild.getGuildName() + "§f|§4" + "会长" + "§7]&r";
+            } else if (guild.getViceChairman1().equals(player.getName()) || guild.getViceChairman2().equals(player.getName())) {
+                return "§7[" + guild.getGuildName() + "§f|§c" + "副会长" + "§7]&r";
             } else {
                 return "§7[" + guild.getGuildName() + "§7]&r";
             }
@@ -87,20 +88,6 @@ public class GuildPapi extends PlaceholderExpansion {
         if (identifier.equals("contribution")) {
             return Integer.toString(member.getContribution());
         }
-        if (identifier.equals("position_prefix")) {
-            return positionPrefix(guild, player);
-        }
         return null;
-    }
-
-    private String positionPrefix(Guild guild, Player player) {
-        String playerID = player.getName();
-        if (guild.getChairman().equals(playerID)) {
-            return "§7[" + guild.getGuildName() + "§f|§4" + "会长" + "§7]&r";
-        } else if (guild.getViceChairman1().equals(playerID) || guild.getViceChairman2().equals(playerID)) {
-            return "§7[" + guild.getGuildName() + "§f|§c" + "副会长" + "§7]&r";
-        } else {
-            return "";
-        }
     }
 }
