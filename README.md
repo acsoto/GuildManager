@@ -2,6 +2,8 @@
 
 基于Minecraft Spigot服务端开发的Bukkit插件
 
+这是本人Java学习初期的不成熟项目，现不定期更新用于AC服务器。
+
 ![image-20210708112758753](README.assets/image-20210708112758753.png)
 
 ![image-20210708112817624](README.assets/image-20210708112817624.png)
