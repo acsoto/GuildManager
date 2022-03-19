@@ -30,7 +30,7 @@ public class Operation {
     }
     
     public void delWarp(Guild guild) {
-        sendConsoleCmd("delwarp " + guild);
+        sendConsoleCmd("delwarp " + guild.getGuildName());
     }
 
     public void giveGuildSquarePerm(String player) {
