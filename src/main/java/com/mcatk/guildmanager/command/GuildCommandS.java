@@ -84,6 +84,8 @@ public class GuildCommandS implements CommandExecutor {
                     guild.setViceChairman2(args[1]);
                 }
                 break;
+            case "buy":
+                buy();
             default:
         }
     }
@@ -104,6 +106,7 @@ public class GuildCommandS implements CommandExecutor {
         sender.sendMessage("§a/gmgs remove <player>  §2删除玩家");
         sender.sendMessage("§a/gmgs buytpall (num) §2购买公会召集令");
         sender.sendMessage("§a/gmgs tpall  §2发起召集");
+        sender.sendMessage("§a/gmgs buy nametag");
     }
 
     void app() throws ParaLengthException {
@@ -283,6 +286,21 @@ public class GuildCommandS implements CommandExecutor {
             if (args[1].equalsIgnoreCase("del")) {
                 new Operation().delWarp(guild);
             }
+        }
+    }
+
+    private void buy() throws ParaLengthException {
+        if (args.length != 2) {
+            throw new ParaLengthException(2);
+        }
+        if (args[1].equalsIgnoreCase("nametag")) {
+            if (guild.getCash() < 10) {
+                sender.sendMessage("§c公会资金不足");
+                return;
+            }
+            guild.setCash(guild.getCash() - 10);
+            guild.setHasChangedName(false);
+            sender.sendMessage("§a更名卡购买成功，你可以通过/gmgs setname 来修改公会名称");
         }
     }
 
