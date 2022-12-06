@@ -28,7 +28,7 @@ public class SQLManager {
         int port = GuildManager.getPlugin().getConfig().getInt("mysql.port");
         try {
             connection = DriverManager.getConnection(
-                    "jdbc:mysql://" + ip + ":" + port + "/" + databaseName + "?autoReconnect=true",
+                    "jdbc:mysql://" + ip + ":" + port + "/" + databaseName + "?autoReconnect=true&useSSL=false",
                     userName, userPassword
             );
         } catch (SQLException e) {
