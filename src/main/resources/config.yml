@@ -5,3 +5,4 @@ mysql:
   port: 3306
   ip: localhost
 Guilds: {}
+bc: false
