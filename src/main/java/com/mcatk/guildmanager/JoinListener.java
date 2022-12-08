@@ -17,11 +17,6 @@ public class JoinListener implements Listener {
         Guild guild = SQLManager.getInstance().getPlayerGuild(playerID);
         if (guild != null) {
             // 玩家有公会
-            if (guild.getChairman().equals(playerID)) {
-                GuildManager.getPlugin().getServer().broadcastMessage(
-                        Msg.INFO + guild.getGuildName() + "§2会长§e" + player.getName() + "§2已上线"
-                );
-            }
             Member member = SQLManager.getInstance().getMember(playerID);
             if (member.isAdvanced()) {
                 new Operation().giveGuildSquarePerm(playerID);
