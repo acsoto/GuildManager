@@ -1,11 +1,8 @@
 package com.mcatk.guildmanager;
 
 public enum Msg {
-    INFO("§6§l公会系统 §7>>> §a"),
-    ERROR("§4§l错误 §7>>> §c"),
-    GUI_BACK("§7返回"),
-    GUILD_GUI_TP("§5传送到公会"),
-    
+    INFO("§7[§6公会系统§7] §a"),
+    ERROR("§7[§6公会系统§7] §c"),
     ;
     private final String content;
     

@@ -3,8 +3,9 @@ version: ${project.version}
 main: com.mcatk.guildmanager.GuildManager
 authors: [ soto ]
 website: www.mcatk.com
-depend: [ Vault ]
-softdepend: [ PlaceholderAPI ]
+softdepend:
+  - Vault
+  - PlaceholderAPI
 commands:
   guildmanager:
     description: main command

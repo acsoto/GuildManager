@@ -2,7 +2,6 @@ package com.mcatk.guildmanager.command;
 
 import com.mcatk.guildmanager.Operation;
 import com.mcatk.guildmanager.exceptions.ParaLengthException;
-import com.mcatk.guildmanager.gui.GuildsGui;
 import com.mcatk.guildmanager.GuildManager;
 import com.mcatk.guildmanager.Msg;
 import com.mcatk.guildmanager.models.ApplicantsList;
@@ -56,7 +55,7 @@ public class GuildCommand implements CommandExecutor {
     private void onCommandWithoutGuild() throws ParaLengthException {
         switch (args[0].toLowerCase()) {
             case "gui":
-                ((Player) sender).openInventory(new GuildsGui().getGuildsGui());
+                GuildManager.getPlugin().getGuildsGUI().openGUI((Player) sender);
                 break;
             case "apply":
                 apply();
