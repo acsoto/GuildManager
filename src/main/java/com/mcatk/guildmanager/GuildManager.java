@@ -10,7 +10,6 @@ import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.economy.EconomyResponse;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
@@ -58,8 +57,6 @@ public final class GuildManager extends JavaPlugin {
                 setExecutor(new GuildCommand());
         Bukkit.getPluginCommand("guildmanagers").
                 setExecutor(new GuildCommandS());
-//        Bukkit.getPluginCommand("guildmanageradmin").
-//                setExecutor(new GuildAdmin());
         getLogger().info("注册指令注册完毕");
     }
 
@@ -70,8 +67,6 @@ public final class GuildManager extends JavaPlugin {
                 registerEvents(new GuiListener(), this);
         Bukkit.getPluginManager().
                 registerEvents(new GuildItem(), this);
-//        Bukkit.getPluginManager().
-//                registerEvents(new GuildRepository(), this);
         getLogger().info("监听器注册完毕");
     }
 
@@ -84,7 +79,6 @@ public final class GuildManager extends JavaPlugin {
         }
     }
 
-    //启动Vault依赖
     private boolean setupEconomy() {
         if (getServer().getPluginManager().getPlugin("Vault") == null) {
             return false;
@@ -99,20 +93,10 @@ public final class GuildManager extends JavaPlugin {
         return econ != null;
     }
 
-    //经济操作
     public boolean takePlayerMoney(Player p, double m) {
         EconomyResponse r = econ.withdrawPlayer(p, m);
         return r.transactionSuccess();
     }
 
-    //log
-    public void logInfo(String s) {
-        getLogger().info(s);
-    }
-
-    //color
-    public String colorFormat(String str) {
-        return ChatColor.translateAlternateColorCodes('&', str);
-    }
 
 }

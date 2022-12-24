@@ -139,7 +139,7 @@ public class GuildCommand implements CommandExecutor {
             SQLManager.getInstance().createGuild(guildID, sender.getName());
             SQLManager.getInstance().addMember(sender.getName(), guildID);
             sender.sendMessage(Msg.INFO + "创建成功");
-            GuildManager.getPlugin().logInfo("玩家" + sender.getName() + "创建了公会" + args[1]);
+            GuildManager.getPlugin().getLogger().info("玩家" + sender.getName() + "创建了公会" + args[1]);
         } else {
             sender.sendMessage(Msg.ERROR + "AC点不足！");
         }
@@ -178,7 +178,7 @@ public class GuildCommand implements CommandExecutor {
                     Msg.INFO + "§a成功为" + guild.getGuildName() +
                             "§a捐赠" + n + "AC" + "折合为" + (n / 10000) + "公会资金"
             );
-            GuildManager.getPlugin().logInfo(p + "捐献了" + n + "给" + guild.getGuildName());
+            GuildManager.getPlugin().getLogger().info(p + "捐献了" + n + "给" + guild.getGuildName());
             SQLManager.getInstance().saveGuild(guild);
         } else {
             sender.sendMessage(Msg.ERROR + "AC点不足！");
