@@ -1,6 +1,5 @@
 package com.mcatk.guildmanager.command;
 
-import com.mcatk.guildmanager.Operation;
 import com.mcatk.guildmanager.exceptions.ParaLengthException;
 import com.mcatk.guildmanager.GuildManager;
 import com.mcatk.guildmanager.Msg;
@@ -109,8 +108,7 @@ public class GuildCommand implements CommandExecutor {
             throw new ParaLengthException(2);
         } else if (SQLManager.getInstance().getGuild(args[1]) != null) {
             guild = SQLManager.getInstance().getGuild(args[1]);
-            String p = sender.getName();
-            new Operation().tpGuild(guild, p);
+            ((Player) sender).chat(String.format("/warp %s", guild.getGuildName()));
             sender.sendMessage(Msg.INFO + "§a传送成功");
         } else {
             sender.sendMessage(Msg.INFO + "§c不存在此公会");

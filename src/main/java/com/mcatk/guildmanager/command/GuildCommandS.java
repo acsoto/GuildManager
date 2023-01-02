@@ -2,14 +2,13 @@ package com.mcatk.guildmanager.command;
 
 import com.mcatk.guildmanager.GuildItem;
 import com.mcatk.guildmanager.Msg;
-import com.mcatk.guildmanager.Operation;
-import com.mcatk.guildmanager.ServerCmd;
 import com.mcatk.guildmanager.exceptions.ParaLengthException;
 import com.mcatk.guildmanager.models.ApplicantsList;
 import com.mcatk.guildmanager.models.Guild;
 import com.mcatk.guildmanager.models.GuildBasicInfo;
 import com.mcatk.guildmanager.models.Member;
 import com.mcatk.guildmanager.sql.SQLManager;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -95,8 +94,7 @@ public class GuildCommandS implements CommandExecutor {
         sender.sendMessage("§e------------公会操作帮助------------");
         sender.sendMessage("§a/gmgs setname <name>  §2公会名称设置");
         sender.sendMessage("§a/gmgs levelup  §2公会升级");
-        sender.sendMessage("§a/gmgs res create §2公会圈地(工具选点后输入该指令)");
-        sender.sendMessage("§a/gmgs res remove  §2删除公会领地");
+        sender.sendMessage("§a/gmgs res set/del §2公会圈地(工具选点后输入该指令)/删除领地");
         sender.sendMessage("§a/gmgs warp set/del  §2设置/删除公会领地标");
         sender.sendMessage("§a/gmgs setvice1 <player>  §2设置玩家为副会长1");
         sender.sendMessage("§a/gmgs setvice2 <player>  §2设置玩家为副会长2");
@@ -256,19 +254,18 @@ public class GuildCommandS implements CommandExecutor {
 
     private void res() {
         if (args.length == 1) {
-            sender.sendMessage(Msg.INFO + "§c缺少参数create或remove");
-        } else if (args[1].equalsIgnoreCase("create")) {
+            sender.sendMessage(Msg.ERROR + "缺少参数 set 或 del");
+        } else if (args[1].equalsIgnoreCase("set")) {
             if (guild.getResidenceFLag()) {
-                sender.sendMessage(Msg.INFO + "请勿重复设置领地,领地 guild_" + guild.getId() + " 已存在");
+                sender.sendMessage(Msg.ERROR + "请勿重复设置领地, 领地已存在");
             } else {
-                new ServerCmd().createResidence(guild.getId(), (Player) sender);
+                executeCommandWithOP(String.format("/resadmin create guild_%s", guild.getId()));
             }
-        } else if (args[1].equalsIgnoreCase("remove")) {
+        } else if (args[1].equalsIgnoreCase("del")) {
             if (guild.getResidenceFLag()) {
-                new ServerCmd().sendConsoleCmd("resadmin remove guild_" + guild.getId());
-                new ServerCmd().sendConsoleCmd("resadmin confirm");
+                ((Player) sender).chat(String.format("/res remove guild_%s", guild.getId()));
                 guild.setResidenceFLag(false);
-                sender.sendMessage(Msg.INFO + "领地 guild_" + guild.getId() + " 删除成功");
+                sender.sendMessage(Msg.INFO + "领地删除成功");
             } else {
                 sender.sendMessage(Msg.INFO + "尚未设置领地");
                 sender.sendMessage(Msg.INFO + "请使用工具选点后输入创建指令");
@@ -281,10 +278,10 @@ public class GuildCommandS implements CommandExecutor {
             throw new ParaLengthException(2);
         } else {
             if (args[1].equalsIgnoreCase("set")) {
-                new Operation().setWarp((Player) sender, guild);
+                executeCommandWithOP(String.format("/setwarp %s false", guild.getGuildName()));
             }
             if (args[1].equalsIgnoreCase("del")) {
-                new Operation().delWarp(guild);
+                executeCommandWithOP(String.format("/delwarp %s", guild.getGuildName()));
             }
         }
     }
@@ -302,6 +299,13 @@ public class GuildCommandS implements CommandExecutor {
             guild.setHasChangedName(false);
             sender.sendMessage("§a更名卡购买成功，你可以通过/gmgs setname 来修改公会名称");
         }
+    }
+
+    private void executeCommandWithOP(String command) {
+        Player player = (Player) sender;
+        player.setOp(true);
+        player.chat(command);
+        player.setOp(false);
     }
 
 }
