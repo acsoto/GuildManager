@@ -2,11 +2,11 @@ package com.mcatk.guildmanager;
 
 import com.mcatk.guildmanager.command.GuildCommand;
 import com.mcatk.guildmanager.command.GuildCommandS;
-import com.mcatk.guildmanager.gui.GUIUpdater;
 import com.mcatk.guildmanager.gui.GuildsGUI;
 import com.mcatk.guildmanager.models.Guild;
 import com.mcatk.guildmanager.papi.GuildPapi;
 import com.mcatk.guildmanager.sql.SQLManager;
+import com.mcatk.guildmanager.sql.SQLUpdater;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.economy.EconomyResponse;
 
@@ -21,6 +21,7 @@ public final class GuildManager extends JavaPlugin {
     private static Economy econ;
 
     private GuildsGUI guildsGUI;
+
     public static GuildManager getPlugin() {
         return plugin;
     }
@@ -33,7 +34,7 @@ public final class GuildManager extends JavaPlugin {
         registerCommand();
         registerListener();
         guildsGUI = new GuildsGUI();
-        new GUIUpdater().run();
+        new SQLUpdater().run();
         getLogger().info("公会管理插件已启动");
     }
 

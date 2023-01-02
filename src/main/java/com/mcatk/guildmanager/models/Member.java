@@ -6,6 +6,13 @@ public class Member {
     private int contribution = 0;
     private boolean isAdvanced = false;
 
+    public Member(String id, String guildID, int contribution, boolean isAdvanced) {
+        this.id = id;
+        this.guildID = guildID;
+        this.contribution = contribution;
+        this.isAdvanced = isAdvanced;
+    }
+
     public String getId() {
         return id;
     }

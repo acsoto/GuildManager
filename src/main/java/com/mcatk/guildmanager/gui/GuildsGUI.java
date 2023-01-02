@@ -13,24 +13,19 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.SkullMeta;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class GuildsGUI implements Listener {
 
-    private Inventory gui;
+    private final Inventory gui;
     private ItemStack back;
 
     private HashMap<ItemStack, GuildGUI> guildGUIMap;
 
     public GuildsGUI() {
         Bukkit.getPluginManager().registerEvents(this, GuildManager.getPlugin());
-        gui = getGuildsGui();
-    }
-
-    public void updateGUI() {
         gui = getGuildsGui();
     }
 
@@ -41,7 +36,7 @@ public class GuildsGUI implements Listener {
     public Inventory getGuildsGui() {
         Inventory gui = Bukkit.createInventory(null, 54, "§6公会列表");
         guildGUIMap = new HashMap<>();
-        for (Guild guild : SQLManager.getInstance().getAllGuilds()) {
+        for (Guild guild : SQLManager.getInstance().getGuilds().values()) {
             ItemStack button = getAnGuildButton(guild);
             guildGUIMap.put(button, new GuildGUI(guild));
             gui.addItem(button);
@@ -53,7 +48,7 @@ public class GuildsGUI implements Listener {
     private ItemStack getAnGuildButton(Guild guild) {
         ItemStack item = new ItemStack(Material.BEACON);
         ItemMeta meta = item.getItemMeta();
-        meta.setDisplayName("§6§l"+guild.getGuildName());
+        meta.setDisplayName("§6§l" + guild.getGuildName());
         ArrayList<String> des = new ArrayList<>();
         des.add("§b公会ID: §a" + guild.getId());
         des.add("§b会长: §a" + guild.getChairman());

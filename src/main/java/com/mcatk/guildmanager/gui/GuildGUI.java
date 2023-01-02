@@ -79,7 +79,7 @@ public class GuildGUI implements Listener {
         ItemStack clickedItem = e.getCurrentItem();
         if (clickedItem == null || clickedItem.getType() == Material.AIR) return;
         if (clickedItem.equals(back)) {
-            GuildManager.getPlugin().getGuildsGUI().openGUI((Player) e.getWhoClicked());
+            new GuildsGUI().openGUI((Player) e.getWhoClicked());
             return;
         }
         if (clickedItem.equals(tp)) {

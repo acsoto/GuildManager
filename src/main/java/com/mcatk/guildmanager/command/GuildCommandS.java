@@ -145,7 +145,7 @@ public class GuildCommandS implements CommandExecutor {
             if (playerID.equalsIgnoreCase(sender.getName())) {
                 sender.sendMessage(Msg.ERROR + "不能删除你自己");
             } else {
-                SQLManager.getInstance().removeMember(playerID);
+                SQLManager.getInstance().removeMember(playerID, guild.getId());
             }
         }
     }

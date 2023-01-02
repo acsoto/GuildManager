@@ -4,6 +4,7 @@ import com.mcatk.guildmanager.Operation;
 import com.mcatk.guildmanager.exceptions.ParaLengthException;
 import com.mcatk.guildmanager.GuildManager;
 import com.mcatk.guildmanager.Msg;
+import com.mcatk.guildmanager.gui.GuildsGUI;
 import com.mcatk.guildmanager.models.ApplicantsList;
 import com.mcatk.guildmanager.models.Guild;
 import com.mcatk.guildmanager.models.Member;
@@ -55,7 +56,7 @@ public class GuildCommand implements CommandExecutor {
     private void onCommandWithoutGuild() throws ParaLengthException {
         switch (args[0].toLowerCase()) {
             case "gui":
-                GuildManager.getPlugin().getGuildsGUI().openGUI((Player) sender);
+                new GuildsGUI().openGUI((Player) sender);
                 break;
             case "apply":
                 apply();
@@ -188,7 +189,7 @@ public class GuildCommand implements CommandExecutor {
         if (guild.isManager(sender.getName())) {
             sender.sendMessage("请先撤销你的公会职务");
         } else {
-            SQLManager.getInstance().removeMember(sender.getName());
+            SQLManager.getInstance().removeMember(sender.getName(), guild.getId());
             sender.sendMessage(Msg.INFO + "退出公会" + guild);
         }
     }

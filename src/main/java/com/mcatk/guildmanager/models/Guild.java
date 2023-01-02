@@ -16,6 +16,16 @@ public class Guild {
     private boolean residenceFLag = false;
     private boolean hasChangedName = false;
 
+    private ArrayList<Member> members = new ArrayList<>();
+
+    public ArrayList<Member> getMembers() {
+        return members;
+    }
+
+    public void setMembers(ArrayList<Member> members) {
+        this.members = members;
+    }
+
     public String getId() {
         return id;
     }
