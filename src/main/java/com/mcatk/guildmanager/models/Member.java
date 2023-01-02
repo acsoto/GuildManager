@@ -1,10 +1,10 @@
 package com.mcatk.guildmanager.models;
 
 public class Member {
-    private String id = "";
-    private String guildID = "";
-    private int contribution = 0;
-    private boolean isAdvanced = false;
+    private String id;
+    private String guildID;
+    private int contribution;
+    private boolean isAdvanced;
 
     public Member(String id, String guildID, int contribution, boolean isAdvanced) {
         this.id = id;

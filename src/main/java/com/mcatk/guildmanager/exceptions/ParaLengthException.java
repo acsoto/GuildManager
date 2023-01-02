@@ -3,7 +3,7 @@ package com.mcatk.guildmanager.exceptions;
 import com.mcatk.guildmanager.Msg;
 
 public class ParaLengthException extends Exception {
-    private int length;
+    private final int length;
     
     public ParaLengthException(int length) {
         this.length = length;

@@ -1,7 +1,5 @@
 package com.mcatk.guildmanager.models;
 
-import com.mcatk.guildmanager.sql.SQLManager;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -19,15 +17,6 @@ public class ApplicantsList {
             listHashMap.put(guildID, new ArrayList<>());
         }
         return listHashMap.get(guildID);
-    }
-
-    public boolean contains(String playerID) {
-        for (ArrayList<String> list : listHashMap.values()) {
-            if (list.contains(playerID)) {
-                return true;
-            }
-        }
-        return false;
     }
 
     public void add(String guildID, String playerID) {

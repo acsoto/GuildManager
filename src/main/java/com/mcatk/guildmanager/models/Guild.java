@@ -1,7 +1,5 @@
 package com.mcatk.guildmanager.models;
 
-import com.mcatk.guildmanager.sql.SQLManager;
-
 import java.util.ArrayList;
 
 public class Guild {

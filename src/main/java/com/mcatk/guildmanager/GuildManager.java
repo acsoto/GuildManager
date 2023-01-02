@@ -2,7 +2,6 @@ package com.mcatk.guildmanager;
 
 import com.mcatk.guildmanager.command.GuildCommand;
 import com.mcatk.guildmanager.command.GuildCommandS;
-import com.mcatk.guildmanager.gui.GuildsGUI;
 import com.mcatk.guildmanager.models.Guild;
 import com.mcatk.guildmanager.papi.GuildPapi;
 import com.mcatk.guildmanager.sql.SQLManager;
@@ -20,8 +19,6 @@ public final class GuildManager extends JavaPlugin {
     private static GuildManager plugin;
     private static Economy econ;
 
-    private GuildsGUI guildsGUI;
-
     public static GuildManager getPlugin() {
         return plugin;
     }
@@ -33,7 +30,6 @@ public final class GuildManager extends JavaPlugin {
         registerDependency();
         registerCommand();
         registerListener();
-        guildsGUI = new GuildsGUI();
         new SQLUpdater().run();
         getLogger().info("公会管理插件已启动");
     }
@@ -47,8 +43,6 @@ public final class GuildManager extends JavaPlugin {
         //检测前置插件
         if (!setupEconomy()) {
             getLogger().warning("未找到前置插件Vault");
-//            getServer().getPluginManager().disablePlugin(this);
-//            return;
         }
         getLogger().info("检测到Vault，成功启动依赖");
         if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
@@ -67,8 +61,6 @@ public final class GuildManager extends JavaPlugin {
 
     private void registerListener() {
         Bukkit.getPluginManager().registerEvents(new JoinListener(), this);
-//        Bukkit.getPluginManager().
-//                registerEvents(new GuiListener(), this);
         Bukkit.getPluginManager().registerEvents(new GuildItem(), this);
         getLogger().info("监听器注册完毕");
     }
@@ -101,8 +93,4 @@ public final class GuildManager extends JavaPlugin {
         return r.transactionSuccess();
     }
 
-
-    public GuildsGUI getGuildsGUI() {
-        return guildsGUI;
-    }
 }

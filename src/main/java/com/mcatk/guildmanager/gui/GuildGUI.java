@@ -1,7 +1,6 @@
 package com.mcatk.guildmanager.gui;
 
 import com.mcatk.guildmanager.GuildManager;
-import com.mcatk.guildmanager.Msg;
 import com.mcatk.guildmanager.models.Guild;
 import com.mcatk.guildmanager.sql.SQLManager;
 import org.bukkit.Bukkit;
