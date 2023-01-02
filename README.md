@@ -1,22 +1,23 @@
 # 简介
 
-基于Minecraft Spigot服务端开发的Bukkit插件
+基于Minecraft Spigot API开发的Bukkit插件
 
 这是本人Java学习初期的不成熟项目，现不定期更新用于AC服务器。
 
-![image-20210708112758753](README.assets/image-20210708112758753.png)
+|GUI|ICON|ITEM
+|---|---|---
+|![image-20210708112758753](README.assets/image-20210708112758753.png)|![image-20210708112817624](README.assets/image-20210708112817624.png)|![image-20210403113934479](README.assets/image-20210403113934479.png)
 
-![image-20210708112817624](README.assets/image-20210708112817624.png)
-
-![image-20210403113934479](README.assets/image-20210403113934479.png)
 
 ### 主要特性
 
-- 公会-成员布局
-- 文件储存利用Google Gson
-- 可视化菜单，如公会列表，成员列表，留言板等
-- 监听器监听玩家行为来实现召集令的触发等功能和防止玩家拿走可视化菜单中的物品
-- Vault实现内部的经济操作，placehoAPI提供变量
+- [x] 公会-成员布局
+- [x] AuthMe登陆监听
+- [x] 公会领地/地标
+- [x] 可视化菜单，如公会列表，成员列表，~~留言板~~等
+- [x] 文件储存利用 ~~Google Gson~~ MySQL
+- [x] 监听器监听玩家行为来实现召集令的触发等功能和防止玩家拿走可视化菜单中的物品
+- [x] Vault实现内部的经济操作，placehoAPI提供变量
 
 # 功能介绍
 
