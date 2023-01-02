@@ -82,7 +82,7 @@ public class GuildGUI implements Listener {
             return;
         }
         if (clickedItem.equals(tp)) {
-            Bukkit.dispatchCommand(e.getWhoClicked(), "warp " + guild.getGuildName());
+            ((Player) e.getWhoClicked()).chat(String.format("/warp %s", guild.getGuildName()));
         }
     }
 }

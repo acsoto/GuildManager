@@ -260,6 +260,7 @@ public class GuildCommandS implements CommandExecutor {
                 sender.sendMessage(Msg.ERROR + "请勿重复设置领地, 领地已存在");
             } else {
                 executeCommandWithOP(String.format("/resadmin create guild_%s", guild.getId()));
+                guild.setResidenceFLag(true);
             }
         } else if (args[1].equalsIgnoreCase("del")) {
             if (guild.getResidenceFLag()) {

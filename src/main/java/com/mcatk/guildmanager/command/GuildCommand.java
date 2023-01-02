@@ -24,9 +24,7 @@ public class GuildCommand implements CommandExecutor {
         sender.sendMessage("§e------------公会帮助------------");
         sender.sendMessage("§a/gmg gui  §2公会列表");
         sender.sendMessage("§a/gmg apply <ID>  §2申请加入公会");
-        sender.sendMessage("§a/gmg tp <guild> §2传送到某公会主城");
         sender.sendMessage("§a/gmg create <ID> §2创建公会（ID必须为英文）");
-        sender.sendMessage("§a/gmg t §2传送到自己的公会主城");
         sender.sendMessage("§a/gmg quit §2退出公会");
         sender.sendMessage("§a/gmg offer <AC点> §2捐助公会资金 1wAC = 1GuildCash");
     }
@@ -59,9 +57,6 @@ public class GuildCommand implements CommandExecutor {
                 break;
             case "apply":
                 apply();
-                break;
-            case "tp":
-                tp();
                 break;
             case "create":
                 create();
@@ -100,18 +95,6 @@ public class GuildCommand implements CommandExecutor {
                     sender.sendMessage(Msg.INFO + "申请成功，等待通过");
                 }
             }
-        }
-    }
-
-    private void tp() throws ParaLengthException {
-        if (args.length != 2) {
-            throw new ParaLengthException(2);
-        } else if (SQLManager.getInstance().getGuild(args[1]) != null) {
-            guild = SQLManager.getInstance().getGuild(args[1]);
-            ((Player) sender).chat(String.format("/warp %s", guild.getGuildName()));
-            sender.sendMessage(Msg.INFO + "§a传送成功");
-        } else {
-            sender.sendMessage(Msg.INFO + "§c不存在此公会");
         }
     }
 
