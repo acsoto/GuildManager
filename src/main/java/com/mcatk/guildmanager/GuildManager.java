@@ -60,7 +60,10 @@ public final class GuildManager extends JavaPlugin {
     }
 
     private void registerListener() {
-        Bukkit.getPluginManager().registerEvents(new JoinListener(), this);
+        if (Bukkit.getPluginManager().isPluginEnabled("AuthMe")) {
+            Bukkit.getPluginManager().registerEvents(new LoginListener(), this);
+            getLogger().info("检测到AuthMe，已启动LoginEvent监听");
+        }
         Bukkit.getPluginManager().registerEvents(new GuildItem(), this);
         getLogger().info("监听器注册完毕");
     }

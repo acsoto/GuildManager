@@ -6,6 +6,7 @@ website: www.mcatk.com
 softdepend:
   - Vault
   - PlaceholderAPI
+  - AuthMe
 commands:
   guildmanager:
     description: main command
