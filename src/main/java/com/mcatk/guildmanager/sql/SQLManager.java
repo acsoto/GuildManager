@@ -188,6 +188,7 @@ public class SQLManager {
                 g.setCash(rs.getInt("guild_cash"));
                 g.setResidenceFLag(rs.getBoolean("guild_has_residence"));
                 g.setHasChangedName(rs.getBoolean("guild_has_changed_name"));
+                g.setMembers(getMembersFromSQL(g.getId()));
                 guilds.put(g.getId(), g);
             }
         } catch (SQLException e) {
