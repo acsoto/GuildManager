@@ -5,8 +5,9 @@ import com.mcatk.guildmanager.models.Guild;
 import com.mcatk.guildmanager.models.GuildBasicInfo;
 import com.mcatk.guildmanager.models.Member;
 import com.mcatk.guildmanager.sql.SQLManager;
-import org.bukkit.entity.Player;
+import org.bukkit.OfflinePlayer;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
+import org.jetbrains.annotations.NotNull;
 
 //The class is used for PAPI
 public class GuildPapi extends PlaceholderExpansion {
@@ -23,22 +24,22 @@ public class GuildPapi extends PlaceholderExpansion {
     }
 
     @Override
-    public String getAuthor() {
+    public @NotNull String getAuthor() {
         return GuildManager.getPlugin().getDescription().getAuthors().toString();
     }
 
     @Override
-    public String getIdentifier() {
+    public @NotNull String getIdentifier() {
         return "guildmanager";
     }
 
     @Override
-    public String getVersion() {
+    public @NotNull String getVersion() {
         return GuildManager.getPlugin().getDescription().getVersion();
     }
 
     @Override
-    public String onPlaceholderRequest(Player player, String identifier) {
+    public String onRequest(OfflinePlayer player, @NotNull String identifier) {
         if (player == null) {
             return "";
         }
