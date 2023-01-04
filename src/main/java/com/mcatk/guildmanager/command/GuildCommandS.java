@@ -144,6 +144,7 @@ public class GuildCommandS implements CommandExecutor {
                 sender.sendMessage(Msg.ERROR + "不能删除你自己");
             } else {
                 SQLManager.getInstance().removeMember(playerID, guild.getId());
+                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), String.format("res pset main.gh %s move true", playerID));
             }
         }
     }

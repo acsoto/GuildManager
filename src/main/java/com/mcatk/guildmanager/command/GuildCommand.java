@@ -8,6 +8,7 @@ import com.mcatk.guildmanager.models.ApplicantsList;
 import com.mcatk.guildmanager.models.Guild;
 import com.mcatk.guildmanager.models.Member;
 import com.mcatk.guildmanager.sql.SQLManager;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -171,6 +172,7 @@ public class GuildCommand implements CommandExecutor {
             sender.sendMessage("请先撤销你的公会职务");
         } else {
             SQLManager.getInstance().removeMember(sender.getName(), guild.getId());
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), String.format("res pset main.gh %s move true", sender.getName()));
             sender.sendMessage(Msg.INFO + "退出公会" + guild);
         }
     }
