@@ -184,13 +184,14 @@ public class GuildCommandS implements CommandExecutor {
             throw new ParaLengthException(3);
         } else {
             String operate = args[1];
-            String player = args[2];
+            String playerName = args[2];
             if (operate.equalsIgnoreCase("add")) {
                 if (SQLManager.getInstance().getGuildAdvancedMembers(guild.getId()).size() < GuildBasicInfo.getMaxAdvancedPlayer(guild.getLevel())) {
-                    if (SQLManager.getInstance().getGuildMembers(guild.getId()).contains(player)) {
-                        Member member = SQLManager.getInstance().getMember(player);
+                    if (SQLManager.getInstance().getGuildMembers(guild.getId()).contains(playerName)) {
+                        Member member = SQLManager.getInstance().getMember(playerName);
                         member.setAdvanced(true);
                         SQLManager.getInstance().saveMember(member);
+                        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), String.format("res pset main.gh %s move true", playerName));
                         sender.sendMessage(Msg.INFO + "增加成功");
                     } else {
                         sender.sendMessage(Msg.ERROR + "不是公会成员");
@@ -199,10 +200,11 @@ public class GuildCommandS implements CommandExecutor {
                     sender.sendMessage(Msg.ERROR + "已达到公会广场名单最大成员数");
                 }
             } else if (operate.equalsIgnoreCase("remove")) {
-                if (SQLManager.getInstance().getGuildMembers(guild.getId()).contains(player)) {
-                    Member member = SQLManager.getInstance().getMember(player);
+                if (SQLManager.getInstance().getGuildMembers(guild.getId()).contains(playerName)) {
+                    Member member = SQLManager.getInstance().getMember(playerName);
                     member.setAdvanced(false);
                     SQLManager.getInstance().saveMember(member);
+                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), String.format("res pset main.gh %s move remove", playerName));
                 } else {
                     sender.sendMessage(Msg.ERROR + "不是公会成员");
                 }

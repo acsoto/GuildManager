@@ -1,7 +1,6 @@
 package com.mcatk.guildmanager;
 
 import com.mcatk.guildmanager.models.Guild;
-import com.mcatk.guildmanager.models.Member;
 import com.mcatk.guildmanager.sql.SQLManager;
 import fr.xephi.authme.events.LoginEvent;
 import org.bukkit.Bukkit;
@@ -32,15 +31,6 @@ public class LoginListener implements Listener {
                     }
                 }
             }
-            Member member = SQLManager.getInstance().getMember(player.getName());
-            if (member.isAdvanced()) {
-                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "res pset main.gh " + player + " move true");
-            } else {
-                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "res pset main.gh " + player + " move remove");
-            }
-        } else {
-            // 玩家无公会
-            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "res pset main.gh " + player + " move remove");
         }
     }
 }
