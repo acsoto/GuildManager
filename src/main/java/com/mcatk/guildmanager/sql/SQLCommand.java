@@ -8,13 +8,13 @@ public enum SQLCommand {
                     "(?,?)"
     ),
     CREATE_PLAYER(
-            "INSERT INTO `player` " +
+            "INSERT INTO `player_guild` " +
                     "(`player_id`, `guild_id`)" +
                     "VALUES " +
                     "(?,?)"
     ),
     DELETE_PLAYER(
-            "DELETE FROM `player` WHERE `player_id` = ?"
+            "DELETE FROM `player_guild` WHERE `player_id` = ?"
     ),
     UPDATE_GUILD(
             "UPDATE guild t " +
@@ -33,25 +33,25 @@ public enum SQLCommand {
             "SELECT * FROM guild WHERE guild_id = ?"
     ),
     UPDATE_PLAYER(
-            "UPDATE `player` t " +
+            "UPDATE `player_guild` t " +
                     "SET t.player_is_advanced  = ?, " +
                     "    t.player_contribution = ? " +
                     "WHERE t.player_id = ?"
     ),
     GET_PLAYER(
-            "SELECT * FROM player WHERE player_id = ?"
+            "SELECT * FROM player_guild WHERE player_id = ?"
     ),
     GET_ALL_GUILDS(
             "SELECT * FROM guild"
     ),
     GET_PLAYER_GUILD(
-            "SELECT * FROM player JOIN guild g on player.guild_id = g.guild_id WHERE player_id = ?"
+            "SELECT * FROM player_guild JOIN guild g on player_guild.guild_id = g.guild_id WHERE player_id = ?"
     ),
     GET_GUILD_PLAYERS(
-            "SELECT * FROM player WHERE guild_id = ?"
+            "SELECT * FROM player_guild WHERE guild_id = ?"
     ),
     GET_GUILD_ADVANCED_PLAYERS(
-            "SELECT * FROM player WHERE guild_id = ? AND player_is_advanced = true"
+            "SELECT * FROM player_guild WHERE guild_id = ? AND player_is_advanced = true"
     ),
 
 

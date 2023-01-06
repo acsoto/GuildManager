@@ -200,7 +200,7 @@ public class SQLManager {
     private ArrayList<Member> getMembersFromSQL(String guildID) {
         ArrayList<Member> list = new ArrayList<>();
         try {
-            PreparedStatement ps = connection.prepareStatement("SELECT * FROM player WHERE guild_id = ?");
+            PreparedStatement ps = connection.prepareStatement("SELECT * FROM `player_guild` WHERE guild_id = ?");
             ps.setString(1, guildID);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
