@@ -17,7 +17,7 @@
 - [x] 可视化菜单，如公会列表，成员列表，~~留言板~~等
 - [x] 文件储存利用 ~~Google Gson~~ MySQL
 - [x] 监听器监听玩家行为来实现召集令的触发等功能和防止玩家拿走可视化菜单中的物品
-- [x] Vault实现内部的经济操作，placehoAPI提供变量
+- [x] Vault实现内部的经济操作，PlaceholderAPI提供变量
 
 # 功能介绍
 
@@ -85,8 +85,8 @@
 
 ## PlaceholderAPI
 
-| 权限结点                         | 功能           |
-| -------------------------------- | -------------- |
+| 变量                               | 功能           |
+|----------------------------------| -------------- |
 | guildmanager_id                  | ID             |
 | guildmanager_name                | 名称           |
 | guildmanager_prefix              | 前缀           |
@@ -97,16 +97,7 @@
 | guildmanager_num_player          | 成员数         |
 | guildmanager_max_player          | 最大成员数     |
 | guildmanager_max_advanced_player | 最大高级成员数 |
-| guildmanager_isadvanced          | 是否高级成员   |
 | guildmanager_contribution        | 贡献度         |
-| guildmanager_position            | 职位           |
-| guildmanager_position_prefix     | 职位前缀       |
-|                                  |                |
-|                                  |                |
-|                                  |                |
-|                                  |                |
-
-
 
 # 依赖
 
