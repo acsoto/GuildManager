@@ -40,8 +40,7 @@ public class SQLManager {
     }
 
     public void createGuild(String id, String chairman) {
-        try {
-            PreparedStatement ps = connection.prepareStatement(SQLCommand.CREATE_GUILD.toString());
+        try (PreparedStatement ps = connection.prepareStatement(SQLCommand.CREATE_GUILD.toString())){
             ps.setString(1, id);
             ps.setString(2, chairman);
             ps.executeUpdate();
@@ -52,8 +51,7 @@ public class SQLManager {
     }
 
     public Guild getPlayerGuild(String name) {
-        try {
-            PreparedStatement ps = connection.prepareStatement(SQLCommand.GET_PLAYER_GUILD.toString());
+        try (PreparedStatement ps = connection.prepareStatement(SQLCommand.GET_PLAYER_GUILD.toString())){
             ps.setString(1, name);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
@@ -70,8 +68,7 @@ public class SQLManager {
     }
 
     public void saveGuild(Guild g) {
-        try {
-            PreparedStatement ps = connection.prepareStatement(SQLCommand.UPDATE_GUILD.toString());
+        try (PreparedStatement ps = connection.prepareStatement(SQLCommand.UPDATE_GUILD.toString())){
             ps.setString(1, g.getGuildName());
             ps.setString(2, g.getChairman());
             ps.setString(3, g.getViceChairman1());
@@ -94,8 +91,7 @@ public class SQLManager {
     }
 
     public void saveMember(Member m) {
-        try {
-            PreparedStatement ps = connection.prepareStatement(SQLCommand.UPDATE_PLAYER.toString());
+        try (PreparedStatement ps = connection.prepareStatement(SQLCommand.UPDATE_PLAYER.toString())){
             ps.setBoolean(1, m.isAdvanced());
             ps.setInt(2, m.getContribution());
             ps.setString(3, m.getId());
@@ -108,8 +104,7 @@ public class SQLManager {
 
     public Member getMember(String id) {
         Member m = null;
-        try {
-            PreparedStatement ps = connection.prepareStatement(SQLCommand.GET_PLAYER.toString());
+        try (PreparedStatement ps = connection.prepareStatement(SQLCommand.GET_PLAYER.toString())){
             ps.setString(1, id);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
@@ -127,8 +122,7 @@ public class SQLManager {
     }
 
     public void addMember(String playerID, String guildID) {
-        try {
-            PreparedStatement ps = connection.prepareStatement(SQLCommand.CREATE_PLAYER.toString());
+        try (PreparedStatement ps = connection.prepareStatement(SQLCommand.CREATE_PLAYER.toString())) {
             ps.setString(1, playerID);
             ps.setString(2, guildID);
             ps.executeUpdate();
@@ -139,8 +133,7 @@ public class SQLManager {
     }
 
     public void removeMember(String playerID, String guildID) {
-        try {
-            PreparedStatement ps = connection.prepareStatement(SQLCommand.DELETE_PLAYER.toString());
+        try (PreparedStatement ps = connection.prepareStatement(SQLCommand.DELETE_PLAYER.toString())){
             ps.setString(1, playerID);
             ps.executeUpdate();
             updateMembers(guildID);
@@ -173,8 +166,7 @@ public class SQLManager {
 
     private HashMap<String, Guild> getAllGuildsFromSQL() {
         HashMap<String, Guild> guilds = new HashMap<>();
-        try {
-            PreparedStatement ps = connection.prepareStatement(SQLCommand.GET_ALL_GUILDS.toString());
+        try (PreparedStatement ps = connection.prepareStatement(SQLCommand.GET_ALL_GUILDS.toString())){
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 Guild g = new Guild();
@@ -199,8 +191,7 @@ public class SQLManager {
 
     private ArrayList<Member> getMembersFromSQL(String guildID) {
         ArrayList<Member> list = new ArrayList<>();
-        try {
-            PreparedStatement ps = connection.prepareStatement("SELECT * FROM `player_guild` WHERE guild_id = ?");
+        try (PreparedStatement ps = connection.prepareStatement("SELECT * FROM `player_guild` WHERE guild_id = ?")){
             ps.setString(1, guildID);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
